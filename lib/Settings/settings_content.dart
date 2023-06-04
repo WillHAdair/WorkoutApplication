@@ -7,25 +7,25 @@ class SettingsPageContent extends StatefulWidget {
 }
 
 class SettingsPageState extends State<SettingsPageContent> {
-  bool valNotify1 = true;
-  bool valNotify2 = false;
-  bool valNotify3 = false;
+  bool darkTheme = true;
+  bool trackProgress = false;
+  bool syncResults = false;
 
-  onChangeFunction1(bool newValue1) {
+  onDarkThemeChange(bool newValue1) {
     setState(() {
-      valNotify1 = newValue1;
+      darkTheme = newValue1;
     });
   }
   
-  onChangeFunction2(bool newValue2) {
+  onTrackProgressChange(bool newValue2) {
     setState(() {
-      valNotify2 = newValue2;
+      trackProgress = newValue2;
     });
   }
 
-  onChangeFunction3(bool newValue3) {
+  onSynceResultsChange(bool newValue3) {
     setState(() {
-      valNotify3 = newValue3;
+      syncResults = newValue3;
     });
   }
 //Credit to Lirs Tech Tips: https://www.youtube.com/@lirstechtips5874 for the base of this settings page
@@ -49,11 +49,11 @@ class SettingsPageState extends State<SettingsPageContent> {
             ),
             const Divider(height: 20, thickness:  1),
             const SizedBox(height: 10),
-            buildAccountOption(context, 'Change Password'),
-            buildAccountOption(context, 'Content Settings'),
-            buildAccountOption(context, 'Social'),
-            buildAccountOption(context, 'Language'),
-            buildAccountOption(context, 'Privacy'),
+            buildAccountOption(context, 'Change Password', ['basic 1', 'basic 2']),
+            buildAccountOption(context, 'Content Settings', ['basic 2', 'basic 3']),
+            buildAccountOption(context, 'Social', ['basic 4']),
+            buildAccountOption(context, 'Language', ['basic 5', 'basic 6', 'basic 7']),
+            buildAccountOption(context, 'Privacy', ['basic 8']),
             const SizedBox(height: 40),
             const Row(
               children: [
@@ -67,9 +67,9 @@ class SettingsPageState extends State<SettingsPageContent> {
             ),
             const Divider(height: 20, thickness:  1),
             const SizedBox(height: 10),
-            buildNotificationOption('Theme Dark', valNotify1, onChangeFunction1),
-            buildNotificationOption('Account Active', valNotify2, onChangeFunction2),
-            buildNotificationOption('Opportunity', valNotify3, onChangeFunction3),
+            buildNotificationOption('Theme Dark', darkTheme, onDarkThemeChange),
+            buildNotificationOption('Account Active', trackProgress, onTrackProgressChange),
+            buildNotificationOption('Opportunity', syncResults, onSynceResultsChange),
             const SizedBox(height: 40),
             Center(
               child: OutlinedButton(
@@ -118,18 +118,17 @@ class SettingsPageState extends State<SettingsPageContent> {
     );
   }
 
-  GestureDetector buildAccountOption(BuildContext context, String title) {
+  GestureDetector buildAccountOption(BuildContext context, String title, List<String> options) {
     return GestureDetector(
       onTap: () {
         showDialog(context: context, builder: (BuildContext context) {
           return AlertDialog(
             title: Text(title),
-            content: const Column(
+            content: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Option 1'),
-                Text('Option 2')
-              ],
+              children: options
+                .map((option) => Text(option))
+                .toList(),
               ),
               actions: [
                 TextButton(
