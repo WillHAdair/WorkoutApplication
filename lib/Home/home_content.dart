@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class MyHomePageContent extends StatelessWidget {
-  const MyHomePageContent({
+class HomePageContent extends StatelessWidget {
+  const HomePageContent({
     Key? key,
     required this.counter,
     required this.incrementCounter,
@@ -21,7 +21,7 @@ class MyHomePageContent extends StatelessWidget {
           ),
           Text(
             '$counter',
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           ElevatedButton(
             onPressed: incrementCounter,

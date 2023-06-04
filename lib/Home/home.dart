@@ -4,9 +4,9 @@ import 'package:workout_app/Workouts/workouts.dart';
 import 'package:workout_app/Settings/settings.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key, required this.title}) : super(key: key);
+  const HomePage({Key? key, required this.titles}) : super(key: key);
 
-  final String title;
+  final List<String> titles;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -33,14 +33,14 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text(widget.titles[_selectedIndex]),
       ),
       body: IndexedStack(
         index: _selectedIndex,
         children: [
-          MyHomePageContent(counter: _counter, incrementCounter: _incrementCounter),
+          HomePageContent(counter: _counter, incrementCounter: _incrementCounter),
           WorkoutsPage(),
-          SettingsPage(),
+          const SettingsPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

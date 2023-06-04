@@ -12,7 +12,7 @@ class WorkoutApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(title: 'Home Page'),
+      home: const HomePage(titles: ['Home Page', 'Workouts Page', 'Settings Page']),
     );
   }
 }
