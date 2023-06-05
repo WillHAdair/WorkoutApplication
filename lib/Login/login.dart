@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:workout_app/components/custom_widgets/my_button.dart';
-import 'package:workout_app/components/custom_widgets/my_textfield.dart';
-import 'package:workout_app/components/custom_widgets/square_tile.dart';
+import 'package:workout_app/components/custom_widgets/SignInButton.dart';
+import 'package:workout_app/components/custom_widgets/CustomTextField.dart';
+import 'package:workout_app/components/custom_widgets/SquareImageButton.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});

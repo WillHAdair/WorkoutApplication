@@ -1,8 +1,8 @@
   import 'package:flutter/material.dart';
 
-import '../components/custom_widgets/my_button.dart';
-import '../components/custom_widgets/my_textfield.dart';
-import '../components/custom_widgets/square_tile.dart';
+import '../components/custom_widgets/SignInButton.dart';
+import '../components/custom_widgets/CustomTextField.dart';
+import '../components/custom_widgets/SquareImageButton.dart';
 
 class LoginPageContent extends StatefulWidget {
   const LoginPageContent({super.key});

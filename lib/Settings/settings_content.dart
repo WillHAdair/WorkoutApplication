@@ -1,5 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:workout_app/components/custom_widgets/CustomSwitch.dart';
 import 'package:flutter/material.dart';
+import 'package:workout_app/components/custom_widgets/TextPopUp.dart';
 
 class SettingsPageContent extends StatefulWidget {
   const SettingsPageContent({super.key});
@@ -13,21 +14,21 @@ class SettingsPageState extends State<SettingsPageContent> {
   bool trackProgress = false;
   bool syncResults = false;
 
-  onDarkThemeChange(bool newValue1) {
+  onDarkThemeChange(bool newTheme) {
     setState(() {
-      darkTheme = newValue1;
+      darkTheme = newTheme;
     });
   }
   
-  onTrackProgressChange(bool newValue2) {
+  onTrackProgressChange(bool newProgress) {
     setState(() {
-      trackProgress = newValue2;
+      trackProgress = newProgress;
     });
   }
 
-  onSynceResultsChange(bool newValue3) {
+  onSynceResultsChange(bool newSynced) {
     setState(() {
-      syncResults = newValue3;
+      syncResults = newSynced;
     });
   }
 //Credit to Lirs Tech Tips: https://www.youtube.com/@lirstechtips5874 for the base of this settings page
@@ -51,27 +52,26 @@ class SettingsPageState extends State<SettingsPageContent> {
             ),
             const Divider(height: 20, thickness:  1),
             const SizedBox(height: 10),
-            buildAccountOption(context, 'Change Password', ['basic 1', 'basic 2']),
-            buildAccountOption(context, 'Content Settings', ['basic 2', 'basic 3']),
-            buildAccountOption(context, 'Social', ['basic 4']),
-            buildAccountOption(context, 'Language', ['basic 5', 'basic 6', 'basic 7']),
-            buildAccountOption(context, 'Privacy', ['basic 8']),
+            TextPopUp(context: context, title: 'Content Settings', textOptions: const ['basic 2', 'basic 3']),
+            TextPopUp(context: context, title: 'Social', textOptions: const ['basic 4']),
+            TextPopUp(context: context, title: 'Language', textOptions: const ['basic 5', 'basic 6', 'basic 7']),
+            TextPopUp(context: context, title: 'Privacy', textOptions: const ['basic 8']),
             const SizedBox(height: 40),
             const Row(
               children: [
                 Icon(
-                  Icons.volume_up_outlined,
+                  Icons.notification_add,
                   color: Colors.blue,
                 ),
                 SizedBox(width: 10),
-                Text('Notifications', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+                Text('Preferences', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
               ],
             ),
             const Divider(height: 20, thickness:  1),
             const SizedBox(height: 10),
-            buildNotificationOption('Theme Dark', darkTheme, onDarkThemeChange),
-            buildNotificationOption('Account Active', trackProgress, onTrackProgressChange),
-            buildNotificationOption('Opportunity', syncResults, onSynceResultsChange),
+            CustomSwitch(title: 'Theme Dark', defaultValue: darkTheme, onChangeMethod: onDarkThemeChange),
+            CustomSwitch(title: 'Account Active', defaultValue: trackProgress, onChangeMethod: onTrackProgressChange),
+            CustomSwitch(title: 'Opportunity', defaultValue: syncResults, onChangeMethod: onSynceResultsChange),
             const SizedBox(height: 40),
             Center(
               child: OutlinedButton(
@@ -87,73 +87,6 @@ class SettingsPageState extends State<SettingsPageContent> {
                 )),
               ),
             )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Padding buildNotificationOption(String title, bool value, Function onChangeMethod) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(title, style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-            color: Colors.grey[600]
-          )),
-          Transform.scale(
-              scale: 0.7,
-            child: CupertinoSwitch(
-              activeColor: Colors.blue,
-              trackColor: Colors.grey,
-              value: value,
-              onChanged: (bool newValue) {
-                onChangeMethod(newValue);
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  GestureDetector buildAccountOption(BuildContext context, String title, List<String> options) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(context: context, builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(title),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: options
-                .map((option) => Text(option))
-                .toList(),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Close')
-                  )
-              ],
-          );
-        });
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(title, style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey[600]
-              )),
-              const Icon(Icons.arrow_forward_ios, color: Colors.grey)
           ],
         ),
       ),
