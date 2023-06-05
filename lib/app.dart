@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workout_app/Login/login.dart';
 import 'Home/home.dart';
 
 class WorkoutApp extends StatelessWidget {
@@ -12,6 +13,7 @@ class WorkoutApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      //home: LoginPage(),
       home: const HomePage(titles: ['Home Page', 'Workouts Page', 'Settings Page']),
     );
   }
