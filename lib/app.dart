@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:workout_app/Login/login.dart';
 import 'Home/home.dart';
 
 class WorkoutApp extends StatelessWidget {

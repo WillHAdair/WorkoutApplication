@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'workouts_content.dart';
+
 class WorkoutsPage extends StatelessWidget {
+  const WorkoutsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        'Workouts Page',
-        style: Theme.of(context).textTheme.headlineSmall,
-      ),
+    return const Scaffold(
+      body: IndexedStack(
+        children: [
+          WorkoutsPageContent(),
+        ],
+      )
     );
   }
 }
