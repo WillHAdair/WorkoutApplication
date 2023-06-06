@@ -9,7 +9,7 @@ class HomePage extends StatefulWidget {
   final List<String> titles;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> get createState => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
         index: _selectedIndex,
         children: [
           HomePageContent(counter: _counter, incrementCounter: _incrementCounter),
-          WorkoutsPage(),
+          const WorkoutsPage(),
           const SettingsPage(),
         ],
       ),

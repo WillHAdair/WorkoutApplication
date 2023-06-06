@@ -6,7 +6,7 @@ class SettingsPageContent extends StatefulWidget {
   const SettingsPageContent({super.key});
 
   @override 
-  SettingsPageState createState() => SettingsPageState();
+  SettingsPageState get createState => SettingsPageState();
 }
 
 class SettingsPageState extends State<SettingsPageContent> {

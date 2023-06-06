@@ -8,7 +8,7 @@ class LoginPageContent extends StatefulWidget {
   const LoginPageContent({super.key});
 
   @override
-  LoginsPageState createState() => LoginsPageState();
+  LoginsPageState get createState => LoginsPageState();
 }
 
 class LoginsPageState extends State<LoginPageContent> {
