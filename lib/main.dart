@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
-import 'package:workout_app/pages/home_page.dart';
+import 'package:workout_app/pages/nav_bar.dart';
 
 import 'data/workout_data.dart';
 
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       create: (context) => WorkoutData(),
       child: MaterialApp(
         debugShowCheckedModeBanner:  false,
-        home: const HomePage(),
+        home: const BottomNavigation(),
         theme: ThemeData(primarySwatch: Colors.green),
       ),
     );

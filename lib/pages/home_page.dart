@@ -150,10 +150,6 @@ void onDeletePress(String workoutName) {
         appBar: AppBar(
           title: const Text('Workout Tracker'),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: createNewWorkout,
-          child: const Icon(Icons.add),
-          ),
         body: ListView(
           children: [
             CustomHeatMap(datasets: value.heatMapDataSet, startDate: value.getStartDate()),
@@ -169,6 +165,10 @@ void onDeletePress(String workoutName) {
               )
             ),
           ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: createNewWorkout,
+          child: const Icon(Icons.add),
         ),
       ),
     );

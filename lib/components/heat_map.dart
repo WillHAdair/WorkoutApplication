@@ -26,7 +26,7 @@ class CustomHeatMap extends StatelessWidget {
         colorsets: {
           -2: Colors.cyan.shade400, // Indicates Rest Days
           -1: Colors.red.shade300, // Reds indicate skipped days
-          0: Colors.grey.shade100, // this is to stop the heat map automatically setting everything to red
+          0: Colors.grey.shade400, // this is to stop the heat map automatically setting everything to red
           1: Colors.green.shade100,
           2: Colors.green.shade200,
           3: Colors.green.shade300,
