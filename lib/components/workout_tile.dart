@@ -40,7 +40,7 @@ class WorkoutTile extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Colors.grey[900],
+            color: Colors.grey[800],
             borderRadius: BorderRadius.circular(12),
           ),
           child: ListTile(

@@ -192,7 +192,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
     return Consumer<WorkoutData>(
       builder: (context, value, child) => Scaffold(
         backgroundColor: Colors.grey[300],
-        appBar: AppBar(title: Text(widget.workoutName)),
+        appBar: AppBar(
+          title: Text(widget.workoutName),
+          centerTitle: true,
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => createNewExercise(),
           child: const Icon(Icons.add),

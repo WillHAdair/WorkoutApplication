@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/pages/nav_bar.dart';
+import 'package:workout_app/theme/theme_provider.dart';
 
 import 'data/workout_data.dart';
 
@@ -11,7 +12,19 @@ void main() async {
 
   await Hive.openBox("workout_database");
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => WorkoutData(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ThemeProvider(),
+        ),
+      ],
+      child: const MyApp()
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -19,13 +32,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => WorkoutData(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner:  false,
-        home: const BottomNavigation(),
-        theme: ThemeData(primarySwatch: Colors.green),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner:  false,
+      home: const BottomNavigation(),
+      themeMode:  Provider.of<ThemeProvider>(context).themeMode,
+      theme: Provider.of<ThemeProvider>(context).light,
+      darkTheme: Provider.of<ThemeProvider>(context).dark,
     );
   }
 }

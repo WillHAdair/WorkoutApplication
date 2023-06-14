@@ -146,9 +146,10 @@ void onDeletePress(String workoutName) {
   Widget build(BuildContext context) {
     return Consumer<WorkoutData>(
       builder: (context, value, child) =>Scaffold(
-        backgroundColor: Colors.grey[300],
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
           title: const Text('Workout Tracker'),
+          centerTitle: true,
         ),
         body: ListView(
           children: [
