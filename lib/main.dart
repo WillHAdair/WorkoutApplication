@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/pages/nav_bar.dart';
-import 'package:workout_app/theme/theme_provider.dart';
+import 'package:workout_app/data/theme_provider.dart';
 
 import 'data/workout_data.dart';
 
@@ -36,8 +36,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner:  false,
       home: const BottomNavigation(),
       themeMode:  Provider.of<ThemeProvider>(context).themeMode,
-      theme: Provider.of<ThemeProvider>(context).light,
-      darkTheme: Provider.of<ThemeProvider>(context).dark,
+      theme: Provider.of<ThemeProvider>(context).lightTheme,
+      darkTheme: Provider.of<ThemeProvider>(context).darkTheme,
     );
   }
 }
