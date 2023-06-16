@@ -65,7 +65,10 @@ class SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 10),
             //Let the user choose their display options
             buildColorOption("Select Primary Color", isPrimary: true),
-            buildColorOption("Select secondary Color", isSecondary: true),
+            buildColorOption("Select Secondary Color", isSecondary: true),
+            buildColorOption("Select Skip Day Color", isSkip: true),
+            buildColorOption("Select Rest Day Color", isRest: true),
+            buildColorOption("Select Rep counting Color", isMapBase: true),
             const SizedBox(height: 10),
             const Row(
               children: [
@@ -119,12 +122,19 @@ class SettingsPageState extends State<SettingsPage> {
     );
   }
 
-Padding buildColorOption(String title, {bool isPrimary = false, bool isSecondary = false}) {
+Padding buildColorOption(String title, {bool isPrimary = false, bool isSecondary = false, bool isSkip = false,
+    bool isRest = false, isMapBase = false}) {
   Color color;
-  if (isPrimary) {
+  if(isPrimary) {
     color = Provider.of<ThemeProvider>(context).primaryColor;
   } else if (isSecondary) {
     color = Provider.of<ThemeProvider>(context).secondaryColor;
+  } else if (isSkip) {
+    color = Provider.of<ThemeProvider>(context).skipDayColor;
+  } else if (isRest) {
+    color = Provider.of<ThemeProvider>(context).restDayColor;
+  } else if (isMapBase) {
+    color = Provider.of<ThemeProvider>(context).heatMapBaseColor;
   } else {
     color = selectedColor;
   }
@@ -135,7 +145,8 @@ Padding buildColorOption(String title, {bool isPrimary = false, bool isSecondary
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-          onTap: () => pickColor(context, isPrimary: isPrimary, isSecondary: isSecondary),
+          onTap: () => pickColor(context, isPrimary: isPrimary, isSecondary: isSecondary, isSkip: isSkip, 
+            isRest: isRest, isMapBase: isMapBase),
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
@@ -157,7 +168,8 @@ Padding buildColorOption(String title, {bool isPrimary = false, bool isSecondary
           scale: 0.7,
           child: IconButton(
             icon: const Icon(Icons.arrow_forward_ios),
-            onPressed: () => pickColor(context, isPrimary: isPrimary, isSecondary: isSecondary),
+            onPressed: () => pickColor(context, isPrimary: isPrimary, isSecondary: isSecondary, isSkip: isSkip, 
+            isRest: isRest, isMapBase: isMapBase),
             color: Colors.white,
           ),
         ),
@@ -166,14 +178,16 @@ Padding buildColorOption(String title, {bool isPrimary = false, bool isSecondary
   );
 }
 
-void pickColor(BuildContext context, {bool isPrimary = false, bool isSecondary = false}) => showDialog(
+void pickColor(BuildContext context, {bool isPrimary = false, bool isSecondary = false, bool isSkip = false,
+    bool isRest = false, isMapBase = false}) => showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Pick color'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            buildColorPicker(isPrimary: isPrimary, isSecondary: isSecondary),
+            buildColorPicker( isPrimary: isPrimary, isSecondary: isSecondary, isSkip: isSkip, 
+            isRest: isRest, isMapBase: isMapBase),
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: const Text(
@@ -189,32 +203,46 @@ void pickColor(BuildContext context, {bool isPrimary = false, bool isSecondary =
       ),
     );
 
-Widget buildColorPicker({bool isPrimary = false, bool isSecondary = false}) {
-  Color selectedColor;
-  if (isPrimary) {
-    selectedColor = Provider.of<ThemeProvider>(context).primaryColor;
-  } else if (isSecondary) {
-    selectedColor = Provider.of<ThemeProvider>(context).secondaryColor;
-  } else {
-    selectedColor = this.selectedColor;
-  }
+  Widget buildColorPicker({bool isPrimary = false, bool isSecondary = false, bool isSkip = false,
+    bool isRest = false, isMapBase = false}) {
+    Color color;
+    if(isPrimary) {
+      color = Provider.of<ThemeProvider>(context).primaryColor;
+    } else if (isSecondary) {
+      color = Provider.of<ThemeProvider>(context).secondaryColor;
+    } else if (isSkip) {
+      color = Provider.of<ThemeProvider>(context).skipDayColor;
+    } else if (isRest) {
+      color = Provider.of<ThemeProvider>(context).restDayColor;
+    } else if (isMapBase) {
+      color = Provider.of<ThemeProvider>(context).heatMapBaseColor;
+    } else {
+      color = selectedColor;
+    }
 
-  return ColorPicker(
-    pickerColor: selectedColor,
-    onColorChanged: (color) {
-      setState(() {
-        if (isPrimary) {
-          Provider.of<ThemeProvider>(context, listen: false).setPrimaryColor(color);
-        } else if (isSecondary) {
-          Provider.of<ThemeProvider>(context, listen: false).setSecondaryColor(color);
-        } else {
-          selectedColor = color;
-        }
-      });
-    },
-    enableAlpha: false,
-    labelTypes: const [],
-  );
-}
+    return ColorPicker(
+      pickerColor: color,
+      onColorChanged: (newColor) {
+        setState(() {
+          if (isPrimary) {
+            Provider.of<ThemeProvider>(context, listen: false).setPrimaryColor(newColor);
+          } else if (isSecondary) {
+            Provider.of<ThemeProvider>(context, listen: false).setSecondaryColor(newColor);
+          }  else if (isSkip) {
+            Provider.of<ThemeProvider>(context, listen: false).setSkipColor(newColor);
+          }  else if (isRest) {
+            Provider.of<ThemeProvider>(context, listen: false).setRestColor(newColor);
+          }  else if (isMapBase) {
+            MaterialColor colorToMaterial =  Provider.of<ThemeProvider>(context, listen: false).getMaterialColor(newColor);
+            Provider.of<ThemeProvider>(context, listen: false).setHeatMapBaseColor(colorToMaterial);
+          } else {
+            selectedColor = newColor;
+          }
+        });
+      },
+      enableAlpha: false,
+      labelTypes: const [],
+    );
+  }
 
 }

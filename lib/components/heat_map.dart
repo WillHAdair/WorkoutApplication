@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
+import 'package:provider/provider.dart';
 import 'package:workout_app/datetime/date_timedata.dart';
+
+import '../data/theme_provider.dart';
 
 
 class CustomHeatMap extends StatelessWidget {
@@ -11,6 +14,11 @@ class CustomHeatMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final Color restDayColor = themeProvider.restDayColor;
+    final Color skipDayColor = themeProvider.skipDayColor;
+    final MaterialColor heatMapColor = themeProvider.heatMapBaseColor;
+    
     return Container(
       padding: const EdgeInsets.all(25),
       child: HeatMap(
@@ -24,18 +32,18 @@ class CustomHeatMap extends StatelessWidget {
         showText: true,
         scrollable: true,
         colorsets: {
-          -2: Colors.cyan.shade400, // Indicates Rest Days
-          -1: Colors.red.shade300, // Reds indicate skipped days
+          -2: restDayColor, // Indicates Rest Days
+          -1: skipDayColor, // Reds indicate skipped days
           0: Colors.grey.shade400, // this is to stop the heat map automatically setting everything to red
-          1: Colors.green.shade100,
-          2: Colors.green.shade200,
-          3: Colors.green.shade300,
-          4: Colors.green.shade400,
-          5: Colors.green.shade500,
-          6: Colors.green.shade600,
-          7: Colors.green.shade700,
-          8: Colors.green.shade800,
-          9: Colors.green.shade900,
+          1: heatMapColor.shade100,
+          2: heatMapColor.shade200,
+          3: heatMapColor.shade300,
+          4: heatMapColor.shade400,
+          5: heatMapColor.shade500,
+          6: heatMapColor.shade600,
+          7: heatMapColor.shade700,
+          8: heatMapColor.shade800,
+          9: heatMapColor.shade900,
         },     
       )
     );
