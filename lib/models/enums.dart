@@ -1,10 +1,10 @@
 // How to model the Rep Type, (i.e do you do set number of reps, or just time, or go to failure)
 enum RepType {
-    time,
-    counted,
-    timeFailure,
-    countedFailure,
-    warmup,
+  time,
+  counted,
+  timeFailure,
+  countedFailure,
+  warmup,
 }
 
 // What is the exercise purpose, this influences how the suggestions regarding weight are discussed
@@ -16,8 +16,7 @@ enum ExercisePurpose {
 }
 
 // Modeling the type of Weight used (i.e is it just the number value, % of 1RM, or not weighted at all)
-enum WeightType {
-  fixedValue,
-  percentORM,
-  notApplicable
-}
+enum WeightType { fixedValue, percentORM, notApplicable }
+
+// Modeling the type of setting we are using
+enum SettingType { string, boolean, color, materialColor, empty }

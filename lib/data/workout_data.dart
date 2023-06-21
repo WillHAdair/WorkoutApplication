@@ -5,34 +5,33 @@ import 'package:workout_app/models/exercise.dart';
 
 import '../models/workout.dart';
 
-class WorkoutData extends ChangeNotifier{
-
+class WorkoutData extends ChangeNotifier {
   final db = HiveDatabase();
 
   List<Workout> workoutList = [
-    Workout(name: "Upper body",
-    exercises: [Exercise(
-      name: 'Bench', 
-      weight: '185', 
-      reps: '1', 
-      sets: '4',
-      isCompleted: false
-      )]),
-    Workout(name: "Lower Body",
-    exercises: [Exercise(
-      name: 'Deadlift', 
-      weight: '205', 
-      reps: '1', 
-      sets: '3',
-      isCompleted: false
-      )]),
+    Workout(name: "Upper body", exercises: [
+      Exercise(
+          name: 'Bench',
+          weight: '185',
+          reps: '1',
+          sets: '4',
+          isCompleted: false)
+    ]),
+    Workout(name: "Lower Body", exercises: [
+      Exercise(
+          name: 'Deadlift',
+          weight: '205',
+          reps: '1',
+          sets: '3',
+          isCompleted: false)
+    ]),
   ];
 
   void initializeWorkoutList() {
     if (db.previousDataExists()) {
-      workoutList = db.readFromDatabase();
+      workoutList = db.readWorkouts();
     } else {
-      db.saveToDatabase(workoutList);
+      db.saveWorkouts(workoutList);
     }
 
     loadHeatMap();
@@ -52,7 +51,7 @@ class WorkoutData extends ChangeNotifier{
 
     notifyListeners();
 
-    db.saveToDatabase(workoutList);
+    db.saveWorkouts(workoutList);
   }
 
   void changeWorkoutName(String currentName, String newName) {
@@ -61,7 +60,7 @@ class WorkoutData extends ChangeNotifier{
 
     notifyListeners();
 
-    db.saveToDatabase(workoutList);
+    db.saveWorkouts(workoutList);
   }
 
   void deleteWorkout(String workoutName) {
@@ -71,50 +70,56 @@ class WorkoutData extends ChangeNotifier{
 
     notifyListeners();
 
-    db.saveToDatabase(workoutList);
+    db.saveWorkouts(workoutList);
   }
 
-  void addExercise(String workoutName, String exerciseName, String weight, String reps, String sets) {
+  void addExercise(String workoutName, String exerciseName, String weight,
+      String reps, String sets) {
     Workout relevantWorkout = getRelevantWorkout(workoutName);
-    relevantWorkout.exercises.add(Exercise(name: exerciseName, weight: weight, reps: reps, sets: sets));
+    relevantWorkout.exercises.add(
+        Exercise(name: exerciseName, weight: weight, reps: reps, sets: sets));
 
     notifyListeners();
 
-    db.saveToDatabase(workoutList);
+    db.saveWorkouts(workoutList);
   }
 
   void checkOffExercise(String workoutName, String exerciseName) {
     Workout relevantWorkout = getRelevantWorkout(workoutName);
-    Exercise relevantExercise = getRelevantExercise(relevantWorkout, exerciseName);
+    Exercise relevantExercise =
+        getRelevantExercise(relevantWorkout, exerciseName);
     relevantExercise.isCompleted = !relevantExercise.isCompleted;
 
     notifyListeners();
 
-    db.saveToDatabase(workoutList);
+    db.saveWorkouts(workoutList);
 
     loadHeatMap();
   }
 
   void deleteExercise(String workoutName, String exerciseName) {
     Workout relevantWorkout = getRelevantWorkout(workoutName);
-    Exercise relevantExercise = getRelevantExercise(relevantWorkout, exerciseName);
+    Exercise relevantExercise =
+        getRelevantExercise(relevantWorkout, exerciseName);
     relevantWorkout.exercises.remove(relevantExercise);
 
     notifyListeners();
 
-    db.saveToDatabase(workoutList);
+    db.saveWorkouts(workoutList);
   }
 
-  void editExercise(String workoutName, String oldExerciseName, String newExerciseName, String weight, String reps, String sets) {
+  void editExercise(String workoutName, String oldExerciseName,
+      String newExerciseName, String weight, String reps, String sets) {
     Workout relevantWorkout = getRelevantWorkout(workoutName);
-    Exercise relevantExercise = getRelevantExercise(relevantWorkout, oldExerciseName);    
+    Exercise relevantExercise =
+        getRelevantExercise(relevantWorkout, oldExerciseName);
     relevantExercise.name = newExerciseName;
     relevantExercise.weight = weight;
     relevantExercise.sets = sets;
     relevantExercise.reps = reps;
     notifyListeners();
 
-    db.saveToDatabase(workoutList);
+    db.saveWorkouts(workoutList);
   }
 
   Workout getRelevantWorkout(String workoutName) {
@@ -122,7 +127,8 @@ class WorkoutData extends ChangeNotifier{
   }
 
   Exercise getRelevantExercise(Workout workout, String exerciseName) {
-    return workout.exercises.firstWhere((exercise) => exercise.name == exerciseName);
+    return workout.exercises
+        .firstWhere((exercise) => exercise.name == exerciseName);
   }
 
   String getStartDate() {
@@ -136,7 +142,7 @@ class WorkoutData extends ChangeNotifier{
 
     int daysBetween = DateTime.now().difference(startDate).inDays;
 
-    for (int i=0; i< daysBetween + 1; i++) {
+    for (int i = 0; i < daysBetween + 1; i++) {
       String date = convertDateTimeToString(startDate.add(Duration(days: i)));
       int completionStatus = db.getCompletionStatus(date);
 
@@ -144,8 +150,9 @@ class WorkoutData extends ChangeNotifier{
       int month = startDate.add(Duration(days: i)).month;
       int day = startDate.add(Duration(days: i)).day;
 
-      final percentForEachDay = <DateTime, int> {
-        DateTime(year, month, day): completionStatus};
+      final percentForEachDay = <DateTime, int>{
+        DateTime(year, month, day): completionStatus
+      };
 
       heatMapDataSet.addEntries(percentForEachDay.entries);
     }

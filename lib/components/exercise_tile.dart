@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
+
+import '../data/theme_provider.dart';
 
 class ExerciseTile extends StatelessWidget {
   final String exerciseName;
@@ -25,37 +28,37 @@ class ExerciseTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color tileColor = Colors.grey[100]!;
-    Color chipColor = const Color.fromARGB(255, 134, 134, 134);
+    Color tileColor = Provider.of<ThemeProvider>(context).getTileColor();
+    Color chipColor = Provider.of<ThemeProvider>(context).getChipcolor();
     if (isCompleted) {
-      tileColor = const Color.fromARGB(255, 53, 153, 57);
-      chipColor = const Color.fromARGB(255, 39, 117, 42);
+      tileColor = Provider.of<ThemeProvider>(context).tileCompleted;
+      chipColor = Provider.of<ThemeProvider>(context).chipCompleted;
     }
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Slidable(
         endActionPane: ActionPane(
-        motion: const StretchMotion(),
-        children: [
-          SlidableAction(
-            onPressed: (context) => onSettingsPress(),
-            backgroundColor: Colors.grey.shade800,
-            icon: Icons.settings,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          SlidableAction(
-            onPressed: (context) => onDeletePress(),
-            backgroundColor: Colors.red.shade300,
-            icon: Icons.delete,
-            borderRadius: BorderRadius.circular(12),
-         ),
-        ],
-      ),
+          motion: const StretchMotion(),
+          children: [
+            SlidableAction(
+              onPressed: (context) => onSettingsPress(),
+              backgroundColor: Provider.of<ThemeProvider>(context).settingsTile,
+              icon: Icons.settings,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            SlidableAction(
+              onPressed: (context) => onDeletePress(),
+              backgroundColor: Provider.of<ThemeProvider>(context).deleteTile,
+              icon: Icons.delete,
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ],
+        ),
         child: Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: tileColor,
-            borderRadius: BorderRadius.circular(12), 
+            borderRadius: BorderRadius.circular(12),
           ),
           child: ListTile(
             title: Text(exerciseName),
@@ -85,8 +88,3 @@ class ExerciseTile extends StatelessWidget {
     );
   }
 }
-
- 
-
-
-    

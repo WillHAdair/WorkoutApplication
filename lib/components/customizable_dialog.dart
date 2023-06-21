@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:workout_app/components/custom_textfield.dart';
+
+import '../data/theme_provider.dart';
 
 class CustomizableDialog extends StatelessWidget {
   final List<CustomTextField> customTextFields;
@@ -19,7 +22,6 @@ class CustomizableDialog extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         return AlertDialog(
           contentPadding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
-          backgroundColor: Colors.grey[900],
           content: Container(
             constraints: BoxConstraints(maxHeight: constraints.maxHeight - 100),
             child: SingleChildScrollView(
@@ -42,18 +44,18 @@ class CustomizableDialog extends StatelessWidget {
           actions: [
             MaterialButton(
               onPressed: onSave,
-              color: Colors.black,
-              child: const Text(
+              child: Text(
                 "Save",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                    color: Provider.of<ThemeProvider>(context).acceptText),
               ),
             ),
             MaterialButton(
               onPressed: onCancel,
-              color: Colors.black,
-              child: const Text(
+              child: Text(
                 "Cancel",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                    color: Provider.of<ThemeProvider>(context).cancelText),
               ),
             ),
           ],

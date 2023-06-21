@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:workout_app/data/theme_provider.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -19,18 +21,19 @@ class CustomTextField extends StatelessWidget {
       child: TextField(
         controller: controller,
         obscureText: obscureText,
-        style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey.shade200),
+              borderSide: BorderSide(
+                  color: Provider.of<ThemeProvider>(context).secondaryColor),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey.shade200),
+              borderSide: BorderSide(
+                  color: Provider.of<ThemeProvider>(context).secondaryColor),
             ),
-            fillColor: Colors.grey[900],
             filled: true,
             hintText: hintText,
-            hintStyle: TextStyle(color: Colors.grey[300])),
+            hintStyle: TextStyle(
+                color: Provider.of<ThemeProvider>(context).secondaryColor)),
       ),
     );
   }

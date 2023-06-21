@@ -2,39 +2,75 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
+import 'package:workout_app/data/settings_data.dart';
 import 'package:workout_app/data/theme_provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
-  @override 
+  @override
   SettingsPageState createState() => SettingsPageState();
 }
 
 class SettingsPageState extends State<SettingsPage> {
-  
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   final settingsData = Provider.of<SettingsData>(context, listen: false);
+  //   final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+  //   settingsData.initializeSettingsList();
+  //   darkMode = settingsData.getRelevantSetting("IsDarkMode").value as bool;
+  //   themeProvider.toggleTheme(darkMode);
+  //   notificationsOn =
+  //       settingsData.getRelevantSetting("Notifications").value as bool;
+  //   trendTracking =
+  //       settingsData.getRelevantSetting("ProgressTracking").value as bool;
+  // }
+
   Color selectedColor = Colors.green;
-  bool isDarkMode = true;
-  bool valNotify2 = false;
-  bool valNotify3 = false;
+  bool darkMode = true;
+  bool notificationsOn = false;
+  bool trendTracking = false;
+  @override
+  void initState() {
+    super.initState();
+    final settingsData = Provider.of<SettingsData>(context, listen: false);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    settingsData.initializeSettingsList();
+    darkMode = settingsData.getRelevantSetting("IsDarkMode").value as bool;
+    notificationsOn =
+        settingsData.getRelevantSetting("Notifications").value as bool;
+    trendTracking =
+        settingsData.getRelevantSetting("ProgressTracking").value as bool;
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      themeProvider.toggleTheme(darkMode);
+    });
+  }
 
   changeDarkMode(bool newThemeValue) {
     setState(() {
       final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+      Provider.of<SettingsData>(context, listen: false)
+          .editSetting("IsDarkMode", newThemeValue);
       themeProvider.toggleTheme(newThemeValue);
-      isDarkMode = newThemeValue;
-    });
-  }
-  
-  onChangeFunction2(bool newValue2) {
-    setState(() {
-      valNotify2 = newValue2;
+      darkMode = newThemeValue;
     });
   }
 
-  onChangeFunction3(bool newValue3) {
+  changeNotifications(bool newNotifications) {
     setState(() {
-      valNotify3 = newValue3;
+      notificationsOn = newNotifications;
+      Provider.of<SettingsData>(context, listen: false)
+          .editSetting("Notifications", newNotifications);
+    });
+  }
+
+  changeTrendTracking(bool newTrendTracking) {
+    setState(() {
+      trendTracking = newTrendTracking;
+      Provider.of<SettingsData>(context, listen: false)
+          .editSetting("ProgressTracking", newTrendTracking);
     });
   }
 
@@ -44,7 +80,7 @@ class SettingsPageState extends State<SettingsPage> {
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         title: const Text('Settings'),
-          centerTitle: true,
+        centerTitle: true,
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
@@ -58,10 +94,11 @@ class SettingsPageState extends State<SettingsPage> {
                   color: Colors.blue,
                 ),
                 SizedBox(width: 10),
-                Text('Display', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+                Text('Display',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
               ],
             ),
-            const Divider(height: 20, thickness:  1),
+            const Divider(height: 20, thickness: 1),
             const SizedBox(height: 10),
             //Let the user choose their display options
             buildColorOption("Select Primary Color", isPrimary: true),
@@ -77,21 +114,26 @@ class SettingsPageState extends State<SettingsPage> {
                   color: Colors.blue,
                 ),
                 SizedBox(width: 10),
-                Text('Preferences', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+                Text('Preferences',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
               ],
             ),
-            const Divider(height: 20, thickness:  1),
+            const Divider(height: 20, thickness: 1),
             const SizedBox(height: 10),
-            buildSwitch(Icons.light_mode, Icons.dark_mode, 'Theme Dark', isDarkMode, changeDarkMode),
-            buildSwitch(Icons.notifications_off, Icons.notifications_active, 'Notifications', valNotify2, onChangeFunction2),
-            buildSwitch(Icons.trending_flat, Icons.insights, 'Progress Tracking', valNotify3, onChangeFunction3),
+            buildSwitch(Icons.light_mode, Icons.dark_mode, 'Theme Dark',
+                darkMode, changeDarkMode),
+            buildSwitch(Icons.notifications_off, Icons.notifications_active,
+                'Notifications', notificationsOn, changeNotifications),
+            buildSwitch(Icons.trending_flat, Icons.insights,
+                'Progress Tracking', trendTracking, changeTrendTracking),
           ],
         ),
       ),
     );
   }
 
-  Padding buildSwitch(IconData iconOff, IconData iconOn, String title, bool value, Function onChangeMethod) {
+  Padding buildSwitch(IconData iconOff, IconData iconOn, String title,
+      bool value, Function onChangeMethod) {
     IconData currentIcon = value ? iconOn : iconOff;
 
     return Padding(
@@ -100,13 +142,13 @@ class SettingsPageState extends State<SettingsPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Icon(currentIcon),
-          Text(title, style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-            color: Colors.grey[600]
-          )),
+          Text(title,
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: Provider.of<ThemeProvider>(context).constantText)),
           Transform.scale(
-              scale: 0.7,
+            scale: 0.7,
             child: CupertinoSwitch(
               activeColor: Colors.blue,
               trackColor: Colors.grey,
@@ -122,91 +164,115 @@ class SettingsPageState extends State<SettingsPage> {
     );
   }
 
-Padding buildColorOption(String title, {bool isPrimary = false, bool isSecondary = false, bool isSkip = false,
-    bool isRest = false, isMapBase = false}) {
-  Color color;
-  if(isPrimary) {
-    color = Provider.of<ThemeProvider>(context).primaryColor;
-  } else if (isSecondary) {
-    color = Provider.of<ThemeProvider>(context).secondaryColor;
-  } else if (isSkip) {
-    color = Provider.of<ThemeProvider>(context).skipDayColor;
-  } else if (isRest) {
-    color = Provider.of<ThemeProvider>(context).restDayColor;
-  } else if (isMapBase) {
-    color = Provider.of<ThemeProvider>(context).heatMapBaseColor;
-  } else {
-    color = selectedColor;
-  }
+  Padding buildColorOption(String title,
+      {bool isPrimary = false,
+      bool isSecondary = false,
+      bool isSkip = false,
+      bool isRest = false,
+      isMapBase = false}) {
+    Color color;
+    if (isPrimary) {
+      color = Provider.of<ThemeProvider>(context).primaryColor;
+    } else if (isSecondary) {
+      color = Provider.of<ThemeProvider>(context).secondaryColor;
+    } else if (isSkip) {
+      color = Provider.of<ThemeProvider>(context).skipDayColor;
+    } else if (isRest) {
+      color = Provider.of<ThemeProvider>(context).restDayColor;
+    } else if (isMapBase) {
+      color = Provider.of<ThemeProvider>(context).heatMapBaseColor;
+    } else {
+      color = selectedColor;
+    }
 
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        GestureDetector(
-          onTap: () => pickColor(context, isPrimary: isPrimary, isSecondary: isSecondary, isSkip: isSkip, 
-            isRest: isRest, isMapBase: isMapBase),
-          child: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: color,
-            ),
-            width: 40,
-            height: 40,
-          ),
-        ),
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-            color: Colors.grey[600],
-          ),
-        ),
-        Transform.scale(
-          scale: 0.7,
-          child: IconButton(
-            icon: const Icon(Icons.arrow_forward_ios),
-            onPressed: () => pickColor(context, isPrimary: isPrimary, isSecondary: isSecondary, isSkip: isSkip, 
-            isRest: isRest, isMapBase: isMapBase),
-            color: Colors.white,
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-void pickColor(BuildContext context, {bool isPrimary = false, bool isSecondary = false, bool isSkip = false,
-    bool isRest = false, isMapBase = false}) => showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Pick color'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            buildColorPicker( isPrimary: isPrimary, isSecondary: isSecondary, isSkip: isSkip, 
-            isRest: isRest, isMapBase: isMapBase),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text(
-                'Select',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: () => pickColor(context,
+                isPrimary: isPrimary,
+                isSecondary: isSecondary,
+                isSkip: isSkip,
+                isRest: isRest,
+                isMapBase: isMapBase),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: color,
               ),
+              width: 40,
+              height: 40,
             ),
-          ],
-        ),
+          ),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: Provider.of<ThemeProvider>(context).constantText,
+            ),
+          ),
+          Transform.scale(
+            scale: 0.7,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_forward_ios),
+              onPressed: () => pickColor(context,
+                  isPrimary: isPrimary,
+                  isSecondary: isSecondary,
+                  isSkip: isSkip,
+                  isRest: isRest,
+                  isMapBase: isMapBase),
+            ),
+          ),
+        ],
       ),
     );
+  }
 
-  Widget buildColorPicker({bool isPrimary = false, bool isSecondary = false, bool isSkip = false,
-    bool isRest = false, isMapBase = false}) {
+  void pickColor(BuildContext context,
+          {bool isPrimary = false,
+          bool isSecondary = false,
+          bool isSkip = false,
+          bool isRest = false,
+          isMapBase = false}) =>
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Pick color'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              buildColorPicker(
+                  isPrimary: isPrimary,
+                  isSecondary: isSecondary,
+                  isSkip: isSkip,
+                  isRest: isRest,
+                  isMapBase: isMapBase),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(
+                  'Select',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Provider.of<ThemeProvider>(context).getTextColor(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget buildColorPicker(
+      {bool isPrimary = false,
+      bool isSecondary = false,
+      bool isSkip = false,
+      bool isRest = false,
+      isMapBase = false}) {
     Color color;
-    if(isPrimary) {
+    if (isPrimary) {
       color = Provider.of<ThemeProvider>(context).primaryColor;
     } else if (isSecondary) {
       color = Provider.of<ThemeProvider>(context).secondaryColor;
@@ -225,16 +291,23 @@ void pickColor(BuildContext context, {bool isPrimary = false, bool isSecondary =
       onColorChanged: (newColor) {
         setState(() {
           if (isPrimary) {
-            Provider.of<ThemeProvider>(context, listen: false).setPrimaryColor(newColor);
+            Provider.of<ThemeProvider>(context, listen: false)
+                .setPrimaryColor(newColor);
           } else if (isSecondary) {
-            Provider.of<ThemeProvider>(context, listen: false).setSecondaryColor(newColor);
-          }  else if (isSkip) {
-            Provider.of<ThemeProvider>(context, listen: false).setSkipColor(newColor);
-          }  else if (isRest) {
-            Provider.of<ThemeProvider>(context, listen: false).setRestColor(newColor);
-          }  else if (isMapBase) {
-            MaterialColor colorToMaterial =  Provider.of<ThemeProvider>(context, listen: false).getMaterialColor(newColor);
-            Provider.of<ThemeProvider>(context, listen: false).setHeatMapBaseColor(colorToMaterial);
+            Provider.of<ThemeProvider>(context, listen: false)
+                .setSecondaryColor(newColor);
+          } else if (isSkip) {
+            Provider.of<ThemeProvider>(context, listen: false)
+                .setSkipColor(newColor);
+          } else if (isRest) {
+            Provider.of<ThemeProvider>(context, listen: false)
+                .setRestColor(newColor);
+          } else if (isMapBase) {
+            MaterialColor colorToMaterial =
+                Provider.of<ThemeProvider>(context, listen: false)
+                    .getMaterialColor(newColor);
+            Provider.of<ThemeProvider>(context, listen: false)
+                .setHeatMapBaseColor(colorToMaterial);
           } else {
             selectedColor = newColor;
           }
@@ -244,5 +317,4 @@ void pickColor(BuildContext context, {bool isPrimary = false, bool isSecondary =
       labelTypes: const [],
     );
   }
-
 }

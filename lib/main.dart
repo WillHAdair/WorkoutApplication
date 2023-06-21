@@ -1,44 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
+import 'package:workout_app/data/settings_data.dart';
 import 'package:workout_app/pages/nav_bar.dart';
 import 'package:workout_app/data/theme_provider.dart';
 
 import 'data/workout_data.dart';
 
 void main() async {
-  
   await Hive.initFlutter();
 
   await Hive.openBox("workout_database");
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => WorkoutData(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => ThemeProvider(),
-        ),
-      ],
-      child: const MyApp()
-    )
-  );
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => WorkoutData()),
+    ChangeNotifierProvider(create: (context) => ThemeProvider()),
+    ChangeNotifierProvider(create: (context) => SettingsData()),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp ({super.key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner:  false,
+      debugShowCheckedModeBanner: false,
       home: const BottomNavigation(),
-      themeMode:  Provider.of<ThemeProvider>(context).themeMode,
+      themeMode: Provider.of<ThemeProvider>(context).themeMode,
       theme: Provider.of<ThemeProvider>(context).lightTheme,
       darkTheme: Provider.of<ThemeProvider>(context).darkTheme,
     );
   }
 }
-
