@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:workout_app/data/settings_data.dart';
 import 'package:workout_app/data/theme_provider.dart';
 
+import '../models/constants.dart';
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
@@ -51,8 +53,8 @@ class SettingsPageState extends State<SettingsPage> {
   changeDarkMode(bool newThemeValue) {
     setState(() {
       final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-      Provider.of<SettingsData>(context, listen: false)
-          .editSetting("IsDarkMode", newThemeValue);
+      final settingsData = Provider.of<SettingsData>(context, listen: false);
+      settingsData.editSetting("IsDarkMode", newThemeValue);
       themeProvider.toggleTheme(newThemeValue);
       darkMode = newThemeValue;
     });
@@ -303,9 +305,7 @@ class SettingsPageState extends State<SettingsPage> {
             Provider.of<ThemeProvider>(context, listen: false)
                 .setRestColor(newColor);
           } else if (isMapBase) {
-            MaterialColor colorToMaterial =
-                Provider.of<ThemeProvider>(context, listen: false)
-                    .getMaterialColor(newColor);
+            MaterialColor colorToMaterial = getMaterialColor(newColor);
             Provider.of<ThemeProvider>(context, listen: false)
                 .setHeatMapBaseColor(colorToMaterial);
           } else {

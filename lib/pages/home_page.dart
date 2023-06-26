@@ -7,6 +7,8 @@ import 'package:workout_app/pages/workout_page.dart';
 
 import '../components/heat_map.dart';
 import '../components/customizable_dialog.dart';
+import '../data/settings_data.dart';
+import '../data/theme_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,10 +19,22 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
     Provider.of<WorkoutData>(context, listen: false).initializeWorkoutList();
+    final settingsData = Provider.of<SettingsData>(context, listen: false);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    settingsData.initializeSettingsList();
+    bool darkMode = settingsData.getRelevantSetting("IsDarkMode").value as bool;
+    bool notificationsOn =
+        settingsData.getRelevantSetting("Notifications").value as bool;
+    bool trendTracking =
+        settingsData.getRelevantSetting("ProgressTracking").value as bool;
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      themeProvider.toggleTheme(darkMode);
+    });
   }
 
   final workoutNameController = TextEditingController();

@@ -28,7 +28,7 @@ class WorkoutData extends ChangeNotifier {
   ];
 
   void initializeWorkoutList() {
-    if (db.previousDataExists()) {
+    if (db.selectedKeyFound("WORKOUTS") & db.selectedKeyFound("EXERCISES")) {
       workoutList = db.readWorkouts();
     } else {
       db.saveWorkouts(workoutList);

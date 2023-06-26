@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:workout_app/data/hive_database.dart';
+import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/models/setting.dart';
 
-import '../models/enums.dart';
+import '../models/constants.dart';
 
 // This class holds all of the various settings, to add more simply add to list
 class SettingsData extends ChangeNotifier {
@@ -34,6 +36,19 @@ class SettingsData extends ChangeNotifier {
     Setting(name: "Notifications", type: SettingType.boolean, value: true),
     Setting(name: "ProgressTracking", type: SettingType.boolean, value: true),
   ];
+
+  bool getBooleanValue(String identifier) {
+    switch (identifier.toLowerCase()) {
+      case "theme":
+        return getRelevantSetting("IsDarkMode").value as bool;
+      case "notifications":
+        return getRelevantSetting("Notifications").value as bool;
+      case "tracking":
+        return getRelevantSetting("ProgressTracking").value as bool;
+      default:
+        return false;
+    }
+  }
 
   void initializeSettingsList() {
     if (db.selectedKeyFound("SETTINGS")) {

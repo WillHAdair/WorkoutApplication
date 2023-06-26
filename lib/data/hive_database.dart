@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:workout_app/datetime/date_timedata.dart';
-import 'package:workout_app/models/enums.dart';
+import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/setting.dart';
 
@@ -37,7 +37,12 @@ class HiveDatabase {
   }
 
   String getStartDate() {
-    return _myBox.get("START_DATE");
+    var startDate = _myBox.get("START_DATE");
+    if (startDate == null) {
+      _myBox.put("START_DATE", todaysDate());
+      return todaysDate();
+    }
+    return startDate;
   }
 
   Color? getColor(String colorName) {
@@ -72,8 +77,10 @@ class HiveDatabase {
   }
 
   List<Workout> readWorkouts() {
+    if (!selectedKeyFound("WORKOUTS") || !selectedKeyFound("EXERCISES")) {
+      return [];
+    }
     List<Workout> mySavedWorkouts = [];
-
     List<String> workoutNames = _myBox.get("WORKOUTS");
     final exerciseDetails = _myBox.get("EXERCISES");
 
@@ -166,7 +173,7 @@ List<List<String>> convertSettingsToList(List<Setting> settings) {
         settingValue = (setting.value as Color).value.toString();
         break;
       case SettingType.materialColor:
-        settingValue = (setting.value as MaterialColor).toString();
+        settingValue = (setting.value as MaterialColor).value.toString();
         break;
       case SettingType.empty:
         break;
@@ -195,10 +202,11 @@ List<Setting> convertListToSettings(List<List<String>> settingStrings) {
         value = bool.parse(stringValue);
         break;
       case SettingType.color:
-        value = Color(stringValue as int);
+        value = Color(int.parse(stringValue));
         break;
       case SettingType.materialColor:
-        value = ColorSwatch.fromHex(stringValue);
+        Color color = Color(int.parse(stringValue));
+        value = getMaterialColor(color);
         break;
       default:
         value = stringValue;
@@ -207,21 +215,4 @@ List<Setting> convertListToSettings(List<List<String>> settingStrings) {
     settings.add(Setting(name: name, type: type, value: value));
   }
   return settings;
-}
-
-class ColorSwatch {
-  static MaterialColor fromHex(String colorString) {
-    if (colorString.startsWith('MaterialColor')) {
-      // Extract the hexadecimal color value
-      String hexColor = colorString.split('(')[1].split(',')[0].trim();
-
-      // Convert the hexadecimal color value to an int
-      int colorValue = int.parse(hexColor, radix: 16);
-
-      // Create a MaterialColor from the color value
-      return MaterialColor(colorValue, <int, Color>{});
-    }
-
-    throw FormatException('Invalid MaterialColor string: $colorString');
-  }
 }

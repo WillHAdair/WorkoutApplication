@@ -1,4 +1,4 @@
-import 'package:workout_app/models/enums.dart';
+import 'package:workout_app/models/constants.dart';
 
 class Setting {
   String name;
