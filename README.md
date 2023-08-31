@@ -22,9 +22,16 @@ Once Flutter is set up, clone this repository to your local machine and open the
 - **Reminder Functionality:** Set workout reminders to help you maintain consistency and achieve your fitness targets.
 
 ## Folder Structure
+The project's codebase is organized as follows:
 
-The project's folder structure is organized to enhance code maintainability and scalability. It follows a conventional directory arrangement, with clear separations for source code, assets, configurations, and documentation. The detailed breakdown of the folder structure will be added in future updates.
+- **lib**: This directory contains all the source code for the application.
+  - **components**: This directory holds reusable functions and user interface (UI) elements that are shared across multiple pages.
+  - **data**: Responsible for data storage and interaction with the local Hive database.
+  - **datetime**: Manages the logic associated with the conversion of date and time data to and from the Hive database.
+  - **models**: Defines the various classes utilized within the application.
+  - **pages**: Contains the different pages comprising the user interface of the application.
 
+Other folders in the repository are dedicated to platform-specific instructions and configurations.
 ## Contributing
 
 Contributions to the Workout Application are welcome and encouraged! If you have suggestions for improvements, bug fixes, or new features, please feel free to submit a pull request. Please ensure that you follow the established coding guidelines and practices.
