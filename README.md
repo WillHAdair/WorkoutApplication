@@ -46,7 +46,7 @@ To contribute:
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE), allowing you to use, modify, and distribute the codebase for your purposes. See the [LICENSE](LICENSE) file for more details.
+This project is licensed under the [GPL](https://www.gnu.org/licenses/gpl-3.0.en.html) License.
 
 ---
 
