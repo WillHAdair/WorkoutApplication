@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -47,7 +45,7 @@ class HiveDatabase {
 
   Color? getColor(String colorName) {
     int color = _myBox.get(colorName);
-    return !color.isUndefinedOrNull ? Color(color) : null;
+    return color == 0 ? Color(color) : null;
   }
 
   void setColor(String colorName, Color color) {
@@ -60,7 +58,7 @@ class HiveDatabase {
   }
 
   List<Setting> readSettings() {
-    List<List<String>> settingsList = _myBox.get("SETTINGS");
+    List<List<String>> settingsList = convertToList(_myBox.get("SETTINGS"));
     return convertListToSettings(settingsList);
   }
 
@@ -215,4 +213,19 @@ List<Setting> convertListToSettings(List<List<String>> settingStrings) {
     settings.add(Setting(name: name, type: type, value: value));
   }
   return settings;
+}
+
+List<List<String>> convertToList(List<dynamic> values) {
+  List<List<String>> programData = [];
+
+  for (var dynamicItem in values) {
+    List<String> elements = [];
+    for (var element in dynamicItem) {
+      if (element is String) {
+        elements.add(element);
+      }
+    }
+    programData.add(elements);
+  }
+  return programData;
 }
