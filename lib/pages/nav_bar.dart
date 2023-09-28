@@ -11,7 +11,7 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
   late PageController _pageController;
 
   @override
@@ -37,8 +37,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
           });
         },
         children: const [
-          HomePage(),
           Scaffold(),
+          HomePage(),        
           SettingsPage(),
         ],
       ),
@@ -70,12 +70,12 @@ class _BottomNavigationState extends State<BottomNavigation> {
             tabBackgroundColor: Colors.grey.shade800,
             tabs: const [
               GButton(
-                icon: Icons.home,
-                text: 'Home',
+                icon: Icons.event_repeat,
+                text: 'Tracker',
               ),
               GButton(
-                icon: Icons.fitness_center_rounded,
-                text: 'Workouts',
+                icon: Icons.home,
+                text: 'Home',
               ),
               GButton(
                 icon: Icons.settings,

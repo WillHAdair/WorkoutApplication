@@ -8,7 +8,15 @@ The Workout Application is a robust fitness tracking solution designed to stream
 
 Before cloning this repository, ensure that you have Flutter and its associated dependencies installed. If not, refer to the official Flutter installation guide: [Flutter Installation Guide](https://docs.flutter.dev/get-started/install).
 
-Once Flutter is set up, clone this repository to your local machine and open the project folder in Visual Studio Code (VSCode). Follow these steps to run the application:
+Once Flutter is set up, clone this repository to your local machine and open the project folder in Visual Studio Code (VSCode).
+
+Follow these steps to set up the application:
+
+1. Open the pubspec.yaml file
+2. Right click anywhere within the code, and click Get packages, which should build dependencies
+
+
+Follow these steps to run the application:
 
 1. Choose an environment for running the application from the bottom right-hand corner of the VSCode interface.
 2. Click the "Run" button at the top of the interface or press `Ctrl + F5` to initiate the application.

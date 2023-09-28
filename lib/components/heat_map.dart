@@ -27,7 +27,6 @@ class CustomHeatMap extends StatelessWidget {
         datasets: datasets,
         colorMode: ColorMode.color,
         defaultColor: Colors.grey[200],
-        textColor: Colors.white,
         showColorTip: false,
         showText: true,
         scrollable: true,

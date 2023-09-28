@@ -54,7 +54,7 @@ class ThemeProvider extends ChangeNotifier {
           backgroundColor: primaryColor,
         ),
         colorScheme: ColorScheme.light(
-          background: Colors.grey.shade100,
+          background: Colors.white,
           primary: primaryColor,
           secondary: secondaryColor,
         ),

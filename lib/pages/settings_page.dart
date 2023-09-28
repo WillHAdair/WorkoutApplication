@@ -15,19 +15,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class SettingsPageState extends State<SettingsPage> {
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   final settingsData = Provider.of<SettingsData>(context, listen: false);
-  //   final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-  //   settingsData.initializeSettingsList();
-  //   darkMode = settingsData.getRelevantSetting("IsDarkMode").value as bool;
-  //   themeProvider.toggleTheme(darkMode);
-  //   notificationsOn =
-  //       settingsData.getRelevantSetting("Notifications").value as bool;
-  //   trendTracking =
-  //       settingsData.getRelevantSetting("ProgressTracking").value as bool;
-  // }
 
   Color selectedColor = Colors.green;
   bool darkMode = true;

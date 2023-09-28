@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/custom_textfield.dart';
 import 'package:workout_app/components/workout_tile.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/pages/workout_page.dart';
+import 'package:workout_app/pages/workouts_page.dart';
 
 import '../components/heat_map.dart';
 import '../components/customizable_dialog.dart';
@@ -61,6 +63,13 @@ class _HomePageState extends State<HomePage> {
                 )));
   }
 
+  void goToWorkoutsPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const WorkoutsPage()));
+  }
+
   void save() {
     String newWorkoutName = workoutNameController.text;
     Provider.of<WorkoutData>(context, listen: false).addWorkout(newWorkoutName);
@@ -97,6 +106,10 @@ class _HomePageState extends State<HomePage> {
         ], onSave: () => edit(workoutName), onCancel: cancel);
       },
     );
+  }
+
+  void startWorkout(String workoutName) {
+
   }
 
   void delete(String workoutName) {
@@ -164,24 +177,86 @@ class _HomePageState extends State<HomePage> {
             CustomHeatMap(
                 datasets: value.heatMapDataSet,
                 startDate: value.getStartDate()),
-            ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: value.getWorkoutList().length,
-                itemBuilder: (context, index) => WorkoutTile(
-                      workoutName: value.getWorkoutList()[index].name,
-                      onForwardPress: () =>
-                          goToWorkoutPage(value.getWorkoutList()[index].name),
-                      onSettingsPress: () =>
-                          onSettingsPress(value.getWorkoutList()[index].name),
-                      onDeletePress: () =>
-                          onDeletePress(value.getWorkoutList()[index].name),
-                    )),
+            const SizedBox(height: 10),
+            const Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(width: 10),
+                  Icon(
+                    Icons.today,
+                    color: Colors.blue,
+                  ),
+                  SizedBox(width: 10),
+                  Text('Today\'s workout',
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+                ],
+              ),
+            WorkoutTile(
+              workoutName: value.getWorkoutList()[0].name,
+              onForwardPress: () =>
+                goToWorkoutPage(value.getWorkoutList()[0].name),
+              onSettingsPress: () =>
+                onSettingsPress(value.getWorkoutList()[0].name),
+              onDeletePress: () =>
+                onDeletePress(value.getWorkoutList()[0].name),
+              ),
+            const SizedBox(height: 10),
+            const Row(
+              children: [
+                SizedBox(width: 10),
+                Icon(
+                  Icons.checklist,
+                  color: Colors.blue,
+                ),
+                SizedBox(width: 10),
+                Text('Other workouts',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: 
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.grey[800],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListTile(
+                  title: const Text(
+                    "View/Add Workouts",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.arrow_forward_ios),
+                    onPressed: () => goToWorkoutsPage(),
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding:const EdgeInsets.all(22),
+              child: TextButton(
+              onPressed: () => startWorkout(value.getWorkoutList()[0].name),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(16), 
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.green[200], 
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              child: const Text(
+                'Start Workout',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
+              ),
+            ), 
+            ), 
           ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: createNewWorkout,
-          child: const Icon(Icons.add),
         ),
       ),
     );
