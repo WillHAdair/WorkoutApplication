@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
+import 'package:workout_app/components/custom_textfield.dart';
+import 'package:workout_app/components/customizable_dialog.dart';
 import 'package:workout_app/data/settings_data.dart';
 import 'package:workout_app/data/theme_provider.dart';
 
@@ -20,6 +22,8 @@ class SettingsPageState extends State<SettingsPage> {
   bool darkMode = true;
   bool notificationsOn = false;
   bool trendTracking = false;
+  bool remoteStorage = false;
+  bool localStorage = true;
   @override
   void initState() {
     super.initState();
@@ -31,6 +35,7 @@ class SettingsPageState extends State<SettingsPage> {
         settingsData.getRelevantSetting("Notifications").value as bool;
     trendTracking =
         settingsData.getRelevantSetting("ProgressTracking").value as bool;
+
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       themeProvider.toggleTheme(darkMode);
@@ -55,6 +60,57 @@ class SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  delete() {
+    Navigator.pop(context);
+  }
+  
+
+  void deleteStoredData() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.all(16),
+          backgroundColor: Colors.grey[900],
+          content: SingleChildScrollView(
+            child: Row(
+              children: [
+                const Text(
+                  'Are you sure?',
+                  style: TextStyle(color: Colors.white),
+                ),
+                const SizedBox(width: 12),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: MaterialButton(
+                    onPressed: () => delete(),
+                    color: Colors.red.shade300,
+                    child: const Text(
+                      'Yes',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: MaterialButton(
+                    onPressed: () => Navigator.pop(context),
+                    color: Colors.green.shade300,
+                    child: const Text(
+                      'No',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }  
+
   changeTrendTracking(bool newTrendTracking) {
     setState(() {
       trendTracking = newTrendTracking;
@@ -63,38 +119,85 @@ class SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  changeRemoteStorage(bool newRemoteStorage) {
+    setState(() {
+      remoteStorage = newRemoteStorage;
+      //Update data later
+    });
+  }
+
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final ageController = TextEditingController();
+  final weightController = TextEditingController();
+
+  void save() {
+    String firstName = firstNameController.text;
+    String lastName = lastNameController.text;
+    String age = ageController.text;
+    String weight = weightController.text;
+
+    Navigator.pop(context);
+    firstNameController.clear();
+    lastNameController.clear();
+    ageController.clear();
+    weightController.clear();
+  }
+
+  void openAccountDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomizableDialog(
+          customTextFields: [
+            CustomTextField(
+              controller: firstNameController, 
+              hintText: 'Enter first name', 
+              obscureText: false),
+            CustomTextField(
+              controller: lastNameController, 
+              hintText: 'Enter last name', 
+              obscureText: false),
+            CustomTextField(
+              controller: ageController, 
+              hintText: 'Enter age', 
+              obscureText: false),
+            CustomTextField(
+              controller: weightController, 
+              hintText: 'Enter weight', 
+              obscureText: false),
+          ], 
+          onSave: save, 
+          onCancel: () => Navigator.pop(context),
+        );
+      });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Consumer<SettingsData>(
+      builder: (context, value, child) => Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        title: const Text('Settings'),
+        leading: IconButton(
+          onPressed: () {
+
+          },
+          icon: const Icon(Icons.account_circle),
+        ),
+        title: const Text('Chuck Lewis - Settings'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () => openAccountDialog,
+            icon: const Icon(Icons.edit_note),
+          ),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
         child: ListView(
           children: [
-            const SizedBox(height: 10),
-            const Row(
-              children: [
-                Icon(
-                  Icons.palette,
-                  color: Colors.blue,
-                ),
-                SizedBox(width: 10),
-                Text('Display',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-              ],
-            ),
-            const Divider(height: 20, thickness: 1),
-            const SizedBox(height: 10),
-            //Let the user choose their display options
-            buildColorOption("Select Primary Color", isPrimary: true),
-            buildColorOption("Select Secondary Color", isSecondary: true),
-            buildColorOption("Select Skip Day Color", isSkip: true),
-            buildColorOption("Select Rest Day Color", isRest: true),
-            buildColorOption("Select Rep counting Color", isMapBase: true),
             const SizedBox(height: 10),
             const Row(
               children: [
@@ -113,11 +216,49 @@ class SettingsPageState extends State<SettingsPage> {
                 darkMode, changeDarkMode),
             buildSwitch(Icons.notifications_off, Icons.notifications_active,
                 'Notifications', notificationsOn, changeNotifications),
-            buildSwitch(Icons.trending_flat, Icons.insights,
+            const SizedBox(height: 10),
+            const Row(
+              children: [
+                Icon(
+                  Icons.storage,
+                  color: Colors.blue,
+                ),
+                SizedBox(width: 10),
+                Text('Data',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+              ],
+            ),
+            const Divider(height: 20, thickness: 1),
+            const SizedBox(height: 10),
+            buildSwitch(Icons.trending_flat, Icons.trending_up,
                 'Progress Tracking', trendTracking, changeTrendTracking),
+            buildSwitch(Icons.cloud_off, Icons.cloud_upload,
+                'Remote data storage', remoteStorage, changeRemoteStorage),
+            Padding(
+              padding:const EdgeInsets.all(22),
+              child: TextButton(
+              onPressed: () => deleteStoredData(),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(16), 
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.red[200], 
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              child: const Text(
+                'Delete Stored Data',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+            ), 
+            ),
           ],
         ),
       ),
+    ),
     );
   }
 

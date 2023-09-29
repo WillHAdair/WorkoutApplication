@@ -35,6 +35,7 @@ class SettingsData extends ChangeNotifier {
     Setting(name: "IsDarkMode", type: SettingType.boolean, value: false),
     Setting(name: "Notifications", type: SettingType.boolean, value: true),
     Setting(name: "ProgressTracking", type: SettingType.boolean, value: true),
+    Setting(name: "UserName", type: SettingType.string, value: "Real guy"),
   ];
 
   bool getBooleanValue(String identifier) {
