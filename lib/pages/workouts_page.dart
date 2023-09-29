@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/pages/workout_page.dart';
 
 import '../components/custom_textfield.dart';
 import '../components/customizable_dialog.dart';
-import '../components/workout_tile.dart';
+import '../components/sliding_tile.dart';
 import '../data/workout_data.dart';
 
 class WorkoutsPage extends StatefulWidget {
@@ -143,14 +144,15 @@ class WorkoutsPageState extends State<WorkoutsPage> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: value.getWorkoutList().length,
-                itemBuilder: (context, index) => WorkoutTile(
-                      workoutName: value.getWorkoutList()[index].name,
+                itemBuilder: (context, index) => SlidingTile(
+                      text: value.getWorkoutList()[index].name,
                       onForwardPress: () =>
                           goToWorkoutPage(value.getWorkoutList()[index].name),
                       onSettingsPress: () =>
                           onSettingsPress(value.getWorkoutList()[index].name),
                       onDeletePress: () =>
                           onDeletePress(value.getWorkoutList()[index].name),
+                      imageLocation: dumbellImg,
                     )),
           ],
         ),

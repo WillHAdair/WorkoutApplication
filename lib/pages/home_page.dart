@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/custom_textfield.dart';
-import 'package:workout_app/components/workout_tile.dart';
+import 'package:workout_app/components/sliding_tile.dart';
 import 'package:workout_app/data/workout_data.dart';
+import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/pages/workout_page.dart';
 import 'package:workout_app/pages/workouts_page.dart';
 
+import '../components/custom_tile.dart';
 import '../components/heat_map.dart';
 import '../components/customizable_dialog.dart';
 import '../data/settings_data.dart';
@@ -191,14 +192,15 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
                 ],
               ),
-            WorkoutTile(
-              workoutName: value.getWorkoutList()[0].name,
+            SlidingTile(
+              text: value.getWorkoutList()[0].name,
               onForwardPress: () =>
                 goToWorkoutPage(value.getWorkoutList()[0].name),
               onSettingsPress: () =>
                 onSettingsPress(value.getWorkoutList()[0].name),
               onDeletePress: () =>
                 onDeletePress(value.getWorkoutList()[0].name),
+              imageLocation: dumbellImg,
               ),
             const SizedBox(height: 10),
             const Row(
@@ -213,28 +215,10 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: 
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.grey[800],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: ListTile(
-                  title: const Text(
-                    "View/Add Workouts",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.arrow_forward_ios),
-                    onPressed: () => goToWorkoutsPage(),
-                    color: Colors.white,
-                  ),
-                ),
+            CustomTile(
+              text: 'View/AddWorkouts',
+              onForwardPress: () => goToWorkoutsPage(),
               ),
-            ),
             Padding(
               padding:const EdgeInsets.all(22),
               child: TextButton(
@@ -251,7 +235,7 @@ class _HomePageState extends State<HomePage> {
                 'Start Workout',
                 style: TextStyle(
                   fontSize: 20,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
               ),
             ), 

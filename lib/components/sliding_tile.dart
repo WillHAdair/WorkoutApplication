@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class WorkoutTile extends StatelessWidget {
-  final String workoutName;
+class SlidingTile extends StatelessWidget {
+  final String text;
   final VoidCallback onForwardPress;
   final VoidCallback onSettingsPress;
   final VoidCallback onDeletePress;
+  final String? imageLocation;
 
-  const WorkoutTile({
+  const SlidingTile({
     Key? key,
-    required this.workoutName,
+    required this.text,
     required this.onForwardPress,
     required this.onSettingsPress,
     required this.onDeletePress,
+    this.imageLocation,
   }) : super(key: key);
 
   @override
@@ -44,12 +46,12 @@ class WorkoutTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: ListTile(
-            leading: SizedBox(
+            leading: imageLocation != null ? SizedBox(
               height: 40,
-              child: Image.asset('lib/images/dumbell.png'),
-            ),
+              child: Image.asset(imageLocation!),
+            ) : const SizedBox.shrink(),
             title: Text(
-              workoutName,
+              text,
               style: const TextStyle(color: Colors.white),
             ),
             trailing: IconButton(

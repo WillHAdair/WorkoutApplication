@@ -3,6 +3,7 @@ import 'package:workout_app/data/hive_database.dart';
 import 'package:workout_app/datetime/date_timedata.dart';
 import 'package:workout_app/models/exercise.dart';
 
+import '../models/tracker.dart';
 import '../models/workout.dart';
 
 class WorkoutData extends ChangeNotifier {
@@ -27,6 +28,29 @@ class WorkoutData extends ChangeNotifier {
     ]),
   ];
 
+  List<Tracker> trackerList = [
+    Tracker(name: 'Push Pull Legs', workouts: [
+      Workout(name: "Push", exercises: [
+        Exercise(
+          name: 'Incline Press', 
+          weight: '135', 
+          reps: '10', 
+          sets: '3',
+          isCompleted: false,
+        )
+      ]),
+      Workout(name: "Pull", exercises: [
+        Exercise(
+          name: 'Barbell row', 
+          weight: '225', 
+          reps: '10', 
+          sets: '3',
+          isCompleted: false,  
+        )
+      ])
+    ])
+  ];
+
   void initializeWorkoutList() {
     if (db.selectedKeyFound("WORKOUTS") & db.selectedKeyFound("EXERCISES")) {
       workoutList = db.readWorkouts();
@@ -39,6 +63,10 @@ class WorkoutData extends ChangeNotifier {
 
   List<Workout> getWorkoutList() {
     return workoutList;
+  }
+
+  List<Tracker> getTrackerList() {
+    return trackerList;
   }
 
   int numberOfExercisesInWorkout(String workoutName) {

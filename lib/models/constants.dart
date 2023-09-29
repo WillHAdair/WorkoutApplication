@@ -42,3 +42,5 @@ MaterialColor getMaterialColor(Color color) {
   };
   return MaterialColor(color.value, shades);
 }
+
+String dumbellImg = 'lib/images/dumbell.png';
