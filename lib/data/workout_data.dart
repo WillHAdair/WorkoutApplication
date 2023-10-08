@@ -82,6 +82,11 @@ class WorkoutData extends ChangeNotifier {
     db.saveWorkouts(workoutList);
   }
 
+  bool isWorkoutStarted() {
+    //STUB, will need to implement later
+    return false;
+  }
+
   void changeWorkoutName(String currentName, String newName) {
     Workout relevantWorkout = getRelevantWorkout(currentName);
     relevantWorkout.name = newName;

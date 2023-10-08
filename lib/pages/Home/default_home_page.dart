@@ -1,46 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/custom_textfield.dart';
+import 'package:workout_app/components/custom_tile.dart';
+import 'package:workout_app/components/customizable_dialog.dart';
+import 'package:workout_app/components/heat_map.dart';
 import 'package:workout_app/components/sliding_tile.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/pages/workout_page.dart';
 import 'package:workout_app/pages/workouts_page.dart';
 
-import '../components/custom_tile.dart';
-import '../components/heat_map.dart';
-import '../components/customizable_dialog.dart';
-import '../data/settings_data.dart';
-import '../data/theme_provider.dart';
+class DefaultHomePage extends StatefulWidget {
+  final Function(bool) onWorkoutStatusChange;
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const DefaultHomePage({Key? key, required this.onWorkoutStatusChange}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  DefaultHomePageState createState() => DefaultHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    Provider.of<WorkoutData>(context, listen: false).initializeWorkoutList();
-    final settingsData = Provider.of<SettingsData>(context, listen: false);
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-    settingsData.initializeSettingsList();
-    bool darkMode = settingsData.getRelevantSetting("IsDarkMode").value as bool;
-    bool notificationsOn =
-        settingsData.getRelevantSetting("Notifications").value as bool;
-    bool trendTracking =
-        settingsData.getRelevantSetting("ProgressTracking").value as bool;
-
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      themeProvider.toggleTheme(darkMode);
-    });
-  }
-
-  final workoutNameController = TextEditingController();
+class DefaultHomePageState extends State<DefaultHomePage> {
+    final workoutNameController = TextEditingController();
 
   void createNewWorkout() {
     showDialog(
@@ -110,7 +90,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void startWorkout(String workoutName) {
-
+    widget.onWorkoutStatusChange(true);
   }
 
   void delete(String workoutName) {
@@ -170,7 +150,7 @@ class _HomePageState extends State<HomePage> {
       builder: (context, value, child) => Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
-          title: const Text('Workout Tracker'),
+          title: const Text('Home'),
           centerTitle: true,
         ),
         body: ListView(

@@ -44,7 +44,7 @@ class TrackerPageState extends State<TrackerPage> {
       builder: (context, value, child) => Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
-          title: const Text('Tracker'),
+          title: const Text('Workout Tracking'),
           centerTitle: true,
         ),
       body: ListView(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:workout_app/pages/home_page.dart';
+import 'package:workout_app/pages/Home/home_page.dart';
 import 'package:workout_app/pages/settings_page.dart';
 import 'package:workout_app/pages/tracker_page.dart';
 
@@ -18,7 +18,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
+    _pageController = PageController(initialPage: 1);
   }
 
   @override
