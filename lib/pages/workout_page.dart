@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/custom_textfield.dart';
-import 'package:workout_app/components/exercise_tile.dart';
 
 import '../components/customizable_dialog.dart';
+import '../components/dropdown_list.dart';
 import '../data/workout_data.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
@@ -215,43 +215,35 @@ class _WorkoutPageState extends State<WorkoutPage> {
           onPressed: () => createNewExercise(),
           child: const Icon(Icons.add),
         ),
-        // body: ListView.builder(
-        //   itemCount: value.numberOfExercisesInWorkout(widget.workoutName),
-        //   itemBuilder: (context, index) => ExerciseTile(
-        //     exerciseName: value
-        //         .getRelevantWorkout(widget.workoutName)
-        //         .exercises[index]
-        //         .name,
-        //     weight: value
-        //         .getRelevantWorkout(widget.workoutName)
-        //         .exercises[index]
-        //         .weight,
-        //     sets: value
-        //         .getRelevantWorkout(widget.workoutName)
-        //         .exercises[index]
-        //         .sets,
-        //     reps: value
-        //         .getRelevantWorkout(widget.workoutName)
-        //         .exercises[index]
-        //         .reps,
-        //     isCompleted: value
-        //         .getRelevantWorkout(widget.workoutName)
-        //         .exercises[index]
-        //         .isCompleted,
-        //     onChanged: (val) => onCheckBoxChanged(value
-        //         .getRelevantWorkout(widget.workoutName)
-        //         .exercises[index]
-        //         .name),
-        //     onSettingsPress: () => editExercise(value
-        //         .getRelevantWorkout(widget.workoutName)
-        //         .exercises[index]
-        //         .name),
-        //     onDeletePress: () => deleteExercise(value
-        //         .getRelevantWorkout(widget.workoutName)
-        //         .exercises[index]
-        //         .name),
-        //   ),
-        // ),
+        body: ListView.builder(
+          itemCount: value.numberOfExercisesInWorkout(widget.workoutName),
+          itemBuilder: (context, index) => DropdownList(
+            title:  value
+              .getRelevantWorkout(widget.workoutName)
+              .exercises[index]
+              .name,
+            sets: value
+              .getRelevantWorkout(widget.workoutName)
+              .exercises[index]
+              .sets, 
+            isCompleted: value
+              .getRelevantWorkout(widget.workoutName)
+              .exercises[index]
+              .isCompleted, 
+            onSettingsPress: () => editExercise(value
+              .getRelevantWorkout(widget.workoutName)
+              .exercises[index]
+              .name), 
+            onDeletePress: () => deleteExercise(value
+              .getRelevantWorkout(widget.workoutName)
+              .exercises[index]
+              .name), 
+            onChanged: (val) => onCheckBoxChanged(value
+                .getRelevantWorkout(widget.workoutName)
+                .exercises[index]
+                .name),
+          ),
+        ),
       ),
     );
   }

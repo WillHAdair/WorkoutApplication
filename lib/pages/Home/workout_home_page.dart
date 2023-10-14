@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'package:workout_app/components/dropdown_list.dart';
+import 'package:workout_app/models/workout_set.dart';
 
 class WorkoutHomePage extends StatefulWidget {
   const WorkoutHomePage({Key? key}) : super(key: key);
@@ -19,9 +19,9 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
   int _hours = 0;
   bool _timerRunning = true;
   ValueNotifier<double> valueNotifier = ValueNotifier<double>(0);
-  List<SetData> sets = [SetData(reps: 10, weight: 95), 
-                        SetData(reps: 10, weight: 135),
-                        SetData(reps: 10, weight: 205)];
+  List<WorkoutSet> sets = [WorkoutSet(reps: "10", weight: "95", isCompleted: true), 
+                        WorkoutSet(reps: "10", weight: "135", isCompleted: false),
+                        WorkoutSet(reps: "10", weight: "205", isCompleted: false)];
 
   @override
   void initState() {
@@ -102,7 +102,14 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
               ),
         ),
         const SizedBox(height: 15),
-        DropdownList(title: 'Benchpress', sets: sets, isCompleted: false),
+        DropdownList(
+          title: 'Benchpress', 
+          sets: sets,
+          onSettingsPress: () => {}, 
+          onDeletePress: () => {},
+          onChanged: (p0) => {},
+          isCompleted: false
+        ),
         Padding(
           padding: const EdgeInsets.all(22),
           child: TextButton(
