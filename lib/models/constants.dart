@@ -44,3 +44,25 @@ MaterialColor getMaterialColor(Color color) {
 }
 
 String dumbellImg = 'lib/images/dumbell.png';
+
+enum Keys {
+  startDate,
+  notifications,
+  theme,
+  progressTracking,
+  remoteData,
+  completion,
+  workout,
+  userName,
+}
+
+Map<Keys, String> keyMap = {
+  Keys.startDate: "START_DATE",
+  Keys.notifications: "NOTIFICATIONS",
+  Keys.theme: "THEME",
+  Keys.progressTracking: "PROGRESS",
+  Keys.remoteData: "REMOTE_DATA",
+  Keys.completion: "COMPLETED_EXERCISES",
+  Keys.workout: "WORKOUT",
+  Keys.userName: "USERNAME",
+};

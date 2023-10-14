@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:workout_app/data/hive_database.dart';
-import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/models/setting.dart';
 
 import '../models/constants.dart';
@@ -12,50 +10,26 @@ class SettingsData extends ChangeNotifier {
 
   // Default values
   List<Setting> settingsList = [
-    Setting(
-        name: "Primary",
-        type: SettingType.color,
-        value: const Color.fromRGBO(76, 175, 80, 1)),
-    Setting(
-        name: "Secondary",
-        type: SettingType.color,
-        value: const Color.fromRGBO(76, 175, 80, 1)),
-    Setting(
-        name: "SkipDay",
-        type: SettingType.color,
-        value: const Color.fromRGBO(38, 198, 218, 1)),
-    Setting(
-        name: "RestDay",
-        type: SettingType.color,
-        value: const Color.fromRGBO(229, 115, 115, 1)),
-    Setting(
-        name: "RepCounter",
-        type: SettingType.materialColor,
-        value: Colors.green),
-    Setting(name: "IsDarkMode", type: SettingType.boolean, value: false),
-    Setting(name: "Notifications", type: SettingType.boolean, value: true),
-    Setting(name: "ProgressTracking", type: SettingType.boolean, value: true),
-    Setting(name: "UserName", type: SettingType.string, value: "Real guy"),
+    Setting(name: keyMap[Keys.theme].toString(), isString: false, value: false),
+    Setting(name: keyMap[Keys.notifications].toString(), isString: false, value: true),
+    Setting(name: keyMap[Keys.progressTracking].toString(), isString: false, value: true),
+    Setting(name: keyMap[Keys.remoteData].toString(), isString: false, value: false),
+    Setting(name: keyMap[Keys.userName].toString(), isString: false, value: "Real guy"),
   ];
 
-  bool getBooleanValue(String identifier) {
-    switch (identifier.toLowerCase()) {
-      case "theme":
-        return getRelevantSetting("IsDarkMode").value as bool;
-      case "notifications":
-        return getRelevantSetting("Notifications").value as bool;
-      case "tracking":
-        return getRelevantSetting("ProgressTracking").value as bool;
-      default:
-        return false;
-    }
+  bool getSwitchValues(String identifier) {
+    return getRelevantSetting(identifier).value;
   }
 
   void initializeSettingsList() {
-    if (db.selectedKeyFound("SETTINGS")) {
+    if (db.settingsBox.isNotEmpty) {
       settingsList = db.readSettings();
     } else {
-      db.saveSettings(settingsList);
+      Map<String, Setting> settingsMap = {};
+      for (Setting setting in settingsList) {
+        settingsMap[setting.name] = setting;
+      }
+      db.saveSettings(settingsMap);
     }
   }
 
@@ -67,7 +41,7 @@ class SettingsData extends ChangeNotifier {
     Setting relevantSetting = getRelevantSetting(settingName);
     relevantSetting.value = newValue;
     //update DB
-    db.saveSettings(settingsList);
+    db.saveSetting(settingName, relevantSetting);
 
     notifyListeners();
   }

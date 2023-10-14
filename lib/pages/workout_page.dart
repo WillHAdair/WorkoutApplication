@@ -29,12 +29,15 @@ class _WorkoutPageState extends State<WorkoutPage> {
   final exerciseRepsController = TextEditingController();
 
   void save() {
+    // TODO: make the add sets feature work
     Provider.of<WorkoutData>(context, listen: false).addExercise(
       widget.workoutName,
       exerciseNameController.text,
-      exerciseWeightController.text,
-      exerciseRepsController.text,
-      exerciseSetsController.text,
+      [],
+      false
+      // exerciseWeightController.text,
+      // exerciseRepsController.text,
+      // exerciseSetsController.text,
     );
 
     Navigator.pop(context);
@@ -84,9 +87,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
       widget.workoutName,
       exerciseName,
       exerciseNameController.text,
-      exerciseWeightController.text,
-      exerciseRepsController.text,
-      exerciseSetsController.text,
+      []
     );
 
     Navigator.pop(context);
@@ -105,21 +106,21 @@ class _WorkoutPageState extends State<WorkoutPage> {
       selection: TextSelection.fromPosition(
           TextPosition(offset: relevantExercsise.name.length)),
     );
-    exerciseWeightController.value = TextEditingValue(
-      text: relevantExercsise.weight,
-      selection: TextSelection.fromPosition(
-          TextPosition(offset: relevantExercsise.weight.length)),
-    );
-    exerciseSetsController.value = TextEditingValue(
-      text: relevantExercsise.sets,
-      selection: TextSelection.fromPosition(
-          TextPosition(offset: relevantExercsise.sets.length)),
-    );
-    exerciseRepsController.value = TextEditingValue(
-      text: relevantExercsise.reps,
-      selection: TextSelection.fromPosition(
-          TextPosition(offset: relevantExercsise.reps.length)),
-    );
+    // exerciseWeightController.value = TextEditingValue(
+    //   text: relevantExercsise.weight,
+    //   selection: TextSelection.fromPosition(
+    //       TextPosition(offset: relevantExercsise.weight.length)),
+    // );
+    // exerciseSetsController.value = TextEditingValue(
+    //   text: relevantExercsise.sets,
+    //   selection: TextSelection.fromPosition(
+    //       TextPosition(offset: relevantExercsise.sets.length)),
+    // );
+    // exerciseRepsController.value = TextEditingValue(
+    //   text: relevantExercsise.reps,
+    //   selection: TextSelection.fromPosition(
+    //       TextPosition(offset: relevantExercsise.reps.length)),
+    // );
 
     List<CustomTextField> exercises = [
       CustomTextField(
@@ -214,43 +215,43 @@ class _WorkoutPageState extends State<WorkoutPage> {
           onPressed: () => createNewExercise(),
           child: const Icon(Icons.add),
         ),
-        body: ListView.builder(
-          itemCount: value.numberOfExercisesInWorkout(widget.workoutName),
-          itemBuilder: (context, index) => ExerciseTile(
-            exerciseName: value
-                .getRelevantWorkout(widget.workoutName)
-                .exercises[index]
-                .name,
-            weight: value
-                .getRelevantWorkout(widget.workoutName)
-                .exercises[index]
-                .weight,
-            sets: value
-                .getRelevantWorkout(widget.workoutName)
-                .exercises[index]
-                .sets,
-            reps: value
-                .getRelevantWorkout(widget.workoutName)
-                .exercises[index]
-                .reps,
-            isCompleted: value
-                .getRelevantWorkout(widget.workoutName)
-                .exercises[index]
-                .isCompleted,
-            onChanged: (val) => onCheckBoxChanged(value
-                .getRelevantWorkout(widget.workoutName)
-                .exercises[index]
-                .name),
-            onSettingsPress: () => editExercise(value
-                .getRelevantWorkout(widget.workoutName)
-                .exercises[index]
-                .name),
-            onDeletePress: () => deleteExercise(value
-                .getRelevantWorkout(widget.workoutName)
-                .exercises[index]
-                .name),
-          ),
-        ),
+        // body: ListView.builder(
+        //   itemCount: value.numberOfExercisesInWorkout(widget.workoutName),
+        //   itemBuilder: (context, index) => ExerciseTile(
+        //     exerciseName: value
+        //         .getRelevantWorkout(widget.workoutName)
+        //         .exercises[index]
+        //         .name,
+        //     weight: value
+        //         .getRelevantWorkout(widget.workoutName)
+        //         .exercises[index]
+        //         .weight,
+        //     sets: value
+        //         .getRelevantWorkout(widget.workoutName)
+        //         .exercises[index]
+        //         .sets,
+        //     reps: value
+        //         .getRelevantWorkout(widget.workoutName)
+        //         .exercises[index]
+        //         .reps,
+        //     isCompleted: value
+        //         .getRelevantWorkout(widget.workoutName)
+        //         .exercises[index]
+        //         .isCompleted,
+        //     onChanged: (val) => onCheckBoxChanged(value
+        //         .getRelevantWorkout(widget.workoutName)
+        //         .exercises[index]
+        //         .name),
+        //     onSettingsPress: () => editExercise(value
+        //         .getRelevantWorkout(widget.workoutName)
+        //         .exercises[index]
+        //         .name),
+        //     onDeletePress: () => deleteExercise(value
+        //         .getRelevantWorkout(widget.workoutName)
+        //         .exercises[index]
+        //         .name),
+        //   ),
+        // ),
       ),
     );
   }

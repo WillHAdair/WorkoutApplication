@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:workout_app/data/hive_database.dart';
 import 'package:workout_app/datetime/date_timedata.dart';
 import 'package:workout_app/models/exercise.dart';
+import 'package:workout_app/models/workout_set.dart';
 
 import '../models/tracker.dart';
 import '../models/workout.dart';
@@ -13,18 +14,48 @@ class WorkoutData extends ChangeNotifier {
     Workout(name: "Upper body", exercises: [
       Exercise(
           name: 'Bench',
-          weight: '185',
-          reps: '1',
-          sets: '4',
-          isCompleted: false)
+          sets: [
+            WorkoutSet(
+              weight: "100", 
+              reps: "10", 
+              isCompleted: false
+            ),
+            WorkoutSet(
+              weight: "155", 
+              reps: "10", 
+              isCompleted: false
+            ),
+            WorkoutSet(
+              weight: "165",
+              reps: "10",
+              isCompleted: false
+            ),
+          ],
+          isCompleted: false,
+        ),
     ]),
     Workout(name: "Lower Body", exercises: [
       Exercise(
           name: 'Deadlift',
-          weight: '205',
-          reps: '1',
-          sets: '3',
-          isCompleted: false)
+          sets: [
+            WorkoutSet(
+              weight: "200", 
+              reps: "10", 
+              isCompleted: false
+            ),
+            WorkoutSet(
+              weight: "255", 
+              reps: "10", 
+              isCompleted: false
+            ),
+            WorkoutSet(
+              weight: "265",
+              reps: "10",
+              isCompleted: false
+            ),
+          ],
+          isCompleted: false,
+        ),
     ]),
   ];
 
@@ -33,29 +64,61 @@ class WorkoutData extends ChangeNotifier {
       Workout(name: "Push", exercises: [
         Exercise(
           name: 'Incline Press', 
-          weight: '135', 
-          reps: '10', 
-          sets: '3',
+          sets: [
+            WorkoutSet(
+              weight: "100", 
+              reps: "10", 
+              isCompleted: false
+            ),
+            WorkoutSet(
+              weight: "155", 
+              reps: "10", 
+              isCompleted: false
+            ),
+            WorkoutSet(
+              weight: "165",
+              reps: "10",
+              isCompleted: false
+            ),
+          ],
           isCompleted: false,
         )
       ]),
       Workout(name: "Pull", exercises: [
         Exercise(
           name: 'Barbell row', 
-          weight: '225', 
-          reps: '10', 
-          sets: '3',
-          isCompleted: false,  
+          sets: [
+            WorkoutSet(
+              weight: "100", 
+              reps: "10", 
+              isCompleted: false
+            ),
+            WorkoutSet(
+              weight: "155", 
+              reps: "10", 
+              isCompleted: false
+            ),
+            WorkoutSet(
+              weight: "165",
+              reps: "10",
+              isCompleted: false
+            ),
+          ],
+          isCompleted: false,
         )
       ])
     ])
   ];
 
   void initializeWorkoutList() {
-    if (db.selectedKeyFound("WORKOUTS") & db.selectedKeyFound("EXERCISES")) {
-      workoutList = db.readWorkouts();
+    if (db.workoutBox.isNotEmpty) {
+      workoutList = db.readAllWorkouts();
     } else {
-      db.saveWorkouts(workoutList);
+      Map<String, Workout> workoutMap = {};
+      for (Workout workout in workoutList) {
+        workoutMap[workout.name] = workout;
+      }
+      db.saveWorkouts(workoutMap);
     }
 
     loadHeatMap();
@@ -75,15 +138,16 @@ class WorkoutData extends ChangeNotifier {
   }
 
   void addWorkout(String name) {
-    workoutList.add(Workout(name: name, exercises: []));
+    Workout newWorkout = Workout(name: name, exercises: []);
+    workoutList.add(newWorkout);
 
     notifyListeners();
 
-    db.saveWorkouts(workoutList);
+    db.saveWorkout(name, newWorkout);
   }
 
   bool isWorkoutStarted() {
-    //STUB, will need to implement later
+    //TODO: STUB, will need to implement later
     return false;
   }
 
@@ -93,7 +157,11 @@ class WorkoutData extends ChangeNotifier {
 
     notifyListeners();
 
-    db.saveWorkouts(workoutList);
+    Map<String, Workout> workoutMap = {};
+    for (Workout workout in workoutList) {
+      workoutMap[workout.name] = workout;
+    }
+    db.saveWorkouts(workoutMap);
   }
 
   void deleteWorkout(String workoutName) {
@@ -103,18 +171,17 @@ class WorkoutData extends ChangeNotifier {
 
     notifyListeners();
 
-    db.saveWorkouts(workoutList);
+    db.deleteWorkout(workoutName);
   }
 
-  void addExercise(String workoutName, String exerciseName, String weight,
-      String reps, String sets) {
+  void addExercise(String workoutName, String exerciseName, List<WorkoutSet> sets, bool isCompleted) {
     Workout relevantWorkout = getRelevantWorkout(workoutName);
     relevantWorkout.exercises.add(
-        Exercise(name: exerciseName, weight: weight, reps: reps, sets: sets));
+        Exercise(name: exerciseName, sets: sets, isCompleted: isCompleted));
 
     notifyListeners();
 
-    db.saveWorkouts(workoutList);
+    db.saveWorkout(workoutName, relevantWorkout);
   }
 
   void checkOffExercise(String workoutName, String exerciseName) {
@@ -125,8 +192,13 @@ class WorkoutData extends ChangeNotifier {
 
     notifyListeners();
 
-    db.saveWorkouts(workoutList);
-
+    db.saveWorkout(workoutName, relevantWorkout);
+    int currentAmount = db.getDailyCompletion(todaysDate());
+    if (relevantExercise.isCompleted) {
+      db.setDailyCompletion(todaysDate(), currentAmount + 1);
+    } else {
+      db.setDailyCompletion(todaysDate(), currentAmount + currentAmount > 0 ? 0 : - 1);
+    }
     loadHeatMap();
   }
 
@@ -138,21 +210,18 @@ class WorkoutData extends ChangeNotifier {
 
     notifyListeners();
 
-    db.saveWorkouts(workoutList);
+    db.saveWorkout(workoutName, relevantWorkout);
   }
 
   void editExercise(String workoutName, String oldExerciseName,
-      String newExerciseName, String weight, String reps, String sets) {
+      String newExerciseName, List<WorkoutSet> newSets) {
     Workout relevantWorkout = getRelevantWorkout(workoutName);
     Exercise relevantExercise =
         getRelevantExercise(relevantWorkout, oldExerciseName);
-    relevantExercise.name = newExerciseName;
-    relevantExercise.weight = weight;
-    relevantExercise.sets = sets;
-    relevantExercise.reps = reps;
+    relevantExercise.sets = newSets;  
     notifyListeners();
 
-    db.saveWorkouts(workoutList);
+    db.saveWorkout(workoutName, relevantWorkout);
   }
 
   Workout getRelevantWorkout(String workoutName) {
@@ -177,7 +246,7 @@ class WorkoutData extends ChangeNotifier {
 
     for (int i = 0; i < daysBetween + 1; i++) {
       String date = convertDateTimeToString(startDate.add(Duration(days: i)));
-      int completionStatus = db.getCompletionStatus(date);
+      int completionStatus = db.getDailyCompletion(date);
 
       int year = startDate.add(Duration(days: i)).year;
       int month = startDate.add(Duration(days: i)).month;

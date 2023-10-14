@@ -30,11 +30,11 @@ class SettingsPageState extends State<SettingsPage> {
     final settingsData = Provider.of<SettingsData>(context, listen: false);
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     settingsData.initializeSettingsList();
-    darkMode = settingsData.getRelevantSetting("IsDarkMode").value as bool;
+    darkMode = settingsData.getSwitchValues(keyMap[Keys.theme].toString());
     notificationsOn =
-        settingsData.getRelevantSetting("Notifications").value as bool;
+        settingsData.getSwitchValues(keyMap[Keys.notifications].toString());
     trendTracking =
-        settingsData.getRelevantSetting("ProgressTracking").value as bool;
+        settingsData.getSwitchValues(keyMap[Keys.progressTracking].toString());
 
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -46,7 +46,7 @@ class SettingsPageState extends State<SettingsPage> {
     setState(() {
       final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
       final settingsData = Provider.of<SettingsData>(context, listen: false);
-      settingsData.editSetting("IsDarkMode", newThemeValue);
+      settingsData.editSetting(keyMap[Keys.theme].toString(), newThemeValue);
       themeProvider.toggleTheme(newThemeValue);
       darkMode = newThemeValue;
     });
@@ -56,7 +56,7 @@ class SettingsPageState extends State<SettingsPage> {
     setState(() {
       notificationsOn = newNotifications;
       Provider.of<SettingsData>(context, listen: false)
-          .editSetting("Notifications", newNotifications);
+          .editSetting(keyMap[Keys.notifications].toString(), newNotifications);
     });
   }
 
@@ -115,7 +115,7 @@ class SettingsPageState extends State<SettingsPage> {
     setState(() {
       trendTracking = newTrendTracking;
       Provider.of<SettingsData>(context, listen: false)
-          .editSetting("ProgressTracking", newTrendTracking);
+          .editSetting(keyMap[Keys.progressTracking].toString(), newTrendTracking);
     });
   }
 

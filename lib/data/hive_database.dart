@@ -1,231 +1,71 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:workout_app/datetime/date_timedata.dart';
 import 'package:workout_app/models/constants.dart';
-import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/setting.dart';
 
 import '../models/workout.dart';
 
+late Box boxWorkouts;
+late Box boxSettings;
 class HiveDatabase {
-  final _myBox = Hive.box("workout_database");
+  final workoutBox = Hive.box<Workout>("workoutBox");
+  final settingsBox = Hive.box<Setting>("settingsBox");
+  final programDataBox = Hive.box("programDataBox");
 
-  bool selectedKeyFound(String key) {
-    var value = _myBox.get(key);
-    if (value == null) {
-      return false;
-    }
-    return true;
-  }
 
-  bool previousDataExists() {
-    if (_myBox.isEmpty) {
-      if (kDebugMode) {
-        print("previous data not here");
-      }
-      _myBox.put("START_DATE", todaysDate());
-      return false;
-    } else {
-      if (kDebugMode) {
-        print("previous data is here");
-      }
-      return true;
-    }
+  bool selectedKeyFound(Box box, String key) {
+    return box.get(key) != null;
   }
 
   String getStartDate() {
-    var startDate = _myBox.get("START_DATE");
-    if (startDate == null) {
-      _myBox.put("START_DATE", todaysDate());
+    if (!selectedKeyFound(programDataBox, keyMap[Keys.startDate].toString())) {
+      programDataBox.put(keyMap[Keys.startDate].toString(), todaysDate());
       return todaysDate();
     }
-    return startDate;
+    return programDataBox.get(keyMap[Keys.startDate]);
   }
 
-  Color? getColor(String colorName) {
-    int color = _myBox.get(colorName);
-    return color == 0 ? Color(color) : null;
+  Setting? getSetting(String key) {
+    return selectedKeyFound(settingsBox, key) ? settingsBox.get(key) : null;
   }
 
-  void setColor(String colorName, Color color) {
-    _myBox.put(colorName, color.value);
+  void saveSetting(String key, Setting setting) {
+    settingsBox.put(key, setting);
   }
 
-  void saveSettings(List<Setting> settings) {
-    List<List<String>> settingsList = convertSettingsToList(settings);
-    _myBox.put("SETTINGS", settingsList);
+  void saveSettings(Map<String, Setting> settings) {
+    settingsBox.putAll(settings);
   }
 
   List<Setting> readSettings() {
-    List<List<String>> settingsList = convertToList(_myBox.get("SETTINGS"));
-    return convertListToSettings(settingsList);
+    return settingsBox.values.isNotEmpty ? settingsBox.values.toList() : [];
   }
 
-  void saveWorkouts(List<Workout> workouts) {
-    final List<String> workoutList = convertWorkoutsToList(workouts);
-    final List<List<List<String>>> exerciseList =
-        convertExercisesToList(workouts);
-
-    _myBox.put(
-        "COMPLETION_STATUS_${todaysDate()}", getCompletedExercises(workouts));
-
-    _myBox.put("WORKOUTS", workoutList);
-    _myBox.put("EXERCISES", exerciseList);
+  void saveWorkout(String key, Workout workout) {
+    workoutBox.put(key, workout);
   }
 
-  List<Workout> readWorkouts() {
-    if (!selectedKeyFound("WORKOUTS") || !selectedKeyFound("EXERCISES")) {
-      return [];
-    }
-    List<Workout> mySavedWorkouts = [];
-    List<String> workoutNames = _myBox.get("WORKOUTS");
-    final exerciseDetails = _myBox.get("EXERCISES");
-
-    for (int i = 0; i < workoutNames.length; i++) {
-      List<Exercise> exercisesPerWorkout = [];
-
-      for (int j = 0; j < exerciseDetails[i].length; j++) {
-        exercisesPerWorkout.add(Exercise(
-          name: exerciseDetails[i][j][0],
-          weight: exerciseDetails[i][j][1],
-          reps: exerciseDetails[i][j][2],
-          sets: exerciseDetails[i][j][3],
-          isCompleted: exerciseDetails[i][j][4] == "true" ? true : false,
-        ));
-      }
-
-      Workout workout =
-          Workout(name: workoutNames[i], exercises: exercisesPerWorkout);
-
-      mySavedWorkouts.add(workout);
-    }
-    return mySavedWorkouts;
+  void deleteWorkout(String key) {
+    workoutBox.delete(key);
   }
 
-  int getCompletedExercises(List<Workout> workouts) {
-    int completedExercies = 0;
-    for (Workout workout in workouts) {
-      for (Exercise exercise in workout.exercises) {
-        if (exercise.isCompleted) {
-          completedExercies++;
-        }
-      }
-    }
-    return completedExercies;
+  void saveWorkouts(Map<String, Workout> workouts) {
+    workoutBox.putAll(workouts);
   }
 
-  int getCompletionStatus(String date) {
-    return _myBox.get("COMPLETION_STATUS_$date") ?? 0;
-  }
-}
-
-List<String> convertWorkoutsToList(List<Workout> workouts) {
-  List<String> workoutList = [];
-
-  for (Workout workout in workouts) {
-    workoutList.add(workout.name);
+  Workout? readWorkout(String key) {
+    return selectedKeyFound(workoutBox, key) ? workoutBox.get(key) : null;
   }
 
-  return workoutList;
-}
-
-List<List<List<String>>> convertExercisesToList(List<Workout> workouts) {
-  List<List<List<String>>> exerciseList = [];
-
-  for (Workout workout in workouts) {
-    List<Exercise> exercisesInWorkout = workout.exercises;
-    List<List<String>> individualWorkout = [];
-
-    for (Exercise exercise in exercisesInWorkout) {
-      List<String> individualExercise = [];
-
-      individualExercise.addAll([
-        exercise.name,
-        exercise.weight,
-        exercise.reps,
-        exercise.sets,
-        exercise.isCompleted.toString(),
-      ]);
-      individualWorkout.add(individualExercise);
-    }
-
-    exerciseList.add(individualWorkout);
+  List<Workout> readAllWorkouts() {
+    return workoutBox.values.toList();
   }
 
-  return exerciseList;
-}
-
-List<List<String>> convertSettingsToList(List<Setting> settings) {
-  List<List<String>> settingList = [];
-  for (Setting setting in settings) {
-    String settingValue = '';
-    switch (setting.type) {
-      case SettingType.string:
-        settingValue = setting.value;
-        break;
-      case SettingType.boolean:
-        settingValue = (setting.value as bool).toString();
-        break;
-      case SettingType.color:
-        settingValue = (setting.value as Color).value.toString();
-        break;
-      case SettingType.materialColor:
-        settingValue = (setting.value as MaterialColor).value.toString();
-        break;
-      case SettingType.empty:
-        break;
-    }
-    settingList.add([
-      setting.name,
-      setting.type.toString(),
-      settingValue,
-    ]);
+  int getDailyCompletion(String date) {
+    return programDataBox.get("${keyMap[Keys.completion]}_$date") ?? 0;
   }
-  return settingList;
-}
 
-List<Setting> convertListToSettings(List<List<String>> settingStrings) {
-  List<Setting> settings = [];
-  for (List<String> settingString in settingStrings) {
-    String name = settingString[0];
-    SettingType type = SettingType.empty;
-    type = SettingType.values.firstWhere(
-        (settingType) => settingString[1] == settingType.toString());
-    String stringValue = settingString[2];
-    var value;
-    // Empty and String are already correct, so set to default
-    switch (type) {
-      case SettingType.boolean:
-        value = bool.parse(stringValue);
-        break;
-      case SettingType.color:
-        value = Color(int.parse(stringValue));
-        break;
-      case SettingType.materialColor:
-        Color color = Color(int.parse(stringValue));
-        value = getMaterialColor(color);
-        break;
-      default:
-        value = stringValue;
-        break;
-    }
-    settings.add(Setting(name: name, type: type, value: value));
+  void setDailyCompletion(String date, int amount) {
+    programDataBox.put("${keyMap[Keys.completion]}_$date", amount);
   }
-  return settings;
-}
-
-List<List<String>> convertToList(List<dynamic> values) {
-  List<List<String>> programData = [];
-
-  for (var dynamicItem in values) {
-    List<String> elements = [];
-    for (var element in dynamicItem) {
-      if (element is String) {
-        elements.add(element);
-      }
-    }
-    programData.add(elements);
-  }
-  return programData;
 }

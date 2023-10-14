@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/data/workout_data.dart';
+import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/pages/Home/default_home_page.dart';
 import 'package:workout_app/pages/Home/workout_home_page.dart';
 import 'package:workout_app/data/settings_data.dart';
@@ -25,7 +26,7 @@ class _HomePageState extends State<HomePage> {
     final settingsData = Provider.of<SettingsData>(context, listen: false);
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     settingsData.initializeSettingsList();
-    bool darkMode = settingsData.getRelevantSetting("IsDarkMode").value as bool;
+    bool darkMode = settingsData.getSwitchValues(keyMap[Keys.theme].toString());
     // bool notificationsOn =
     //     settingsData.getRelevantSetting("Notifications").value as bool;
     // bool trendTracking =
