@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
 import 'package:workout_app/components/popups/customizable_dialog.dart';
+import 'package:workout_app/components/sliding_tile.dart';
+import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/models/constants.dart';
-import 'package:workout_app/pages/workout_page.dart';
-
-import '../components/sliding_tile.dart';
-import '../data/workout_data.dart';
+import 'package:workout_app/pages/Workouts/workout_page.dart';
 
 class WorkoutsPage extends StatefulWidget {
   const WorkoutsPage({super.key});

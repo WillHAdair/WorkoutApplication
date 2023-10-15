@@ -8,11 +8,7 @@ import '../models/workout.dart';
 late Box boxWorkouts;
 late Box boxSettings;
 class HiveDatabase {
-  final workoutBox = Hive.box<Workout>("workoutBox");
-  final settingsBox = Hive.box<Setting>("settingsBox");
-  final programDataBox = Hive.box("programDataBox");
-
-
+  // Common
   bool selectedKeyFound(Box box, String key) {
     return box.get(key) != null;
   }
@@ -25,22 +21,8 @@ class HiveDatabase {
     return programDataBox.get(keyMap[Keys.startDate]);
   }
 
-  Setting? getSetting(String key) {
-    return selectedKeyFound(settingsBox, key) ? settingsBox.get(key) : null;
-  }
-
-  void saveSetting(String key, Setting setting) {
-    settingsBox.put(key, setting);
-  }
-
-  void saveSettings(Map<String, Setting> settings) {
-    settingsBox.putAll(settings);
-  }
-
-  List<Setting> readSettings() {
-    return settingsBox.values.isNotEmpty ? settingsBox.values.toList() : [];
-  }
-
+  final workoutBox = Hive.box<Workout>("workoutBox");
+  // Workouts
   void saveWorkout(String key, Workout workout) {
     workoutBox.put(key, workout);
   }
@@ -61,6 +43,27 @@ class HiveDatabase {
     return workoutBox.values.toList();
   }
 
+  final settingsBox = Hive.box<Setting>("settingsBox");
+  // Settings
+
+  Setting? getSetting(String key) {
+    return selectedKeyFound(settingsBox, key) ? settingsBox.get(key) : null;
+  }
+
+  void saveSetting(String key, Setting setting) {
+    settingsBox.put(key, setting);
+  }
+
+  void saveSettings(Map<String, Setting> settings) {
+    settingsBox.putAll(settings);
+  }
+
+  List<Setting> readSettings() {
+    return settingsBox.values.isNotEmpty ? settingsBox.values.toList() : [];
+  }
+
+  final programDataBox = Hive.box("programDataBox");
+  // ProgramData
   int getDailyCompletion(String date) {
     return programDataBox.get("${keyMap[Keys.completion]}_$date") ?? 0;
   }

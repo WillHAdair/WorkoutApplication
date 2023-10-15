@@ -18,6 +18,7 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
   int _seconds = 0;
   int _minutes = 0;
   int _hours = 0;
+  // ignore: unused_field
   bool _timerRunning = false;
   ValueNotifier<double> valueNotifier = ValueNotifier<double>(0);
   List<WorkoutSet> sets = [WorkoutSet(reps: "10", weight: "95", isCompleted: true), 

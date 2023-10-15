@@ -7,8 +7,8 @@ import 'package:workout_app/components/popups/customizable_dialog.dart';
 import 'package:workout_app/components/sliding_tile.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/models/constants.dart';
-import 'package:workout_app/pages/workout_page.dart';
-import 'package:workout_app/pages/workouts_page.dart';
+import 'package:workout_app/pages/Workouts/workout_page.dart';
+import 'package:workout_app/pages/Workouts/workouts_page.dart';
 
 class DefaultHomePage extends StatefulWidget {
   final Function(bool) onWorkoutStatusChange;

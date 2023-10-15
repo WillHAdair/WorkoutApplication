@@ -8,6 +8,11 @@ import '../models/tracker.dart';
 import '../models/workout.dart';
 
 class WorkoutData extends ChangeNotifier {
+  String getStartDate() {
+    return db.getStartDate();
+  }
+
+  Map<DateTime, int> heatMapDataSet = {};
   final db = HiveDatabase();
 
   List<Workout> workoutList = [
@@ -110,6 +115,7 @@ class WorkoutData extends ChangeNotifier {
     ])
   ];
 
+  // Initialization
   void initializeWorkoutList() {
     if (db.workoutBox.isNotEmpty) {
       workoutList = db.readAllWorkouts();
@@ -124,28 +130,37 @@ class WorkoutData extends ChangeNotifier {
     loadHeatMap();
   }
 
-  List<Workout> getWorkoutsForDay(DateTime day) {
-    //TODO: Stub
-    return [workoutList[0]];
+    void loadHeatMap() {
+    DateTime startDate = createDateTimeObject(getStartDate());
+
+    int daysBetween = DateTime.now().difference(startDate).inDays;
+
+    for (int i = 0; i < daysBetween + 1; i++) {
+      String date = convertDateTimeToString(startDate.add(Duration(days: i)));
+      int completionStatus = db.getDailyCompletion(date);
+
+      int year = startDate.add(Duration(days: i)).year;
+      int month = startDate.add(Duration(days: i)).month;
+      int day = startDate.add(Duration(days: i)).day;
+
+      final percentForEachDay = <DateTime, int>{
+        DateTime(year, month, day): completionStatus
+      };
+
+      heatMapDataSet.addEntries(percentForEachDay.entries);
+    }
   }
 
-  void deleteWorkoutFromDay(DateTime day, String workoutName) {
-    //TODO: Stub
-  }
-
+  // Workouts
+    // Get Workouts
   List<Workout> getWorkoutList() {
     return workoutList;
   }
 
-  List<Tracker> getTrackerList() {
-    return trackerList;
+  Workout getRelevantWorkout(String workoutName) {
+    return workoutList.firstWhere((workout) => workout.name == workoutName);
   }
-
-  int numberOfExercisesInWorkout(String workoutName) {
-    Workout relevantWorkout = getRelevantWorkout(workoutName);
-    return relevantWorkout.exercises.length;
-  }
-
+    // Add Workouts
   void addWorkout(String name) {
     Workout newWorkout = Workout(name: name, exercises: []);
     workoutList.add(newWorkout);
@@ -154,12 +169,7 @@ class WorkoutData extends ChangeNotifier {
 
     db.saveWorkout(name, newWorkout);
   }
-
-  bool isWorkoutStarted() {
-    //TODO: STUB, will need to implement later
-    return false;
-  }
-
+    // Edit/Delete Workouts
   void changeWorkoutName(String currentName, String newName) {
     Workout relevantWorkout = getRelevantWorkout(currentName);
     relevantWorkout.name = newName;
@@ -182,7 +192,19 @@ class WorkoutData extends ChangeNotifier {
 
     db.deleteWorkout(workoutName);
   }
+  // Exercises
 
+    // Get Exercises
+  Exercise getRelevantExercise(Workout workout, String exerciseName) {
+    return workout.exercises
+        .firstWhere((exercise) => exercise.name == exerciseName);
+  }
+
+  int numberOfExercisesInWorkout(String workoutName) {
+    Workout relevantWorkout = getRelevantWorkout(workoutName);
+    return relevantWorkout.exercises.length;
+  }
+    // Add Exercises
   void addExercise(String workoutName, String exerciseName, List<WorkoutSet> sets, bool isCompleted) {
     Workout relevantWorkout = getRelevantWorkout(workoutName);
     relevantWorkout.exercises.add(
@@ -192,7 +214,7 @@ class WorkoutData extends ChangeNotifier {
 
     db.saveWorkout(workoutName, relevantWorkout);
   }
-
+    // Edit/Delete Exercises
   void checkOffExercise(String workoutName, String exerciseName) {
     Workout relevantWorkout = getRelevantWorkout(workoutName);
     Exercise relevantExercise =
@@ -232,40 +254,23 @@ class WorkoutData extends ChangeNotifier {
 
     db.saveWorkout(workoutName, relevantWorkout);
   }
-
-  Workout getRelevantWorkout(String workoutName) {
-    return workoutList.firstWhere((workout) => workout.name == workoutName);
+  // Workout History
+    // Get Workout History
+  List<Workout> getWorkoutsForDay(DateTime day) {
+    //TODO: Stub
+    return [workoutList[0]];
   }
 
-  Exercise getRelevantExercise(Workout workout, String exerciseName) {
-    return workout.exercises
-        .firstWhere((exercise) => exercise.name == exerciseName);
+  List<Tracker> getTrackerList() {
+    return trackerList;
   }
 
-  String getStartDate() {
-    return db.getStartDate();
-  }
-
-  Map<DateTime, int> heatMapDataSet = {};
-
-  void loadHeatMap() {
-    DateTime startDate = createDateTimeObject(getStartDate());
-
-    int daysBetween = DateTime.now().difference(startDate).inDays;
-
-    for (int i = 0; i < daysBetween + 1; i++) {
-      String date = convertDateTimeToString(startDate.add(Duration(days: i)));
-      int completionStatus = db.getDailyCompletion(date);
-
-      int year = startDate.add(Duration(days: i)).year;
-      int month = startDate.add(Duration(days: i)).month;
-      int day = startDate.add(Duration(days: i)).day;
-
-      final percentForEachDay = <DateTime, int>{
-        DateTime(year, month, day): completionStatus
-      };
-
-      heatMapDataSet.addEntries(percentForEachDay.entries);
-    }
+  bool isWorkoutStarted() {
+    //TODO: Stub
+    return false;
+  }  
+    // Edit/Delete Workout History
+  void deleteWorkoutFromDay(DateTime day, String workoutName) {
+    //TODO: Stub
   }
 }

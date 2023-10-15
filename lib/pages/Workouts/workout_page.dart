@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
+import 'package:workout_app/components/dropdown/exercise_dropdown_list.dart';
 import 'package:workout_app/components/popups/customizable_dialog.dart';
-
-import '../components/dropdown/exercise_dropdown_list.dart';
-import '../data/workout_data.dart';
-import '../models/exercise.dart';
-import '../models/workout.dart';
+import 'package:workout_app/data/workout_data.dart';
+import 'package:workout_app/models/exercise.dart';
+import 'package:workout_app/models/workout.dart';
 
 class WorkoutPage extends StatefulWidget {
   final String workoutName;
