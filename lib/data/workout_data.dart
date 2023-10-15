@@ -291,6 +291,7 @@ class WorkoutData extends ChangeNotifier {
     // Edit/Delete Workout History
   void deleteWorkoutFromDay(DateTime day, String workoutName) {
     db.deleteWorkoutFromDay(convertDateTimeToString(day), workoutName);
+    notifyListeners();
   }
 
   void changeWorkoutStarted(bool status) {

@@ -23,9 +23,6 @@ class WorkoutDayPage extends StatefulWidget {
 class _WorkoutPageState extends State<WorkoutDayPage> {
   final workoutNameController = TextEditingController();
   Set<Workout> selectedWorkouts = {};
-  void deleteWorkoutFromDay(Workout workout) {
-    // TODO: Stub
-  }
 
   void onChanged(Workout workout, bool value) {
     selectedWorkouts.add(workout);

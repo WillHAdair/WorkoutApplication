@@ -17,6 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool workoutStarted = false;
+  // ignore: unused_field
   int _currentIndex = 0;
   @override
   void didChangeDependencies() {
