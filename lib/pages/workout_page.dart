@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:workout_app/components/custom_textfield.dart';
+import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
+import 'package:workout_app/components/popups/customizable_dialog.dart';
 
-import '../components/customizable_dialog.dart';
-import '../components/dropdown_list.dart';
+import '../components/dropdown/exercise_dropdown_list.dart';
 import '../data/workout_data.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
@@ -217,7 +217,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
         ),
         body: ListView.builder(
           itemCount: value.numberOfExercisesInWorkout(widget.workoutName),
-          itemBuilder: (context, index) => DropdownList(
+          itemBuilder: (context, index) => ExerciseDropdownList(
             title:  value
               .getRelevantWorkout(widget.workoutName)
               .exercises[index]

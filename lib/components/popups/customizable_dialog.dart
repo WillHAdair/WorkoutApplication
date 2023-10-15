@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:workout_app/components/custom_textfield.dart';
-
-import '../data/theme_provider.dart';
+import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
+import 'package:workout_app/data/theme_provider.dart';
 
 class CustomizableDialog extends StatelessWidget {
   final List<CustomTextField> customTextFields;

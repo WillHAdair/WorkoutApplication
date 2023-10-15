@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
-import 'package:workout_app/components/dropdown_list.dart';
+import 'package:workout_app/components/dropdown/exercise_dropdown_list.dart';
 import 'package:workout_app/models/workout_set.dart';
 
 class WorkoutHomePage extends StatefulWidget {
@@ -18,7 +18,7 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
   int _seconds = 0;
   int _minutes = 0;
   int _hours = 0;
-  bool _timerRunning = true;
+  bool _timerRunning = false;
   ValueNotifier<double> valueNotifier = ValueNotifier<double>(0);
   List<WorkoutSet> sets = [WorkoutSet(reps: "10", weight: "95", isCompleted: true), 
                         WorkoutSet(reps: "10", weight: "135", isCompleted: false),
@@ -55,6 +55,7 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
         valueNotifier.value = (_seconds / 60) * 100;
       });
     });
+    _timerRunning = true;
   }
 
   void _stopTimer() {
@@ -121,7 +122,7 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
               )
           ],
         ),
-        DropdownList(
+        ExerciseDropdownList(
           title: 'Benchpress', 
           sets: sets,
           onSettingsPress: () => {}, 
@@ -144,7 +145,7 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
               )
           ],
         ),
-        DropdownList(
+        ExerciseDropdownList(
           title: 'Incline Bench', 
           sets: sets,
           onSettingsPress: () => {}, 
@@ -152,7 +153,7 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
           onChanged: (p0) => {},
           isCompleted: false
         ),
-        DropdownList(
+        ExerciseDropdownList(
           title: 'Decline Bench', 
           sets: sets,
           onSettingsPress: () => {}, 
@@ -175,7 +176,7 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
               )
           ],
         ),
-        DropdownList(
+        ExerciseDropdownList(
           title: 'Chest Flys', 
           sets: sets,
           onSettingsPress: () => {}, 

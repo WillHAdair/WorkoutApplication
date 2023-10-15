@@ -4,6 +4,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/datetime/date_timedata.dart';
 import 'package:workout_app/models/constants.dart';
+import 'package:workout_app/pages/workout_day_page.dart';
 
 import '../components/custom_tile.dart';
 import '../components/sliding_tile.dart';
@@ -19,7 +20,12 @@ class TrackerPageState extends State<TrackerPage> {
   DateTime today = DateTime.now();
 
   void daySelected(DateTime day, DateTime focusedDay) {
-    //TODO: make this bring up page
+    Navigator.push(
+      context, 
+      MaterialPageRoute(
+        builder: (context) => WorkoutDayPage(date: focusedDay),
+      )
+    );
   }
 
   void goToSchedulePage() {

@@ -42,6 +42,7 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   table_calendar: ^3.0.9
   simple_circular_progress_bar: ^1.0.2
+  intl:
 
 dev_dependencies:
   flutter_test:

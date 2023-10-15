@@ -3,10 +3,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/models/workout_set.dart';
 
-import '../data/theme_provider.dart';
+import '../../data/theme_provider.dart';
 
 // ignore: must_be_immutable
-class DropdownList extends StatefulWidget {
+class ExerciseDropdownList extends StatefulWidget {
   final String title;
   final List<WorkoutSet> sets;
   bool isCompleted;
@@ -14,7 +14,7 @@ class DropdownList extends StatefulWidget {
   final VoidCallback onDeletePress;
   final void Function(bool?)? onChanged;
 
-  DropdownList({
+  ExerciseDropdownList({
     Key? key, 
     required this.title, 
     required this.sets, 
@@ -26,10 +26,10 @@ class DropdownList extends StatefulWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  _DropdownListState createState() => _DropdownListState();
+  _ExerciseDropdownListState createState() => _ExerciseDropdownListState();
 }
 
-class _DropdownListState extends State<DropdownList> {
+class _ExerciseDropdownListState extends State<ExerciseDropdownList> {
   bool isDropdownOpen = false;
   @override
   Widget build(BuildContext context) { 

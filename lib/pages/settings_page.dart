@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
-import 'package:workout_app/components/custom_textfield.dart';
-import 'package:workout_app/components/customizable_dialog.dart';
+import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
+import 'package:workout_app/components/popups/customizable_dialog.dart';
 import 'package:workout_app/data/settings_data.dart';
 import 'package:workout_app/data/theme_provider.dart';
 

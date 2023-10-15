@@ -124,6 +124,15 @@ class WorkoutData extends ChangeNotifier {
     loadHeatMap();
   }
 
+  List<Workout> getWorkoutsForDay(DateTime day) {
+    //TODO: Stub
+    return [workoutList[0]];
+  }
+
+  void deleteWorkoutFromDay(DateTime day, String workoutName) {
+    //TODO: Stub
+  }
+
   List<Workout> getWorkoutList() {
     return workoutList;
   }
