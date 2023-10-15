@@ -6,7 +6,8 @@ import 'package:workout_app/components/dropdown_list.dart';
 import 'package:workout_app/models/workout_set.dart';
 
 class WorkoutHomePage extends StatefulWidget {
-  const WorkoutHomePage({Key? key}) : super(key: key);
+  final Function(bool) onWorkoutStatusChange;
+  const WorkoutHomePage({Key? key, required this.onWorkoutStatusChange}) : super(key: key);
 
   @override
   WorkoutHomePageState createState() => WorkoutHomePageState();
@@ -26,6 +27,10 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
   @override
   void initState() {
     super.initState();
+    _startTimer();
+  }
+
+  void startWorkoutTimer() {
     _startTimer();
   }
 
@@ -52,16 +57,16 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
     });
   }
 
-  void endWorkout(String workoutName) {
-    // TODO: implement method to end workout
-    _stopTimer();
-  }
-
   void _stopTimer() {
     _timer.cancel();
     setState(() {
       _timerRunning = false;
     });
+  }
+
+  void endWorkout() {
+    widget.onWorkoutStatusChange(false);
+    _stopTimer();
   }
 
   @override
@@ -101,7 +106,21 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
                 ),
               ),
         ),
-        const SizedBox(height: 15),
+        const SizedBox(height: 10),
+        const Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(width: 10),
+            Icon(
+              Icons.fitness_center,
+              color: Colors.blue,
+            ),
+            SizedBox(width: 10),
+              Text('Current exercise',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)
+              )
+          ],
+        ),
         DropdownList(
           title: 'Benchpress', 
           sets: sets,
@@ -110,10 +129,68 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
           onChanged: (p0) => {},
           isCompleted: false
         ),
-        Padding(
+        const SizedBox(height: 10),
+        const Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(width: 10),
+            Icon(
+              Icons.checklist,
+              color: Colors.blue,
+            ),
+            SizedBox(width: 10),
+              Text('Next Exercises',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)
+              )
+          ],
+        ),
+        DropdownList(
+          title: 'Incline Bench', 
+          sets: sets,
+          onSettingsPress: () => {}, 
+          onDeletePress: () => {},
+          onChanged: (p0) => {},
+          isCompleted: false
+        ),
+        DropdownList(
+          title: 'Decline Bench', 
+          sets: sets,
+          onSettingsPress: () => {}, 
+          onDeletePress: () => {},
+          onChanged: (p0) => {},
+          isCompleted: false
+        ),
+        const SizedBox(height: 10),
+        const Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(width: 10),
+            Icon(
+              Icons.done_all,
+              color: Colors.blue,
+            ),
+            SizedBox(width: 10),
+              Text('Completed Exercises',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)
+              )
+          ],
+        ),
+        DropdownList(
+          title: 'Chest Flys', 
+          sets: sets,
+          onSettingsPress: () => {}, 
+          onDeletePress: () => {},
+          onChanged: (p0) => {},
+          isCompleted: false
+        ),
+        
+      ],
+    ),
+    floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    floatingActionButton: Padding(
           padding: const EdgeInsets.all(22),
           child: TextButton(
-          onPressed: () => endWorkout('Chest Day'),
+          onPressed: () => endWorkout(),
             style: TextButton.styleFrom(
               padding: const EdgeInsets.all(16),
               backgroundColor: Colors.red,
@@ -131,8 +208,6 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
             ),
           ),
         ),
-      ],
-    ),
   );
 }
 

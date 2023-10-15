@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-import 'package:workout_app/models/constants.dart';
 
 part 'setting.g.dart';
 

@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
         index: _currentIndex,
         children: [
           DefaultHomePage(onWorkoutStatusChange: changeWorkoutStatus,),
-          WorkoutHomePage(),
+          WorkoutHomePage(onWorkoutStatusChange: changeWorkoutStatus,),
         ],
       ),
     );
