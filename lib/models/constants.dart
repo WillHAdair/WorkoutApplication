@@ -54,6 +54,8 @@ enum Keys {
   completion,
   workout,
   userName,
+  workoutDay,
+  workoutStarted,
 }
 
 Map<Keys, String> keyMap = {
@@ -65,4 +67,6 @@ Map<Keys, String> keyMap = {
   Keys.completion: "COMPLETED_EXERCISES",
   Keys.workout: "WORKOUT",
   Keys.userName: "USERNAME",
+  Keys.workoutDay: "WORKOUT_DAY",
+  Keys.workoutStarted : "WORKOUT_STARTED",
 };

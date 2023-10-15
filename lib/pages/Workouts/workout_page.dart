@@ -95,7 +95,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
   void editExercise(String exerciseName) {
     Workout relevantWorkout = Provider.of<WorkoutData>(context, listen: false)
-        .getRelevantWorkout(widget.workoutName);
+        .getRelevantWorkout(widget.workoutName)!;
     Exercise relevantExercsise =
         Provider.of<WorkoutData>(context, listen: false)
             .getRelevantExercise(relevantWorkout, exerciseName);
@@ -218,27 +218,27 @@ class _WorkoutPageState extends State<WorkoutPage> {
           itemCount: value.numberOfExercisesInWorkout(widget.workoutName),
           itemBuilder: (context, index) => ExerciseDropdownList(
             title:  value
-              .getRelevantWorkout(widget.workoutName)
+              .getRelevantWorkout(widget.workoutName)!
               .exercises[index]
               .name,
             sets: value
-              .getRelevantWorkout(widget.workoutName)
+              .getRelevantWorkout(widget.workoutName)!
               .exercises[index]
               .sets, 
             isCompleted: value
-              .getRelevantWorkout(widget.workoutName)
+              .getRelevantWorkout(widget.workoutName)!
               .exercises[index]
               .isCompleted, 
             onSettingsPress: () => editExercise(value
-              .getRelevantWorkout(widget.workoutName)
+              .getRelevantWorkout(widget.workoutName)!
               .exercises[index]
               .name), 
             onDeletePress: () => deleteExercise(value
-              .getRelevantWorkout(widget.workoutName)
+              .getRelevantWorkout(widget.workoutName)!
               .exercises[index]
               .name), 
             onChanged: (val) => onCheckBoxChanged(value
-                .getRelevantWorkout(widget.workoutName)
+                .getRelevantWorkout(widget.workoutName)!
                 .exercises[index]
                 .name),
           ),

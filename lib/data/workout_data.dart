@@ -157,8 +157,12 @@ class WorkoutData extends ChangeNotifier {
     return workoutList;
   }
 
-  Workout getRelevantWorkout(String workoutName) {
-    return workoutList.firstWhere((workout) => workout.name == workoutName);
+  Workout? getRelevantWorkout(String workoutName) {
+    try {
+      return workoutList.firstWhere((workout) => workout.name == workoutName);
+    } catch (e) {
+      return null;
+    }
   }
     // Add Workouts
   void addWorkout(String name) {
@@ -171,7 +175,7 @@ class WorkoutData extends ChangeNotifier {
   }
     // Edit/Delete Workouts
   void changeWorkoutName(String currentName, String newName) {
-    Workout relevantWorkout = getRelevantWorkout(currentName);
+    Workout relevantWorkout = getRelevantWorkout(currentName)!;
     relevantWorkout.name = newName;
 
     notifyListeners();
@@ -184,7 +188,7 @@ class WorkoutData extends ChangeNotifier {
   }
 
   void deleteWorkout(String workoutName) {
-    Workout relevantWorkout = getRelevantWorkout(workoutName);
+    Workout relevantWorkout = getRelevantWorkout(workoutName)!;
     List<Workout> workouts = getWorkoutList();
     workouts.remove(relevantWorkout);
 
@@ -201,12 +205,12 @@ class WorkoutData extends ChangeNotifier {
   }
 
   int numberOfExercisesInWorkout(String workoutName) {
-    Workout relevantWorkout = getRelevantWorkout(workoutName);
+    Workout relevantWorkout = getRelevantWorkout(workoutName)!;
     return relevantWorkout.exercises.length;
   }
     // Add Exercises
   void addExercise(String workoutName, String exerciseName, List<WorkoutSet> sets, bool isCompleted) {
-    Workout relevantWorkout = getRelevantWorkout(workoutName);
+    Workout relevantWorkout = getRelevantWorkout(workoutName)!;
     relevantWorkout.exercises.add(
         Exercise(name: exerciseName, sets: sets, isCompleted: isCompleted));
 
@@ -216,7 +220,7 @@ class WorkoutData extends ChangeNotifier {
   }
     // Edit/Delete Exercises
   void checkOffExercise(String workoutName, String exerciseName) {
-    Workout relevantWorkout = getRelevantWorkout(workoutName);
+    Workout relevantWorkout = getRelevantWorkout(workoutName)!;
     Exercise relevantExercise =
         getRelevantExercise(relevantWorkout, exerciseName);
     relevantExercise.isCompleted = !relevantExercise.isCompleted;
@@ -234,7 +238,7 @@ class WorkoutData extends ChangeNotifier {
   }
 
   void deleteExercise(String workoutName, String exerciseName) {
-    Workout relevantWorkout = getRelevantWorkout(workoutName);
+    Workout relevantWorkout = getRelevantWorkout(workoutName)!;
     Exercise relevantExercise =
         getRelevantExercise(relevantWorkout, exerciseName);
     relevantWorkout.exercises.remove(relevantExercise);
@@ -246,7 +250,7 @@ class WorkoutData extends ChangeNotifier {
 
   void editExercise(String workoutName, String oldExerciseName,
       String newExerciseName, List<WorkoutSet> newSets) {
-    Workout relevantWorkout = getRelevantWorkout(workoutName);
+    Workout relevantWorkout = getRelevantWorkout(workoutName)!;
     Exercise relevantExercise =
         getRelevantExercise(relevantWorkout, oldExerciseName);
     relevantExercise.sets = newSets;  
@@ -257,8 +261,19 @@ class WorkoutData extends ChangeNotifier {
   // Workout History
     // Get Workout History
   List<Workout> getWorkoutsForDay(DateTime day) {
-    //TODO: Stub
+    List<Workout> dailyWorkouts = [];
+    List<String> workoutNames = db.getWorkoutsForDay(convertDateTimeToString(day));
+    if (workoutNames.isEmpty) {
+      // TODO: remove when schedule is made
     return [workoutList[0]];
+    }
+    for (String workout in workoutNames) {
+      Workout? w = getRelevantWorkout(workout);
+      if (w != null) {
+        dailyWorkouts.add(w);
+      }
+    }
+    return dailyWorkouts;
   }
 
   List<Tracker> getTrackerList() {
@@ -266,11 +281,19 @@ class WorkoutData extends ChangeNotifier {
   }
 
   bool isWorkoutStarted() {
-    //TODO: Stub
-    return false;
+    return db.checkWorkoutStarted();
+  }
+    // Add Workout History
+  void addWorkoutsToDay(DateTime day, List<Workout> workouts) {
+    db.addWorkoutsToDay(convertDateTimeToString(day), workouts.map((workout) => workout.name).toList());
+    notifyListeners();
   }  
     // Edit/Delete Workout History
   void deleteWorkoutFromDay(DateTime day, String workoutName) {
-    //TODO: Stub
+    db.deleteWorkoutFromDay(convertDateTimeToString(day), workoutName);
+  }
+
+  void changeWorkoutStarted(bool status) {
+    db.changeWorkoutStarted(status);
   }
 }

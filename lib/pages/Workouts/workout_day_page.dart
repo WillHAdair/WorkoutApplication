@@ -22,16 +22,19 @@ class WorkoutDayPage extends StatefulWidget {
 
 class _WorkoutPageState extends State<WorkoutDayPage> {
   final workoutNameController = TextEditingController();
-  
+  Set<Workout> selectedWorkouts = {};
   void deleteWorkoutFromDay(Workout workout) {
     // TODO: Stub
   }
 
-  void onChanged(bool value) {
-
+  void onChanged(Workout workout, bool value) {
+    selectedWorkouts.add(workout);
   }
 
   void onSave() {
+    List<Workout> daysWorkouts = Provider.of<WorkoutData>(context, listen: false).getWorkoutsForDay(widget.date);
+    daysWorkouts.addAll(selectedWorkouts);
+    Provider.of<WorkoutData>(context, listen: false).addWorkoutsToDay(widget.date, daysWorkouts);
     Navigator.pop(context);
   }
 
@@ -55,7 +58,7 @@ class _WorkoutPageState extends State<WorkoutDayPage> {
                       title: workout.name,
                       exercises: workout.exercises,
                       isSelected: false,
-                      onChanged: (value) => onChanged(value!),
+                      onChanged: (value) => onChanged(workout, value!),
                     ),
                   );
                 })

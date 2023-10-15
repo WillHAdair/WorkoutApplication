@@ -71,4 +71,38 @@ class HiveDatabase {
   void setDailyCompletion(String date, int amount) {
     programDataBox.put("${keyMap[Keys.completion]}_$date", amount);
   }
+
+  void addWorkoutsToDay(String date, List<String> workoutNames) {
+    List<String> priorWorkouts = getWorkoutsForDay(date);
+    for (String workoutName in workoutNames) {
+      if (!priorWorkouts.contains(workoutName)) {
+        priorWorkouts.add(workoutName);
+      }
+    }
+    programDataBox.put("${keyMap[Keys.workoutDay]}_$date", priorWorkouts);
+  }
+
+  List<String> getWorkoutsForDay(String date) {
+    return programDataBox.get("${keyMap[Keys.workoutDay]}_$date") ?? [];
+  }
+
+  void deleteWorkoutFromDay(String date, String workoutName) {
+    List<String> workouts = getWorkoutsForDay(date);
+    if (workouts.contains(workoutName)) {
+      workouts.remove(workoutName);
+    }
+    addWorkoutsToDay(date, workouts);
+  }
+
+  void changeWorkoutStarted(bool newStatus) {
+    programDataBox.put(keyMap[Keys.workoutStarted], newStatus);
+  }
+
+  bool checkWorkoutStarted() {
+    if (!selectedKeyFound(programDataBox,keyMap[Keys.workoutStarted]!)) {
+      changeWorkoutStarted(false);
+      return false;
+    }
+    return programDataBox.get(keyMap[Keys.workoutStarted]);
+  }
 }

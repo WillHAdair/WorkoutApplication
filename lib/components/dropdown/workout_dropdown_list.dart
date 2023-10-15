@@ -50,7 +50,8 @@ class _WorkoutDropdownListState extends State<WorkoutDropdownList> {
                   onChanged: (value) => {
                     setState(() {
                       widget.isSelected = value!;
-                    },)
+                    }),
+                    widget.onChanged!.call(value),
                   },
                 ),
                 title: Text(

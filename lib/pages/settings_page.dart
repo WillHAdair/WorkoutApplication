@@ -189,7 +189,7 @@ class SettingsPageState extends State<SettingsPage> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () => openAccountDialog,
+            onPressed: () => openAccountDialog(),
             icon: const Icon(Icons.edit_note),
           ),
         ],
