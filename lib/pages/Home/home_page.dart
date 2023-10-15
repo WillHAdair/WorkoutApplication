@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
     return Consumer<WorkoutData>(
       builder: (context, value, child) => Scaffold(
         body: IndexedStack(
-          index: Provider.of<WorkoutData>(context).isWorkoutStarted() ? 1 :0,
+          index: Provider.of<WorkoutData>(context).isWorkoutStarted() ? 1 : 0,
           children: [
             DefaultHomePage(onWorkoutStatusChange: changeWorkoutStatus,),
             WorkoutHomePage(onWorkoutStatusChange: changeWorkoutStatus,),

@@ -53,9 +53,13 @@ enum Keys {
   remoteData,
   completion,
   workout,
-  userName,
   workoutDay,
   workoutStarted,
+  firstName,
+  lastName,
+  age,
+  weight,
+  height,
 }
 
 Map<Keys, String> keyMap = {
@@ -66,7 +70,11 @@ Map<Keys, String> keyMap = {
   Keys.remoteData: "REMOTE_DATA",
   Keys.completion: "COMPLETED_EXERCISES",
   Keys.workout: "WORKOUT",
-  Keys.userName: "USERNAME",
   Keys.workoutDay: "WORKOUT_DAY",
   Keys.workoutStarted : "WORKOUT_STARTED",
+  Keys.firstName : "FIRST_NAME",
+  Keys.lastName : "LAST_NAME",
+  Keys.age : "AGE",
+  Keys.weight : "WEIGHT",
+  Keys.height : "HEIGHT",
 };

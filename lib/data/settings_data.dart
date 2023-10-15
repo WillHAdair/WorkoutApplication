@@ -14,11 +14,15 @@ class SettingsData extends ChangeNotifier {
     Setting(name: keyMap[Keys.notifications].toString(), isString: false, value: true),
     Setting(name: keyMap[Keys.progressTracking].toString(), isString: false, value: true),
     Setting(name: keyMap[Keys.remoteData].toString(), isString: false, value: false),
-    Setting(name: keyMap[Keys.userName].toString(), isString: false, value: "Real guy"),
+    Setting(name: keyMap[Keys.firstName].toString(), isString: true, value: "Placeholder"),
+    Setting(name: keyMap[Keys.lastName].toString(), isString: true, value: "McPerson"),
+    Setting(name: keyMap[Keys.age].toString(), isString: true, value: "21"),
+    Setting(name: keyMap[Keys.height].toString(), isString: true, value: "5'11"),
+    Setting(name: keyMap[Keys.weight].toString(), isString: true, value: "165"),
   ];
 
   bool getSwitchValues(String identifier) {
-    return getRelevantSetting(identifier).value;
+    return getRelevantSetting(identifier)!.value;
   }
 
   void initializeSettingsList() {
@@ -33,12 +37,16 @@ class SettingsData extends ChangeNotifier {
     }
   }
 
-  Setting getRelevantSetting(String settingName) {
-    return settingsList.firstWhere((setting) => setting.name == settingName);
+  Setting? getRelevantSetting(String settingName) {
+    try {
+      return settingsList.firstWhere((setting) => setting.name == settingName);
+    } catch (e) {
+      return null;
+    }
   }
 
   void editSetting(String settingName, var newValue) {
-    Setting relevantSetting = getRelevantSetting(settingName);
+    Setting relevantSetting = getRelevantSetting(settingName)!;
     relevantSetting.value = newValue;
     //update DB
     db.saveSetting(settingName, relevantSetting);

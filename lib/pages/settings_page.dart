@@ -130,12 +130,20 @@ class SettingsPageState extends State<SettingsPage> {
   final lastNameController = TextEditingController();
   final ageController = TextEditingController();
   final weightController = TextEditingController();
+  final heightController = TextEditingController();
 
   void save() {
     String firstName = firstNameController.text;
     String lastName = lastNameController.text;
     String age = ageController.text;
     String weight = weightController.text;
+    String height = heightController.text;
+    var provider = Provider.of<SettingsData>(context, listen: false);
+    provider.editSetting(keyMap[Keys.firstName].toString(), firstName);
+    provider.editSetting(keyMap[Keys.lastName].toString(), lastName);
+    provider.editSetting(keyMap[Keys.age].toString(), age);
+    provider.editSetting(keyMap[Keys.weight].toString(), weight);
+    provider.editSetting(keyMap[Keys.height].toString(), height);
 
     Navigator.pop(context);
     firstNameController.clear();
@@ -145,6 +153,38 @@ class SettingsPageState extends State<SettingsPage> {
   }
 
   void openAccountDialog() {
+    var provider = Provider.of<SettingsData>(context, listen: false);
+    if (provider.getRelevantSetting(keyMap[Keys.firstName].toString()) != null) {
+      firstNameController.text = provider.
+      getRelevantSetting(keyMap[Keys.firstName].toString())!.value.toString();
+    } else {
+      firstNameController.text = '';
+    }
+    if (provider.getRelevantSetting(keyMap[Keys.lastName].toString()) != null) {
+      lastNameController.text = provider.
+      getRelevantSetting(keyMap[Keys.lastName].toString())!.value.toString();
+    } else {
+      lastNameController.text = '';
+    }
+    if (provider.getRelevantSetting(keyMap[Keys.age].toString()) != null) {
+      ageController.text = provider.
+      getRelevantSetting(keyMap[Keys.age].toString())!.value.toString();
+    } else {
+      ageController.text = '';
+    }
+    if (provider.getRelevantSetting(keyMap[Keys.weight].toString()) != null) {
+      weightController.text = provider.
+      getRelevantSetting(keyMap[Keys.weight].toString())!.value.toString();
+    } else {
+      weightController.text = '';
+    }
+    if (provider.getRelevantSetting(keyMap[Keys.height].toString()) != null) {
+      heightController.text = provider.
+      getRelevantSetting(keyMap[Keys.height].toString())!.value.toString();
+    } else {
+      heightController.text = '';
+    }
+
     showDialog(
       context: context,
       builder: (context) {
@@ -162,6 +202,11 @@ class SettingsPageState extends State<SettingsPage> {
               controller: ageController, 
               hintText: 'Enter age', 
               obscureText: false),
+            CustomTextField(
+              controller: heightController,
+              hintText: 'Enter height',
+              obscureText: false,
+            ),
             CustomTextField(
               controller: weightController, 
               hintText: 'Enter weight', 
@@ -185,7 +230,10 @@ class SettingsPageState extends State<SettingsPage> {
           },
           icon: const Icon(Icons.account_circle),
         ),
-        title: const Text('Chuck Lewis - Settings'),
+        title: Text(
+          '${Provider.of<SettingsData>(context).getRelevantSetting(keyMap[Keys.firstName].toString())!.value} ' 
+          '${Provider.of<SettingsData>(context).getRelevantSetting(keyMap[Keys.lastName].toString())!.value}'
+        ),
         centerTitle: true,
         actions: [
           IconButton(
