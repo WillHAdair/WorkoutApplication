@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
     Provider.of<WorkoutData>(context, listen: false).initializeWorkoutList();
     final settingsData = Provider.of<SettingsData>(context, listen: false);
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-    settingsData.initializeSettingsList();
+    workoutStarted = Provider.of<WorkoutData>(context).isWorkoutStarted();
     bool darkMode = settingsData.getSwitchValues(keyMap[Keys.theme].toString());
     // bool notificationsOn =
     //     settingsData.getRelevantSetting("Notifications").value as bool;
@@ -43,23 +43,25 @@ class _HomePageState extends State<HomePage> {
       // Determine the correct index based on the workout status change
       _currentIndex = workoutStarted ? 1 : 0; // Change to the appropriate index
     });
+    Provider.of<WorkoutData>(context, listen: false).changeWorkoutStarted(newStatus);
   }
 
   @override
   void initState() {
     super.initState();
-    workoutStarted = Provider.of<WorkoutData>(context, listen: false).isWorkoutStarted();
   }
 
 @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: [
-          DefaultHomePage(onWorkoutStatusChange: changeWorkoutStatus,),
-          WorkoutHomePage(onWorkoutStatusChange: changeWorkoutStatus,),
-        ],
+    return Consumer<WorkoutData>(
+      builder: (context, value, child) => Scaffold(
+        body: IndexedStack(
+          index: Provider.of<WorkoutData>(context).isWorkoutStarted() ? 1 :0,
+          children: [
+            DefaultHomePage(onWorkoutStatusChange: changeWorkoutStatus,),
+            WorkoutHomePage(onWorkoutStatusChange: changeWorkoutStatus,),
+          ],
+        ),
       ),
     );
   }

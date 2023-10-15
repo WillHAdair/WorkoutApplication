@@ -295,5 +295,6 @@ class WorkoutData extends ChangeNotifier {
 
   void changeWorkoutStarted(bool status) {
     db.changeWorkoutStarted(status);
+    notifyListeners();
   }
 }
