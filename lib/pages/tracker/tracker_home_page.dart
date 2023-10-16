@@ -4,19 +4,22 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/datetime/date_timedata.dart';
 import 'package:workout_app/models/constants.dart';
+import 'package:workout_app/models/tracker.dart';
 import 'package:workout_app/pages/Workouts/workout_day_page.dart';
+import 'package:workout_app/pages/tracker/schedule_page.dart';
+import 'package:workout_app/pages/tracker/schedules_page.dart';
 
-import '../components/custom_tile.dart';
-import '../components/sliding_tile.dart';
+import '../../components/custom_tile.dart';
+import '../../components/sliding_tile.dart';
 
-class TrackerPage extends StatefulWidget {
-  const TrackerPage({Key? key}) : super(key: key);
+class TrackerHomePage extends StatefulWidget {
+  const TrackerHomePage({Key? key}) : super(key: key);
 
   @override
-  TrackerPageState createState() => TrackerPageState();
+  TrackerHomePageState createState() => TrackerHomePageState();
 }
 
-class TrackerPageState extends State<TrackerPage> {
+class TrackerHomePageState extends State<TrackerHomePage> {
   DateTime today = DateTime.now();
 
   void daySelected(DateTime day, DateTime focusedDay) {
@@ -28,8 +31,22 @@ class TrackerPageState extends State<TrackerPage> {
     );
   }
 
-  void goToSchedulePage() {
+  void goToSchedulePage(Tracker tracker) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SchedulePage(tracker: tracker)
+      ),
+    );
+  }
 
+  void goToSchedulesPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SchedulesPage()
+      ),
+    );
   }
 
   void editSchedule(String name) {
@@ -82,7 +99,7 @@ class TrackerPageState extends State<TrackerPage> {
           ),
           SlidingTile(
             text: value.getTrackerList()[0].name,
-            onForwardPress: () => goToSchedulePage(),
+            onForwardPress: () => goToSchedulePage(value.getTrackerList()[0]),
             onSettingsPress: () => editSchedule(value.getTrackerList()[0].name),
             onDeletePress: () => deleteSchedule(value.getTrackerList()[0].name),
             imageLocation: dumbellImg,
@@ -103,7 +120,7 @@ class TrackerPageState extends State<TrackerPage> {
           ),
           CustomTile(
             text: 'View Schedules',
-            onForwardPress: () => goToSchedulePage(),
+            onForwardPress: () => goToSchedulesPage(),
           ),
         ],
       ),

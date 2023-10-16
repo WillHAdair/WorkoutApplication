@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:workout_app/pages/Home/home_page.dart';
 import 'package:workout_app/pages/settings_page.dart';
-import 'package:workout_app/pages/tracker_page.dart';
+import 'package:workout_app/pages/tracker/tracker_home_page.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({Key? key}) : super(key: key);
@@ -38,7 +38,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
           });
         },
         children: const [
-          TrackerPage(),
+          TrackerHomePage(),
           HomePage(),        
           SettingsPage(),
         ],
