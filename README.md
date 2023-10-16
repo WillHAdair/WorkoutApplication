@@ -16,10 +16,18 @@ Follow these steps to set up the application:
 2. Right click anywhere within the code, and click Get packages, which should build dependencies
 
 
-Follow these steps to run the application:
+Follow these steps to run the application in debug mode:
 
 1. Choose an environment for running the application from the bottom right-hand corner of the VSCode interface.
 2. Click the "Run" button at the top of the interface or press `Ctrl + F5` to initiate the application.
+
+## Release Build Execution
+
+In order to view release versions of the app, open the installers tab under the main `WorkoutApplication` folder.
+
+Currently there is a build registered for windows only, which can be executed using the file `WorkoutApplicationSetup.exe`, which will guide the user through a Windows-exclusive setup screen, before allowing the user to launch the app.
+
+To view the app without the installation process, search for `WorkoutApplication` under the application search in the windows menu, or pin the app to the taskbar or desktop.
 
 ## Features
 
