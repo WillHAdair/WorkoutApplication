@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:workout_app/components/custom_tile.dart';
 import 'package:workout_app/components/dropdown/workout_dropdown_list.dart';
 import 'package:workout_app/components/option_tile.dart';
 import 'package:workout_app/components/sliding_tile.dart';
@@ -37,14 +36,30 @@ class _SchedulePageState extends State<SchedulePage> {
     Workout(name: "break", exercises: [])
   ];
 
-  void navigateToWorkout(Workout workout) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => WorkoutPage(
-                  workoutName: workout.name,
-                )));
+  @override
+  void initState() {
+    super.initState();
+    nameController.text = widget.tracker.name;
+    sliderValue = widget.tracker.workouts.length.toDouble();
+    for (int i = 0; i < widget.tracker.workouts.length; i++) {
+      areWorkoutsChosen[i] = true;
+      workouts[i] = widget.tracker.workouts[i];
+    }
   }
+
+void navigateToWorkout(Workout workout) {
+  if (workout.name != "break") {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WorkoutPage(
+          workoutName: workout.name,
+        ),
+      ),
+    );
+  }
+}
+
 
   void onCancel() {
     Navigator.pop(context);
@@ -94,6 +109,22 @@ class _SchedulePageState extends State<SchedulePage> {
         );
       },
     );
+  }
+
+  void deleteWorkout(int index) {
+    setState(() {
+      areWorkoutsChosen[index] = false;
+      workouts[index] = Workout(name: "break", exercises: []);
+    });
+  }
+
+  void editTracker() {
+    String name = nameController.text;
+    List<Workout> newWorkouts = [];
+    for (int i =0; areWorkoutsChosen[i]; i++) {
+      newWorkouts.add(workouts[i]);
+    }
+    Provider.of<WorkoutData>(context, listen: false).editTrackerList(widget.tracker.name, name, newWorkouts);
   }
 
   @override
@@ -168,9 +199,11 @@ class _SchedulePageState extends State<SchedulePage> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: sliderValue.toInt(),
-              itemBuilder: (context, index) => areWorkoutsChosen[index] ?  CustomTile(
+              itemBuilder: (context, index) => areWorkoutsChosen[index] ?  SlidingTile(
                 text: workouts[index].name,
                 onForwardPress: () => navigateToWorkout(workouts[index]),
+                onSettingsPress: () => chooseWorkout(index),
+                onDeletePress: () => deleteWorkout(index),
               ) : OptionTile(
                 onClick: () => chooseWorkout(index)
               ),
@@ -178,6 +211,36 @@ class _SchedulePageState extends State<SchedulePage> {
           ],
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+          padding: const EdgeInsets.all(22),
+          child: TextButton(
+          onPressed: () => editTracker(),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.all(16),
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.green[200],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.edit_note
+                ),
+                Text(
+                  'Edit Tracker',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            )
+          ),
+        ),
     ),
     );
   }

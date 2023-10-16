@@ -62,6 +62,53 @@ class WorkoutData extends ChangeNotifier {
           isCompleted: false,
         ),
     ]),
+    Workout(name: "Push", exercises: [
+        Exercise(
+          name: 'Incline Press', 
+          sets: [
+            WorkoutSet(
+              weight: "100", 
+              reps: "10", 
+              isCompleted: false
+            ),
+            WorkoutSet(
+              weight: "155", 
+              reps: "10", 
+              isCompleted: false
+            ),
+            WorkoutSet(
+              weight: "165",
+              reps: "10",
+              isCompleted: false
+            ),
+          ],
+          isCompleted: false,
+        )
+      ]),
+      Workout(name: "Pull", exercises: [
+        Exercise(
+          name: 'Barbell row', 
+          sets: [
+            WorkoutSet(
+              weight: "100", 
+              reps: "10", 
+              isCompleted: false
+            ),
+            WorkoutSet(
+              weight: "155", 
+              reps: "10", 
+              isCompleted: false
+            ),
+            WorkoutSet(
+              weight: "165",
+              reps: "10",
+              isCompleted: false
+            ),
+          ],
+          isCompleted: false,
+        )
+      ]),
+      Workout(name: "break", exercises: []),
   ];
 
   List<Tracker> trackerList = [
@@ -280,6 +327,10 @@ class WorkoutData extends ChangeNotifier {
     return trackerList;
   }
 
+  Tracker getRelevantTracker(String name) {
+    return trackerList.firstWhere((element) => element.name == name);
+  }
+
   bool isWorkoutStarted() {
     return db.checkWorkoutStarted();
   }
@@ -291,6 +342,15 @@ class WorkoutData extends ChangeNotifier {
     // Edit/Delete Workout History
   void deleteWorkoutFromDay(DateTime day, String workoutName) {
     db.deleteWorkoutFromDay(convertDateTimeToString(day), workoutName);
+    notifyListeners();
+  }
+
+  void editTrackerList(String currentName, String newName, List<Workout> workouts) {
+    Tracker tracker = getRelevantTracker(currentName);
+    if (newName != currentName) {
+      tracker.name = newName;
+    }
+    tracker.workouts = workouts;
     notifyListeners();
   }
 
