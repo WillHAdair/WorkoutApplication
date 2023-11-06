@@ -18,6 +18,9 @@ class ThemeProvider extends ChangeNotifier {
   Color settingsTile = Colors.grey.shade800;
   Color deleteTile = Colors.red.shade300;
 
+  // Generic colors
+  Color programGreen = const Color.fromARGB(168, 230, 207, 1);
+
   //Chips
   Color chipLight = Colors.grey.shade500;
   Color chipDark = Colors.grey.shade900;
@@ -39,8 +42,10 @@ class ThemeProvider extends ChangeNotifier {
   ///Color customization
 
   //Program colors
-  Color primaryColor = const Color.fromRGBO(76, 175, 80, 1);
-  Color secondaryColor = const Color.fromRGBO(76, 175, 80, 1);
+  Color primaryColor = const Color.fromRGBO(0, 153, 255, 1);
+  Color secondaryColor = const Color.fromARGB(255, 7, 65, 255);
+  Color acceptColor = const Color.fromRGBO(54, 255, 116, 1);
+  Color rejectColor = const Color.fromRGBO(255, 0, 20, 1);
 
   //Heat map colors
   Color restDayColor = const Color.fromRGBO(38, 198, 218, 1);

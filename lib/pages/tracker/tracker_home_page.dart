@@ -24,45 +24,34 @@ class TrackerHomePageState extends State<TrackerHomePage> {
 
   void daySelected(DateTime day, DateTime focusedDay) {
     Navigator.push(
-      context, 
-      MaterialPageRoute(
-        builder: (context) => WorkoutDayPage(date: focusedDay),
-      )
-    );
+        context,
+        MaterialPageRoute(
+          builder: (context) => WorkoutDayPage(date: focusedDay),
+        ));
   }
 
   void goToSchedulePage(Tracker tracker) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => SchedulePage(tracker: tracker)
-      ),
+      MaterialPageRoute(builder: (context) => SchedulePage(tracker: tracker)),
     );
   }
 
   void goToSchedulesPage() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => const SchedulesPage()
-      ),
+      MaterialPageRoute(builder: (context) => const SchedulesPage()),
     );
   }
 
-  void editSchedule(String name) {
+  void editSchedule(String name) {}
 
-  }
+  void deleteSchedule(String name) {}
 
-  void deleteSchedule(String name) {
-
-  }
-
-  void addSchedule() {
-
-  }
+  void addSchedule() {}
 
   @override
-  Widget build (BuildContext context) {
+  Widget build(BuildContext context) {
     return Consumer<WorkoutData>(
       builder: (context, value, child) => Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
@@ -70,60 +59,64 @@ class TrackerHomePageState extends State<TrackerHomePage> {
           title: const Text('Workout Tracking'),
           centerTitle: true,
         ),
-      body: ListView(
-        children: [
-          TableCalendar(
-            locale: "en_US",
-            rowHeight: 43,
-            headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
-            availableGestures: AvailableGestures.all,
-            selectedDayPredicate: (day) => isSameDay(day, today),
-            focusedDay: today,
-            firstDay: createDateTimeObject(Provider.of<WorkoutData>(context).getStartDate()),
-            lastDay: today,
-            onDaySelected: daySelected,
-          ),
-          const SizedBox(height: 10),
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(width: 10),
-              Icon(
-                Icons.schedule,
-                color: Colors.blue,
-              ),
-              SizedBox(width: 10),
-              Text('Current schedule',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-            ],
-          ),
-          SlidingTile(
-            text: value.getTrackerList()[0].name,
-            onForwardPress: () => goToSchedulePage(value.getTrackerList()[0]),
-            onSettingsPress: () => editSchedule(value.getTrackerList()[0].name),
-            onDeletePress: () => deleteSchedule(value.getTrackerList()[0].name),
-            imageLocation: dumbellImg,
-          ),
-          const SizedBox(height: 10),
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(width: 10),
-              Icon(
-                Icons.update,
-                color: Colors.blue,
-              ),
-              SizedBox(width: 10),
-              Text('Other schedules',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-            ],
-          ),
-          CustomTile(
-            text: 'View Schedules',
-            onForwardPress: () => goToSchedulesPage(),
-          ),
-        ],
-      ),
+        body: ListView(
+          children: [
+            TableCalendar(
+              locale: "en_US",
+              rowHeight: 43,
+              headerStyle: const HeaderStyle(
+                  formatButtonVisible: false, titleCentered: true),
+              availableGestures: AvailableGestures.all,
+              selectedDayPredicate: (day) => isSameDay(day, today),
+              focusedDay: today,
+              firstDay: createDateTimeObject(
+                  Provider.of<WorkoutData>(context).getStartDate()),
+              lastDay: today,
+              onDaySelected: daySelected,
+            ),
+            const SizedBox(height: 10),
+            const Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(width: 10),
+                Icon(
+                  Icons.schedule,
+                  color: Colors.blue,
+                ),
+                SizedBox(width: 10),
+                Text('Current schedule',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+              ],
+            ),
+            SlidingTile(
+              text: value.getTrackerList()[0].name,
+              onForwardPress: () => goToSchedulePage(value.getTrackerList()[0]),
+              onSettingsPress: () =>
+                  editSchedule(value.getTrackerList()[0].name),
+              onDeletePress: () =>
+                  deleteSchedule(value.getTrackerList()[0].name),
+              imageLocation: dumbellImg,
+            ),
+            const SizedBox(height: 10),
+            const Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(width: 10),
+                Icon(
+                  Icons.update,
+                  color: Colors.blue,
+                ),
+                SizedBox(width: 10),
+                Text('Other schedules',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+              ],
+            ),
+            CustomTile(
+              text: 'View Schedules',
+              onForwardPress: () => goToSchedulesPage(),
+            ),
+          ],
+        ),
       ),
     );
   }

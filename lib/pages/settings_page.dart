@@ -17,7 +17,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class SettingsPageState extends State<SettingsPage> {
-
   Color selectedColor = Colors.green;
   bool darkMode = true;
   bool notificationsOn = false;
@@ -35,7 +34,6 @@ class SettingsPageState extends State<SettingsPage> {
         settingsData.getSwitchValues(keyMap[Keys.notifications].toString());
     trendTracking =
         settingsData.getSwitchValues(keyMap[Keys.progressTracking].toString());
-
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       themeProvider.toggleTheme(darkMode);
@@ -63,7 +61,6 @@ class SettingsPageState extends State<SettingsPage> {
   delete() {
     Navigator.pop(context);
   }
-  
 
   void deleteStoredData() {
     showDialog(
@@ -109,13 +106,13 @@ class SettingsPageState extends State<SettingsPage> {
         );
       },
     );
-  }  
+  }
 
   changeTrendTracking(bool newTrendTracking) {
     setState(() {
       trendTracking = newTrendTracking;
-      Provider.of<SettingsData>(context, listen: false)
-          .editSetting(keyMap[Keys.progressTracking].toString(), newTrendTracking);
+      Provider.of<SettingsData>(context, listen: false).editSetting(
+          keyMap[Keys.progressTracking].toString(), newTrendTracking);
     });
   }
 
@@ -154,159 +151,170 @@ class SettingsPageState extends State<SettingsPage> {
 
   void openAccountDialog() {
     var provider = Provider.of<SettingsData>(context, listen: false);
-    if (provider.getRelevantSetting(keyMap[Keys.firstName].toString()) != null) {
-      firstNameController.text = provider.
-      getRelevantSetting(keyMap[Keys.firstName].toString())!.value.toString();
+    if (provider.getRelevantSetting(keyMap[Keys.firstName].toString()) !=
+        null) {
+      firstNameController.text = provider
+          .getRelevantSetting(keyMap[Keys.firstName].toString())!
+          .value
+          .toString();
     } else {
       firstNameController.text = '';
     }
     if (provider.getRelevantSetting(keyMap[Keys.lastName].toString()) != null) {
-      lastNameController.text = provider.
-      getRelevantSetting(keyMap[Keys.lastName].toString())!.value.toString();
+      lastNameController.text = provider
+          .getRelevantSetting(keyMap[Keys.lastName].toString())!
+          .value
+          .toString();
     } else {
       lastNameController.text = '';
     }
     if (provider.getRelevantSetting(keyMap[Keys.age].toString()) != null) {
-      ageController.text = provider.
-      getRelevantSetting(keyMap[Keys.age].toString())!.value.toString();
+      ageController.text = provider
+          .getRelevantSetting(keyMap[Keys.age].toString())!
+          .value
+          .toString();
     } else {
       ageController.text = '';
     }
     if (provider.getRelevantSetting(keyMap[Keys.weight].toString()) != null) {
-      weightController.text = provider.
-      getRelevantSetting(keyMap[Keys.weight].toString())!.value.toString();
+      weightController.text = provider
+          .getRelevantSetting(keyMap[Keys.weight].toString())!
+          .value
+          .toString();
     } else {
       weightController.text = '';
     }
     if (provider.getRelevantSetting(keyMap[Keys.height].toString()) != null) {
-      heightController.text = provider.
-      getRelevantSetting(keyMap[Keys.height].toString())!.value.toString();
+      heightController.text = provider
+          .getRelevantSetting(keyMap[Keys.height].toString())!
+          .value
+          .toString();
     } else {
       heightController.text = '';
     }
 
     showDialog(
-      context: context,
-      builder: (context) {
-        return CustomizableDialog(
-          customTextFields: [
-            CustomTextField(
-              controller: firstNameController, 
-              hintText: 'Enter first name', 
-              obscureText: false),
-            CustomTextField(
-              controller: lastNameController, 
-              hintText: 'Enter last name', 
-              obscureText: false),
-            CustomTextField(
-              controller: ageController, 
-              hintText: 'Enter age', 
-              obscureText: false),
-            CustomTextField(
-              controller: heightController,
-              hintText: 'Enter height',
-              obscureText: false,
-            ),
-            CustomTextField(
-              controller: weightController, 
-              hintText: 'Enter weight', 
-              obscureText: false),
-          ], 
-          onSave: save, 
-          onCancel: () => Navigator.pop(context),
-        );
-      });
+        context: context,
+        builder: (context) {
+          return CustomizableDialog(
+            customTextFields: [
+              CustomTextField(
+                  controller: firstNameController,
+                  hintText: 'Enter first name',
+                  obscureText: false),
+              CustomTextField(
+                  controller: lastNameController,
+                  hintText: 'Enter last name',
+                  obscureText: false),
+              CustomTextField(
+                  controller: ageController,
+                  hintText: 'Enter age',
+                  obscureText: false),
+              CustomTextField(
+                controller: heightController,
+                hintText: 'Enter height',
+                obscureText: false,
+              ),
+              CustomTextField(
+                  controller: weightController,
+                  hintText: 'Enter weight',
+                  obscureText: false),
+            ],
+            onSave: save,
+            onCancel: () => Navigator.pop(context),
+          );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<SettingsData>(
       builder: (context, value, child) => Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-
-          },
-          icon: const Icon(Icons.account_circle),
-        ),
-        title: Text(
-          '${Provider.of<SettingsData>(context).getRelevantSetting(keyMap[Keys.firstName].toString())!.value} ' 
-          '${Provider.of<SettingsData>(context).getRelevantSetting(keyMap[Keys.lastName].toString())!.value}'
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () => openAccountDialog(),
-            icon: const Icon(Icons.edit_note),
+        backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.account_circle),
           ),
-        ],
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(10),
-        child: ListView(
-          children: [
-            const SizedBox(height: 10),
-            const Row(
-              children: [
-                Icon(
-                  Icons.toggle_off,
-                  color: Colors.blue,
-                ),
-                SizedBox(width: 10),
-                Text('Preferences',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-              ],
-            ),
-            const Divider(height: 20, thickness: 1),
-            const SizedBox(height: 10),
-            buildSwitch(Icons.light_mode, Icons.dark_mode, 'Theme Dark',
-                darkMode, changeDarkMode),
-            buildSwitch(Icons.notifications_off, Icons.notifications_active,
-                'Notifications', notificationsOn, changeNotifications),
-            const SizedBox(height: 10),
-            const Row(
-              children: [
-                Icon(
-                  Icons.storage,
-                  color: Colors.blue,
-                ),
-                SizedBox(width: 10),
-                Text('Data',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-              ],
-            ),
-            const Divider(height: 20, thickness: 1),
-            const SizedBox(height: 10),
-            buildSwitch(Icons.trending_flat, Icons.trending_up,
-                'Progress Tracking', trendTracking, changeTrendTracking),
-            buildSwitch(Icons.cloud_off, Icons.cloud_upload,
-                'Remote data storage', remoteStorage, changeRemoteStorage),
-            Padding(
-              padding:const EdgeInsets.all(22),
-              child: TextButton(
-              onPressed: () => deleteStoredData(),
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.all(16), 
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.red[200], 
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              child: const Text(
-                'Delete Stored Data',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                ),
-              ),
-            ), 
+          title: Text(
+              '${Provider.of<SettingsData>(context).getRelevantSetting(keyMap[Keys.firstName].toString())!.value} '
+              '${Provider.of<SettingsData>(context).getRelevantSetting(keyMap[Keys.lastName].toString())!.value}'),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () => openAccountDialog(),
+              icon: const Icon(Icons.edit_note),
             ),
           ],
         ),
+        body: Container(
+          padding: const EdgeInsets.all(10),
+          child: ListView(
+            children: [
+              const SizedBox(height: 10),
+              const Row(
+                children: [
+                  Icon(
+                    Icons.toggle_off,
+                    color: Colors.blue,
+                  ),
+                  SizedBox(width: 10),
+                  Text('Preferences',
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+                ],
+              ),
+              const Divider(height: 20, thickness: 1),
+              const SizedBox(height: 10),
+              buildSwitch(Icons.light_mode, Icons.dark_mode, 'Theme Dark',
+                  darkMode, changeDarkMode),
+              buildSwitch(Icons.notifications_off, Icons.notifications_active,
+                  'Notifications', notificationsOn, changeNotifications),
+              const SizedBox(height: 10),
+              const Row(
+                children: [
+                  Icon(
+                    Icons.storage,
+                    color: Colors.blue,
+                  ),
+                  SizedBox(width: 10),
+                  Text('Data',
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+                ],
+              ),
+              const Divider(height: 20, thickness: 1),
+              const SizedBox(height: 10),
+              buildSwitch(Icons.trending_flat, Icons.trending_up,
+                  'Progress Tracking', trendTracking, changeTrendTracking),
+              buildSwitch(Icons.cloud_off, Icons.cloud_upload,
+                  'Remote data storage', remoteStorage, changeRemoteStorage),
+              Padding(
+                padding: const EdgeInsets.all(22),
+                child: TextButton(
+                  onPressed: () => deleteStoredData(),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.all(16),
+                    backgroundColor:
+                        Provider.of<ThemeProvider>(context).rejectColor,
+                    foregroundColor: Colors.red[200],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'Delete Stored Data',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
-    ),
     );
   }
 
