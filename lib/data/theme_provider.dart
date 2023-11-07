@@ -44,7 +44,7 @@ class ThemeProvider extends ChangeNotifier {
   //Program colors
   Color primaryColor = const Color.fromRGBO(0, 153, 255, 1);
   Color secondaryColor = const Color.fromARGB(255, 7, 65, 255);
-  Color acceptColor = const Color.fromRGBO(54, 255, 116, 1);
+  Color acceptColor = const Color.fromRGBO(44, 206, 63, 1);
   Color rejectColor = const Color.fromRGBO(255, 0, 20, 1);
 
   //Heat map colors

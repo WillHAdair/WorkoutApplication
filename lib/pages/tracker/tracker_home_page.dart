@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/datetime/date_timedata.dart';
 import 'package:workout_app/models/constants.dart';
@@ -75,16 +76,16 @@ class TrackerHomePageState extends State<TrackerHomePage> {
               onDaySelected: daySelected,
             ),
             const SizedBox(height: 10),
-            const Row(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Icon(
                   Icons.schedule,
-                  color: Colors.blue,
+                  color: Provider.of<ThemeProvider>(context).secondaryColor,
                 ),
-                SizedBox(width: 10),
-                Text('Current schedule',
+                const SizedBox(width: 10),
+                const Text('Current schedule',
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
               ],
             ),
@@ -98,16 +99,16 @@ class TrackerHomePageState extends State<TrackerHomePage> {
               imageLocation: dumbellImg,
             ),
             const SizedBox(height: 10),
-            const Row(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Icon(
                   Icons.update,
-                  color: Colors.blue,
+                  color: Provider.of<ThemeProvider>(context).secondaryColor,
                 ),
-                SizedBox(width: 10),
-                Text('Other schedules',
+                const SizedBox(width: 10),
+                const Text('Other schedules',
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
               ],
             ),

@@ -17,7 +17,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class SettingsPageState extends State<SettingsPage> {
-  Color selectedColor = Colors.green;
   bool darkMode = true;
   bool notificationsOn = false;
   bool trendTracking = false;
@@ -81,7 +80,7 @@ class SettingsPageState extends State<SettingsPage> {
                   fit: FlexFit.loose,
                   child: MaterialButton(
                     onPressed: () => delete(),
-                    color: Colors.red.shade300,
+                    color: Provider.of<ThemeProvider>(context).rejectColor,
                     child: const Text(
                       'Yes',
                       style: TextStyle(color: Colors.white),
@@ -93,7 +92,7 @@ class SettingsPageState extends State<SettingsPage> {
                   fit: FlexFit.loose,
                   child: MaterialButton(
                     onPressed: () => Navigator.pop(context),
-                    color: Colors.green.shade300,
+                    color: Provider.of<ThemeProvider>(context).acceptColor,
                     child: const Text(
                       'No',
                       style: TextStyle(color: Colors.white),
@@ -252,14 +251,14 @@ class SettingsPageState extends State<SettingsPage> {
           child: ListView(
             children: [
               const SizedBox(height: 10),
-              const Row(
+              Row(
                 children: [
                   Icon(
                     Icons.toggle_off,
-                    color: Colors.blue,
+                    color: Provider.of<ThemeProvider>(context).secondaryColor,
                   ),
-                  SizedBox(width: 10),
-                  Text('Preferences',
+                  const SizedBox(width: 10),
+                  const Text('Preferences',
                       style:
                           TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
                 ],
@@ -271,14 +270,14 @@ class SettingsPageState extends State<SettingsPage> {
               buildSwitch(Icons.notifications_off, Icons.notifications_active,
                   'Notifications', notificationsOn, changeNotifications),
               const SizedBox(height: 10),
-              const Row(
+              Row(
                 children: [
                   Icon(
                     Icons.storage,
-                    color: Colors.blue,
+                    color: Provider.of<ThemeProvider>(context).secondaryColor,
                   ),
-                  SizedBox(width: 10),
-                  Text('Data',
+                  const SizedBox(width: 10),
+                  const Text('Data',
                       style:
                           TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
                 ],
@@ -297,7 +296,6 @@ class SettingsPageState extends State<SettingsPage> {
                     padding: const EdgeInsets.all(16),
                     backgroundColor:
                         Provider.of<ThemeProvider>(context).rejectColor,
-                    foregroundColor: Colors.red[200],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -336,7 +334,7 @@ class SettingsPageState extends State<SettingsPage> {
           Transform.scale(
             scale: 0.7,
             child: CupertinoSwitch(
-              activeColor: Colors.blue,
+              activeColor: Provider.of<ThemeProvider>(context).acceptColor,
               trackColor: Colors.grey,
               value: value,
               onChanged: (bool newValue) {
@@ -347,158 +345,6 @@ class SettingsPageState extends State<SettingsPage> {
           )
         ],
       ),
-    );
-  }
-
-  Padding buildColorOption(String title,
-      {bool isPrimary = false,
-      bool isSecondary = false,
-      bool isSkip = false,
-      bool isRest = false,
-      isMapBase = false}) {
-    Color color;
-    if (isPrimary) {
-      color = Provider.of<ThemeProvider>(context).primaryColor;
-    } else if (isSecondary) {
-      color = Provider.of<ThemeProvider>(context).secondaryColor;
-    } else if (isSkip) {
-      color = Provider.of<ThemeProvider>(context).skipDayColor;
-    } else if (isRest) {
-      color = Provider.of<ThemeProvider>(context).restDayColor;
-    } else if (isMapBase) {
-      color = Provider.of<ThemeProvider>(context).heatMapBaseColor;
-    } else {
-      color = selectedColor;
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: () => pickColor(context,
-                isPrimary: isPrimary,
-                isSecondary: isSecondary,
-                isSkip: isSkip,
-                isRest: isRest,
-                isMapBase: isMapBase),
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: color,
-              ),
-              width: 40,
-              height: 40,
-            ),
-          ),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: Provider.of<ThemeProvider>(context).constantText,
-            ),
-          ),
-          Transform.scale(
-            scale: 0.7,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_forward_ios),
-              onPressed: () => pickColor(context,
-                  isPrimary: isPrimary,
-                  isSecondary: isSecondary,
-                  isSkip: isSkip,
-                  isRest: isRest,
-                  isMapBase: isMapBase),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void pickColor(BuildContext context,
-          {bool isPrimary = false,
-          bool isSecondary = false,
-          bool isSkip = false,
-          bool isRest = false,
-          isMapBase = false}) =>
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Pick color'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              buildColorPicker(
-                  isPrimary: isPrimary,
-                  isSecondary: isSecondary,
-                  isSkip: isSkip,
-                  isRest: isRest,
-                  isMapBase: isMapBase),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(
-                  'Select',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Provider.of<ThemeProvider>(context).getTextColor(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget buildColorPicker(
-      {bool isPrimary = false,
-      bool isSecondary = false,
-      bool isSkip = false,
-      bool isRest = false,
-      isMapBase = false}) {
-    Color color;
-    if (isPrimary) {
-      color = Provider.of<ThemeProvider>(context).primaryColor;
-    } else if (isSecondary) {
-      color = Provider.of<ThemeProvider>(context).secondaryColor;
-    } else if (isSkip) {
-      color = Provider.of<ThemeProvider>(context).skipDayColor;
-    } else if (isRest) {
-      color = Provider.of<ThemeProvider>(context).restDayColor;
-    } else if (isMapBase) {
-      color = Provider.of<ThemeProvider>(context).heatMapBaseColor;
-    } else {
-      color = selectedColor;
-    }
-
-    return ColorPicker(
-      pickerColor: color,
-      onColorChanged: (newColor) {
-        setState(() {
-          if (isPrimary) {
-            Provider.of<ThemeProvider>(context, listen: false)
-                .setPrimaryColor(newColor);
-          } else if (isSecondary) {
-            Provider.of<ThemeProvider>(context, listen: false)
-                .setSecondaryColor(newColor);
-          } else if (isSkip) {
-            Provider.of<ThemeProvider>(context, listen: false)
-                .setSkipColor(newColor);
-          } else if (isRest) {
-            Provider.of<ThemeProvider>(context, listen: false)
-                .setRestColor(newColor);
-          } else if (isMapBase) {
-            MaterialColor colorToMaterial = getMaterialColor(newColor);
-            Provider.of<ThemeProvider>(context, listen: false)
-                .setHeatMapBaseColor(colorToMaterial);
-          } else {
-            selectedColor = newColor;
-          }
-        });
-      },
-      enableAlpha: false,
-      labelTypes: const [],
     );
   }
 }

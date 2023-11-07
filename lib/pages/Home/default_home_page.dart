@@ -117,7 +117,7 @@ class DefaultHomePageState extends State<DefaultHomePage> {
                   fit: FlexFit.loose,
                   child: MaterialButton(
                     onPressed: () => delete(workoutName),
-                    color: Colors.red.shade300,
+                    color: Provider.of<ThemeProvider>(context).rejectColor,
                     child: const Text(
                       'Yes',
                       style: TextStyle(color: Colors.white),
@@ -129,7 +129,7 @@ class DefaultHomePageState extends State<DefaultHomePage> {
                   fit: FlexFit.loose,
                   child: MaterialButton(
                     onPressed: cancel,
-                    color: Colors.green.shade300,
+                    color: Provider.of<ThemeProvider>(context).acceptColor,
                     child: const Text(
                       'No',
                       style: TextStyle(color: Colors.white),
@@ -159,16 +159,16 @@ class DefaultHomePageState extends State<DefaultHomePage> {
                 datasets: value.heatMapDataSet,
                 startDate: value.getStartDate()),
             const SizedBox(height: 10),
-            const Row(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Icon(
                   Icons.today,
-                  color: Colors.blue,
+                  color: Provider.of<ThemeProvider>(context).secondaryColor,
                 ),
-                SizedBox(width: 10),
-                Text('Today\'s workout',
+                const SizedBox(width: 10),
+                const Text('Today\'s workout',
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
               ],
             ),
@@ -183,15 +183,15 @@ class DefaultHomePageState extends State<DefaultHomePage> {
               imageLocation: dumbellImg,
             ),
             const SizedBox(height: 10),
-            const Row(
+            Row(
               children: [
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Icon(
                   Icons.checklist,
-                  color: Colors.blue,
+                  color: Provider.of<ThemeProvider>(context).secondaryColor,
                 ),
-                SizedBox(width: 10),
-                Text('Other workouts',
+                const SizedBox(width: 10),
+                const Text('Other workouts',
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
               ],
             ),
@@ -209,7 +209,6 @@ class DefaultHomePageState extends State<DefaultHomePage> {
             style: TextButton.styleFrom(
               padding: const EdgeInsets.all(16),
               backgroundColor: Provider.of<ThemeProvider>(context).acceptColor,
-              foregroundColor: Colors.green[200],
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
