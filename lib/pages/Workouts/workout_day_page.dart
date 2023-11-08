@@ -108,9 +108,11 @@ class _WorkoutPageState extends State<WorkoutDayPage> {
       builder: (context) {
         return CustomizableDialog(customTextFields: [
           CustomTextField(
-              controller: workoutNameController,
-              hintText: "New Name",
-              obscureText: false)
+            controller: workoutNameController,
+            name: "New Name",
+            prefixIcon: Icons.person_add,
+            inputType: TextInputType.name,
+          )
         ], onSave: () => edit(workoutName), onCancel: onCancel);
       },
     );

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
 import 'package:workout_app/components/dropdown/exercise_dropdown_list.dart';
 import 'package:workout_app/components/popups/customizable_dialog.dart';
+import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/workout.dart';
@@ -57,21 +58,29 @@ class _WorkoutPageState extends State<WorkoutPage> {
   void createNewExercise() {
     List<CustomTextField> exercises = [
       CustomTextField(
-          controller: exerciseNameController,
-          hintText: "Exercise name",
-          obscureText: false),
+        controller: exerciseNameController,
+        name: "Exercise name",
+        prefixIcon: Icons.person_add,
+        inputType: TextInputType.name,
+      ),
       CustomTextField(
-          controller: exerciseWeightController,
-          hintText: "Exercise weight",
-          obscureText: false),
+        controller: exerciseWeightController,
+        name: "Exercise weight",
+        prefixIcon: Icons.scale,
+        inputType: TextInputType.number,
+      ),
       CustomTextField(
-          controller: exerciseSetsController,
-          hintText: "Exercise sets",
-          obscureText: false),
+        controller: exerciseSetsController,
+        name: "Exercise sets",
+        prefixIcon: Icons.edit,
+        inputType: TextInputType.number,
+      ),
       CustomTextField(
-          controller: exerciseRepsController,
-          hintText: "Exercise reps",
-          obscureText: false),
+        controller: exerciseRepsController,
+        name: "Exercise reps",
+        prefixIcon: Icons.edit,
+        inputType: TextInputType.number,
+      ),
     ];
     showDialog(
         context: context,
@@ -123,21 +132,29 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
     List<CustomTextField> exercises = [
       CustomTextField(
-          controller: exerciseNameController,
-          hintText: "New name",
-          obscureText: false),
+        controller: exerciseNameController,
+        name: "New name",
+        prefixIcon: Icons.person_add,
+        inputType: TextInputType.name,
+      ),
       CustomTextField(
-          controller: exerciseWeightController,
-          hintText: "New weight",
-          obscureText: false),
+        controller: exerciseWeightController,
+        name: "New weight",
+        prefixIcon: Icons.scale,
+        inputType: TextInputType.number,
+      ),
       CustomTextField(
-          controller: exerciseSetsController,
-          hintText: "New sets",
-          obscureText: false),
+        controller: exerciseSetsController,
+        name: "New sets",
+        prefixIcon: Icons.edit,
+        inputType: TextInputType.number,
+      ),
       CustomTextField(
-          controller: exerciseRepsController,
-          hintText: "New reps",
-          obscureText: false),
+        controller: exerciseRepsController,
+        name: "New reps",
+        prefixIcon: Icons.edit,
+        inputType: TextInputType.number,
+      ),
     ];
     showDialog(
         context: context,
@@ -175,7 +192,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   fit: FlexFit.loose,
                   child: MaterialButton(
                     onPressed: () => delete(exerciseName),
-                    color: Colors.red.shade300,
+                    color: Provider.of<ThemeProvider>(context).rejectColor,
                     child: const Text(
                       'Yes',
                       style: TextStyle(color: Colors.white),
@@ -187,7 +204,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   fit: FlexFit.loose,
                   child: MaterialButton(
                     onPressed: cancel,
-                    color: Colors.green.shade300,
+                    color: Provider.of<ThemeProvider>(context).acceptColor,
                     child: const Text(
                       'No',
                       style: TextStyle(color: Colors.white),
@@ -212,6 +229,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => createNewExercise(),
+          backgroundColor: Provider.of<ThemeProvider>(context).acceptColor,
           child: const Icon(Icons.add),
         ),
         body: ListView.builder(

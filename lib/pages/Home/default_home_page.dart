@@ -30,9 +30,11 @@ class DefaultHomePageState extends State<DefaultHomePage> {
         builder: (context) {
           return CustomizableDialog(customTextFields: [
             CustomTextField(
-                controller: workoutNameController,
-                hintText: "Workout Name",
-                obscureText: false)
+              controller: workoutNameController,
+              name: "Workout Name",
+              prefixIcon: Icons.text_fields_outlined,
+              inputType: TextInputType.name,
+            )
           ], onSave: save, onCancel: cancel);
         });
   }
@@ -81,9 +83,11 @@ class DefaultHomePageState extends State<DefaultHomePage> {
       builder: (context) {
         return CustomizableDialog(customTextFields: [
           CustomTextField(
-              controller: workoutNameController,
-              hintText: "New Name",
-              obscureText: false)
+            controller: workoutNameController,
+            name: "New Name",
+            prefixIcon: Icons.settings,
+            inputType: TextInputType.text,
+          )
         ], onSave: () => edit(workoutName), onCancel: cancel);
       },
     );

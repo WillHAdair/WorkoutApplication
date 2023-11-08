@@ -31,8 +31,9 @@ class CustomizableDialog extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: CustomTextField(
                         controller: customTextField.controller,
-                        hintText: customTextField.hintText,
-                        obscureText: customTextField.obscureText,
+                        name: customTextField.name,
+                        prefixIcon: customTextField.prefixIcon,
+                        inputType: customTextField.inputType,
                       ),
                     );
                   }),

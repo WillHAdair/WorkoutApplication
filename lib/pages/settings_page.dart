@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
 import 'package:workout_app/components/popups/customizable_dialog.dart';
@@ -198,26 +197,35 @@ class SettingsPageState extends State<SettingsPage> {
           return CustomizableDialog(
             customTextFields: [
               CustomTextField(
-                  controller: firstNameController,
-                  hintText: 'Enter first name',
-                  obscureText: false),
-              CustomTextField(
-                  controller: lastNameController,
-                  hintText: 'Enter last name',
-                  obscureText: false),
-              CustomTextField(
-                  controller: ageController,
-                  hintText: 'Enter age',
-                  obscureText: false),
-              CustomTextField(
-                controller: heightController,
-                hintText: 'Enter height',
-                obscureText: false,
+                controller: firstNameController,
+                name: 'Enter first name',
+                prefixIcon: Icons.person_add,
+                inputType: TextInputType.name,
               ),
               CustomTextField(
-                  controller: weightController,
-                  hintText: 'Enter weight',
-                  obscureText: false),
+                controller: lastNameController,
+                name: 'Enter last name',
+                prefixIcon: Icons.person_add,
+                inputType: TextInputType.name,
+              ),
+              CustomTextField(
+                controller: ageController,
+                name: 'Enter age',
+                prefixIcon: Icons.schedule,
+                inputType: TextInputType.number,
+              ),
+              CustomTextField(
+                controller: heightController,
+                name: 'Enter height',
+                prefixIcon: Icons.height,
+                inputType: TextInputType.none,
+              ),
+              CustomTextField(
+                controller: weightController,
+                name: 'Enter weight',
+                prefixIcon: Icons.scale,
+                inputType: TextInputType.number,
+              ),
             ],
             onSave: save,
             onCancel: () => Navigator.pop(context),

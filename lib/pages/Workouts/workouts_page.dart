@@ -24,8 +24,10 @@ class WorkoutsPageState extends State<WorkoutsPage> {
           return CustomizableDialog(customTextFields: [
             CustomTextField(
                 controller: workoutNameController,
-                hintText: "Workout Name",
-                obscureText: false)
+                name: "Workout Name",
+                prefixIcon: Icons.fitness_center,
+                inputType: TextInputType.name,
+            ),
           ], onSave: save, onCancel: cancel);
         });
   }
@@ -70,8 +72,10 @@ class WorkoutsPageState extends State<WorkoutsPage> {
         return CustomizableDialog(customTextFields: [
           CustomTextField(
               controller: workoutNameController,
-              hintText: "New Name",
-              obscureText: false)
+              name: "New Name",
+              prefixIcon: Icons.edit,
+              inputType: TextInputType.name,
+            )
         ], onSave: () => edit(workoutName), onCancel: cancel);
       },
     );

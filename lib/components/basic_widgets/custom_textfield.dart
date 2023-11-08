@@ -4,36 +4,58 @@ import 'package:workout_app/data/theme_provider.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
-  final String hintText;
+  final String name;
+  final IconData prefixIcon;
   final bool obscureText;
+  final TextCapitalization textCapitalization;
+  final TextInputType inputType;
 
   const CustomTextField({
     super.key,
     required this.controller,
-    required this.hintText,
-    required this.obscureText,
+    required this.name,
+    required this.prefixIcon,
+    required this.inputType,
+    this.textCapitalization = TextCapitalization.none,
+    this.obscureText = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
       child: TextField(
+        enabled: true,
         controller: controller,
+        textCapitalization: textCapitalization,
+        maxLength: 32,
+        maxLines: 1,
         obscureText: obscureText,
+        keyboardType: inputType,
+        textAlign: TextAlign.start,
+        style: TextStyle(
+          color: Provider.of<ThemeProvider>(context).getTextColor(),
+          fontSize: 16,
+        ),
         decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Provider.of<ThemeProvider>(context).secondaryColor),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Provider.of<ThemeProvider>(context).secondaryColor),
-            ),
-            filled: true,
-            hintText: hintText,
-            hintStyle: TextStyle(
-                color: Provider.of<ThemeProvider>(context).secondaryColor)),
+          prefixIcon: Icon(prefixIcon),
+          isDense: true,
+          labelText: name,
+          counterText: "",
+          labelStyle: const TextStyle(color: Colors.grey),
+          border: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.green),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.green),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.green),
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+        ),
       ),
     );
   }
