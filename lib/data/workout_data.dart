@@ -4,7 +4,7 @@ import 'package:workout_app/datetime/date_timedata.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/workout_set.dart';
 
-import '../models/tracker.dart';
+import '../models/schedule.dart';
 import '../models/workout.dart';
 
 class WorkoutData extends ChangeNotifier {
@@ -111,8 +111,8 @@ class WorkoutData extends ChangeNotifier {
       Workout(name: "break", exercises: []),
   ];
 
-  List<Tracker> trackerList = [
-    Tracker(name: 'Push Pull Legs', workouts: [
+  List<Schedule> trackerList = [
+    Schedule(name: 'Push Pull Legs', period: 2, workouts: [
       Workout(name: "Push", exercises: [
         Exercise(
           name: 'Incline Press', 
@@ -323,11 +323,11 @@ class WorkoutData extends ChangeNotifier {
     return dailyWorkouts;
   }
 
-  List<Tracker> getTrackerList() {
+  List<Schedule> getTrackerList() {
     return trackerList;
   }
 
-  Tracker getRelevantTracker(String name) {
+  Schedule getRelevantTracker(String name) {
     return trackerList.firstWhere((element) => element.name == name);
   }
 
@@ -340,13 +340,27 @@ class WorkoutData extends ChangeNotifier {
     notifyListeners();
   }  
     // Edit/Delete Workout History
+  void editSchedule(String oldSchedule, String newSchedule) {
+
+  }
+
+  void deleteSchedule(String scheduleName) {
+    Schedule tracker = getRelevantTracker(scheduleName);
+    List<Schedule> trackers = getTrackerList();
+    trackers.remove(tracker);
+
+    notifyListeners();
+
+    db.deleteSchedule(scheduleName);
+  }
+
   void deleteWorkoutFromDay(DateTime day, String workoutName) {
     db.deleteWorkoutFromDay(convertDateTimeToString(day), workoutName);
     notifyListeners();
   }
 
   void editTrackerList(String currentName, String newName, List<Workout> workouts) {
-    Tracker tracker = getRelevantTracker(currentName);
+    Schedule tracker = getRelevantTracker(currentName);
     if (newName != currentName) {
       tracker.name = newName;
     }

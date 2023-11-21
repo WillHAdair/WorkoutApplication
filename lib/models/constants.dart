@@ -45,6 +45,20 @@ MaterialColor getMaterialColor(Color color) {
 
 String dumbellImg = 'lib/images/dumbell.png';
 
+enum BoxKeys {
+  settings,
+  programData,
+  workouts,
+  schedules,
+}
+
+Map<BoxKeys, String> boxKeyMap = {
+  BoxKeys.settings: "settingsBox",
+  BoxKeys.workouts: "workoutBox",
+  BoxKeys.programData: "programDataBox",
+  BoxKeys.schedules: "schedulesBox",
+};
+
 enum Keys {
   startDate,
   notifications,

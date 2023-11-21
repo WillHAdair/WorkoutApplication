@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/custom_tile.dart';
 import 'package:workout_app/data/workout_data.dart';
-import 'package:workout_app/models/tracker.dart';
+import 'package:workout_app/models/schedule.dart';
 import 'package:workout_app/pages/tracker/schedule_page.dart';
 
 class SchedulesPage extends StatefulWidget{ 
@@ -14,7 +14,7 @@ class SchedulesPage extends StatefulWidget{
 }
 
 class _SchedulesPageState extends State<SchedulesPage> {
-    void goToSchedulePage(Tracker tracker) {
+    void goToSchedulePage(Schedule tracker) {
     Navigator.push(
       context,
       MaterialPageRoute(

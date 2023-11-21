@@ -5,12 +5,12 @@ import 'package:workout_app/components/option_tile.dart';
 import 'package:workout_app/components/sliding_tile.dart';
 import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/data/workout_data.dart';
-import 'package:workout_app/models/tracker.dart';
+import 'package:workout_app/models/schedule.dart';
 import 'package:workout_app/models/workout.dart';
 import 'package:workout_app/pages/Workouts/workout_page.dart';
 
 class SchedulePage extends StatefulWidget {
-  final Tracker tracker;
+  final Schedule tracker;
 
   const SchedulePage({super.key, required this.tracker});
 

@@ -2,11 +2,10 @@ import 'package:hive/hive.dart';
 import 'package:workout_app/datetime/date_timedata.dart';
 import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/models/setting.dart';
+import 'package:workout_app/models/schedule.dart';
 
 import '../models/workout.dart';
 
-late Box boxWorkouts;
-late Box boxSettings;
 class HiveDatabase {
   // Common
   bool selectedKeyFound(Box box, String key) {
@@ -62,8 +61,18 @@ class HiveDatabase {
     return settingsBox.values.isNotEmpty ? settingsBox.values.toList() : [];
   }
 
+  final scheduleBox = Hive.box<Schedule>("scheduleBox");
+  // Workout Schedules
+  List<Schedule>  readSchedules() {
+    return scheduleBox.values.isNotEmpty ? scheduleBox.values.toList() : [];
+  }
+  void deleteSchedule(String scheduleName) {
+    scheduleBox.delete(scheduleName);
+  }
+
   final programDataBox = Hive.box("programDataBox");
   // ProgramData
+
   int getDailyCompletion(String date) {
     return programDataBox.get("${keyMap[Keys.completion]}_$date") ?? 0;
   }

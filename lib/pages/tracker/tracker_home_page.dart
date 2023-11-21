@@ -5,7 +5,7 @@ import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/datetime/date_timedata.dart';
 import 'package:workout_app/models/constants.dart';
-import 'package:workout_app/models/tracker.dart';
+import 'package:workout_app/models/schedule.dart';
 import 'package:workout_app/pages/Workouts/workout_day_page.dart';
 import 'package:workout_app/pages/tracker/schedule_page.dart';
 import 'package:workout_app/pages/tracker/schedules_page.dart';
@@ -31,7 +31,7 @@ class TrackerHomePageState extends State<TrackerHomePage> {
         ));
   }
 
-  void goToSchedulePage(Tracker tracker) {
+  void goToSchedulePage(Schedule tracker) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SchedulePage(tracker: tracker)),

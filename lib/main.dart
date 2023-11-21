@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/data/settings_data.dart';
+import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/models/exercise.dart';
+import 'package:workout_app/models/schedule.dart';
 import 'package:workout_app/models/setting.dart';
 import 'package:workout_app/models/workout.dart';
 import 'package:workout_app/models/workout_set.dart';
@@ -17,9 +19,11 @@ void main() async {
   Hive.registerAdapter(ExerciseAdapter());
   Hive.registerAdapter(SettingAdapter());
   Hive.registerAdapter(WorkoutAdapter());
-  await Hive.openBox<Workout>("workoutBox");
-  await Hive.openBox<Setting>("settingsBox");
-  await Hive.openBox("programDataBox");
+  Hive.registerAdapter(ScheduleAdapter());
+  await Hive.openBox<Workout>(boxKeyMap[BoxKeys.workouts].toString());
+  await Hive.openBox<Setting>(boxKeyMap[BoxKeys.settings].toString());
+  await Hive.openBox<Schedule>(boxKeyMap[BoxKeys.schedules].toString());
+  await Hive.openBox(boxKeyMap[BoxKeys.programData].toString());
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => WorkoutData()),
