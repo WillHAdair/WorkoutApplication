@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:workout_app/data/schedule_data.dart';
 import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/datetime/date_timedata.dart';
@@ -53,7 +54,7 @@ class TrackerHomePageState extends State<TrackerHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WorkoutData>(
+    return Consumer<ScheduleData>(
       builder: (context, value, child) => Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
@@ -90,12 +91,12 @@ class TrackerHomePageState extends State<TrackerHomePage> {
               ],
             ),
             SlidingTile(
-              text: value.getTrackerList()[0].name,
-              onForwardPress: () => goToSchedulePage(value.getTrackerList()[0]),
+              text: value.getSchedules()[0].name,
+              onForwardPress: () => goToSchedulePage(value.getSchedules()[0]),
               onSettingsPress: () =>
-                  editSchedule(value.getTrackerList()[0].name),
+                  editSchedule(value.getSchedules()[0].name),
               onDeletePress: () =>
-                  deleteSchedule(value.getTrackerList()[0].name),
+                  deleteSchedule(value.getSchedules()[0].name),
               imageLocation: dumbellImg,
             ),
             const SizedBox(height: 10),

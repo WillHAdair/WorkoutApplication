@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
+import 'package:workout_app/data/schedule_data.dart';
 import 'package:workout_app/data/settings_data.dart';
 import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/models/exercise.dart';
@@ -29,6 +30,7 @@ void main() async {
     ChangeNotifierProvider(create: (context) => WorkoutData()),
     ChangeNotifierProvider(create: (context) => ThemeProvider()),
     ChangeNotifierProvider(create: (context) => SettingsData()),
+    ChangeNotifierProvider(create: (context) => ScheduleData()),
   ], child: const MyApp()));
 }
 

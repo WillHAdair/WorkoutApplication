@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workout_app/components/dropdown/workout_dropdown_list.dart';
 import 'package:workout_app/components/option_tile.dart';
 import 'package:workout_app/components/sliding_tile.dart';
+import 'package:workout_app/data/schedule_data.dart';
 import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/models/schedule.dart';
@@ -136,8 +137,8 @@ class _SchedulePageState extends State<SchedulePage> {
     for (int i = 0; areWorkoutsChosen[i]; i++) {
       newWorkouts.add(workouts[i]);
     }
-    Provider.of<WorkoutData>(context, listen: false)
-        .editTrackerList(widget.tracker.name, name, newWorkouts);
+    Provider.of<ScheduleData>(context, listen: false)
+        .editSchedule(widget.tracker.name, 0, newWorkouts, false);
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
 import 'package:workout_app/components/dropdown/workout_dropdown_list.dart';
 import 'package:workout_app/components/popups/customizable_dialog.dart';
 import 'package:workout_app/components/sliding_tile.dart';
+import 'package:workout_app/data/schedule_data.dart';
 import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/models/constants.dart';
@@ -29,9 +30,9 @@ class _WorkoutPageState extends State<WorkoutDayPage> {
   }
 
   void onSave() {
-    List<Workout> daysWorkouts = Provider.of<WorkoutData>(context, listen: false).getWorkoutsForDay(widget.date);
+    List<Workout> daysWorkouts = Provider.of<ScheduleData>(context, listen: false).getWorkoutsForDay(widget.date);
     daysWorkouts.addAll(selectedWorkouts);
-    Provider.of<WorkoutData>(context, listen: false).addWorkoutsToDay(widget.date, daysWorkouts);
+    Provider.of<ScheduleData>(context, listen: false).addWorkoutsToDay(widget.date, daysWorkouts);
     Navigator.pop(context);
   }
 
@@ -119,7 +120,7 @@ class _WorkoutPageState extends State<WorkoutDayPage> {
   }
 
   void delete(String workoutName) {
-    Provider.of<WorkoutData>(context, listen: false).deleteWorkoutFromDay(widget.date, workoutName);
+    Provider.of<ScheduleData>(context, listen: false).deleteWorkoutFromDay(widget.date, workoutName);
     Navigator.pop(context);
   }
 
@@ -171,7 +172,7 @@ class _WorkoutPageState extends State<WorkoutDayPage> {
   
   @override
   Widget build(BuildContext context) {
-    return Consumer<WorkoutData>(
+    return Consumer<ScheduleData>(
       builder: (context, value, child) => Scaffold(
         appBar: AppBar(
           title: Text("${DateFormat('MMMM dd').format(widget.date)} Workouts"),
@@ -184,11 +185,11 @@ class _WorkoutPageState extends State<WorkoutDayPage> {
           itemBuilder: (context, index) => SlidingTile(
             text: value.getWorkoutsForDay(widget.date)[index].name,
             onForwardPress: () =>
-              goToWorkoutPage(value.getWorkoutList()[index].name),
+              goToWorkoutPage(value.getAllWorkouts()[index].name),
             onSettingsPress: () =>
-              onSettingsPress(value.getWorkoutList()[index].name),
+              onSettingsPress(value.getAllWorkouts()[index].name),
             onDeletePress: () =>
-              onDeletePress(value.getWorkoutList()[index].name),
+              onDeletePress(value.getAllWorkouts()[index].name),
             imageLocation: dumbellImg,
           ),
         ),

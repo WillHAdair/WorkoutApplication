@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workout_app/data/hive_database.dart';
+import 'package:workout_app/data/workout_data.dart';
+import 'package:workout_app/datetime/date_timedata.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/schedule.dart';
 import 'package:workout_app/models/workout.dart';
@@ -62,7 +64,87 @@ class ScheduleData extends ChangeNotifier {
   // Initialization
   void initializeScheduleList() {
     if (db.scheduleBox.isNotEmpty) {
-      workoutList = db.rea
+      scheduleList = db.readSchedules();
+    } else {
+      Map<String, Schedule> scheduleMap = {};
+      for (Schedule schedule in scheduleList) {
+        scheduleMap[schedule.name] = schedule;
+      }
+      db.saveSchedules(scheduleMap);
     }
+  }
+
+  // Get Schedules
+  List<Schedule> getSchedules() {
+    return scheduleList;
+  }
+
+  Schedule getRelevantSchedule(String scheduleName) {
+    return scheduleList.firstWhere((element) => element.name == scheduleName);
+  }
+
+  // Add Schedules
+  void addSchedule(String scheduleName) {
+    Schedule newSchedule = Schedule(name: scheduleName, period: 0, workouts: []);
+    scheduleList.add(newSchedule);
+
+    notifyListeners();
+  }
+
+  void addWorkoutsToDay(DateTime day, List<Workout> workouts) {
+    db.addWorkoutsToDay(convertDateTimeToString(day), workouts.map((workout) => workout.name).toList());
+    notifyListeners();
+  }
+
+  // Edit/Delete Schedules
+  void changeScheduleName(String currentName, String newName) {
+    Schedule relevantSchedule = getRelevantSchedule(currentName);
+    relevantSchedule.name = newName;
+
+    notifyListeners();
+    db.deleteSchedule(currentName);
+    db.saveSchedule(newName, relevantSchedule);
+  }
+
+  void editSchedule(String name, int period, List<Workout> workouts, bool? isCCurrent) {
+    Schedule schedule = getRelevantSchedule(name);
+    schedule.period = period;
+    schedule.workouts = workouts;
+    schedule.isCurrent = isCCurrent;
+
+    notifyListeners();
+  }
+
+  void deleteSchedule(String scheduleName) {
+    Schedule relevantSchedule = getRelevantSchedule(scheduleName);
+    scheduleList.remove(relevantSchedule);
+
+    notifyListeners();
+    db.deleteSchedule(scheduleName);
+  }
+
+  List<Workout> getWorkoutsForDay(DateTime day) {
+    List<Workout> dailyWorkouts = [];
+    List<String> workoutNames = db.getWorkoutsForDay(convertDateTimeToString(day));
+    if (workoutNames.isEmpty) {
+      // TODO: remove when schedule is made
+    return [WorkoutData().getWorkoutList()[0]];
+    }
+    for (String workout in workoutNames) {
+      Workout? w = WorkoutData().getRelevantWorkout(workout);
+      if (w != null) {
+        dailyWorkouts.add(w);
+      }
+    }
+    return dailyWorkouts;
+  }
+
+  void deleteWorkoutFromDay(DateTime day, String workoutName) {
+    db.deleteWorkoutFromDay(convertDateTimeToString(day), workoutName);
+    notifyListeners();
+  }
+
+  List<Workout> getAllWorkouts() {
+    return WorkoutData().getWorkoutList();
   }
 }

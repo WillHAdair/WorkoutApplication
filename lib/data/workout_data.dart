@@ -307,65 +307,9 @@ class WorkoutData extends ChangeNotifier {
   }
   // Workout History
     // Get Workout History
-  List<Workout> getWorkoutsForDay(DateTime day) {
-    List<Workout> dailyWorkouts = [];
-    List<String> workoutNames = db.getWorkoutsForDay(convertDateTimeToString(day));
-    if (workoutNames.isEmpty) {
-      // TODO: remove when schedule is made
-    return [workoutList[0]];
-    }
-    for (String workout in workoutNames) {
-      Workout? w = getRelevantWorkout(workout);
-      if (w != null) {
-        dailyWorkouts.add(w);
-      }
-    }
-    return dailyWorkouts;
-  }
-
-  List<Schedule> getTrackerList() {
-    return trackerList;
-  }
-
-  Schedule getRelevantTracker(String name) {
-    return trackerList.firstWhere((element) => element.name == name);
-  }
 
   bool isWorkoutStarted() {
     return db.checkWorkoutStarted();
-  }
-    // Add Workout History
-  void addWorkoutsToDay(DateTime day, List<Workout> workouts) {
-    db.addWorkoutsToDay(convertDateTimeToString(day), workouts.map((workout) => workout.name).toList());
-    notifyListeners();
-  }  
-    // Edit/Delete Workout History
-  void editSchedule(String oldSchedule, String newSchedule) {
-
-  }
-
-  void deleteSchedule(String scheduleName) {
-    Schedule tracker = getRelevantTracker(scheduleName);
-    List<Schedule> trackers = getTrackerList();
-    trackers.remove(tracker);
-
-    notifyListeners();
-
-    db.deleteSchedule(scheduleName);
-  }
-
-  void deleteWorkoutFromDay(DateTime day, String workoutName) {
-    db.deleteWorkoutFromDay(convertDateTimeToString(day), workoutName);
-    notifyListeners();
-  }
-
-  void editTrackerList(String currentName, String newName, List<Workout> workouts) {
-    Schedule tracker = getRelevantTracker(currentName);
-    if (newName != currentName) {
-      tracker.name = newName;
-    }
-    tracker.workouts = workouts;
-    notifyListeners();
   }
 
   void changeWorkoutStarted(bool status) {
