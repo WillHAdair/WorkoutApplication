@@ -18,148 +18,49 @@ class WorkoutData extends ChangeNotifier {
   List<Workout> workoutList = [
     Workout(name: "Upper body", exercises: [
       Exercise(
-          name: 'Bench',
-          sets: [
-            WorkoutSet(
-              weight: "100", 
-              reps: "10", 
-              isCompleted: false
-            ),
-            WorkoutSet(
-              weight: "155", 
-              reps: "10", 
-              isCompleted: false
-            ),
-            WorkoutSet(
-              weight: "165",
-              reps: "10",
-              isCompleted: false
-            ),
-          ],
-          isCompleted: false,
-        ),
+        name: 'Bench',
+        sets: [
+          WorkoutSet(weight: "100", reps: "10", isCompleted: false),
+          WorkoutSet(weight: "155", reps: "10", isCompleted: false),
+          WorkoutSet(weight: "165", reps: "10", isCompleted: false),
+        ],
+        isCompleted: false,
+      ),
     ]),
     Workout(name: "Lower Body", exercises: [
       Exercise(
-          name: 'Deadlift',
-          sets: [
-            WorkoutSet(
-              weight: "200", 
-              reps: "10", 
-              isCompleted: false
-            ),
-            WorkoutSet(
-              weight: "255", 
-              reps: "10", 
-              isCompleted: false
-            ),
-            WorkoutSet(
-              weight: "265",
-              reps: "10",
-              isCompleted: false
-            ),
-          ],
-          isCompleted: false,
-        ),
+        name: 'Deadlift',
+        sets: [
+          WorkoutSet(weight: "200", reps: "10", isCompleted: false),
+          WorkoutSet(weight: "255", reps: "10", isCompleted: false),
+          WorkoutSet(weight: "265", reps: "10", isCompleted: false),
+        ],
+        isCompleted: false,
+      ),
     ]),
     Workout(name: "Push", exercises: [
-        Exercise(
-          name: 'Incline Press', 
-          sets: [
-            WorkoutSet(
-              weight: "100", 
-              reps: "10", 
-              isCompleted: false
-            ),
-            WorkoutSet(
-              weight: "155", 
-              reps: "10", 
-              isCompleted: false
-            ),
-            WorkoutSet(
-              weight: "165",
-              reps: "10",
-              isCompleted: false
-            ),
-          ],
-          isCompleted: false,
-        )
-      ]),
-      Workout(name: "Pull", exercises: [
-        Exercise(
-          name: 'Barbell row', 
-          sets: [
-            WorkoutSet(
-              weight: "100", 
-              reps: "10", 
-              isCompleted: false
-            ),
-            WorkoutSet(
-              weight: "155", 
-              reps: "10", 
-              isCompleted: false
-            ),
-            WorkoutSet(
-              weight: "165",
-              reps: "10",
-              isCompleted: false
-            ),
-          ],
-          isCompleted: false,
-        )
-      ]),
-      Workout(name: "break", exercises: []),
-  ];
-
-  List<Schedule> trackerList = [
-    Schedule(name: 'Push Pull Legs', period: 2, workouts: [
-      Workout(name: "Push", exercises: [
-        Exercise(
-          name: 'Incline Press', 
-          sets: [
-            WorkoutSet(
-              weight: "100", 
-              reps: "10", 
-              isCompleted: false
-            ),
-            WorkoutSet(
-              weight: "155", 
-              reps: "10", 
-              isCompleted: false
-            ),
-            WorkoutSet(
-              weight: "165",
-              reps: "10",
-              isCompleted: false
-            ),
-          ],
-          isCompleted: false,
-        )
-      ]),
-      Workout(name: "Pull", exercises: [
-        Exercise(
-          name: 'Barbell row', 
-          sets: [
-            WorkoutSet(
-              weight: "100", 
-              reps: "10", 
-              isCompleted: false
-            ),
-            WorkoutSet(
-              weight: "155", 
-              reps: "10", 
-              isCompleted: false
-            ),
-            WorkoutSet(
-              weight: "165",
-              reps: "10",
-              isCompleted: false
-            ),
-          ],
-          isCompleted: false,
-        )
-      ])
-    ])
+      Exercise(
+        name: 'Incline Press',
+        sets: [
+          WorkoutSet(weight: "100", reps: "10", isCompleted: false),
+          WorkoutSet(weight: "155", reps: "10", isCompleted: false),
+          WorkoutSet(weight: "165", reps: "10", isCompleted: false),
+        ],
+        isCompleted: false,
+      )
+    ]),
+    Workout(name: "Pull", exercises: [
+      Exercise(
+        name: 'Barbell row',
+        sets: [
+          WorkoutSet(weight: "100", reps: "10", isCompleted: false),
+          WorkoutSet(weight: "155", reps: "10", isCompleted: false),
+          WorkoutSet(weight: "165", reps: "10", isCompleted: false),
+        ],
+        isCompleted: false,
+      )
+    ]),
+    Workout(name: "break", exercises: []),
   ];
 
   // Initialization
@@ -177,7 +78,7 @@ class WorkoutData extends ChangeNotifier {
     loadHeatMap();
   }
 
-    void loadHeatMap() {
+  void loadHeatMap() {
     DateTime startDate = createDateTimeObject(getStartDate());
 
     int daysBetween = DateTime.now().difference(startDate).inDays;
@@ -199,7 +100,7 @@ class WorkoutData extends ChangeNotifier {
   }
 
   // Workouts
-    // Get Workouts
+  // Get Workouts
   List<Workout> getWorkoutList() {
     return workoutList;
   }
@@ -211,7 +112,8 @@ class WorkoutData extends ChangeNotifier {
       return null;
     }
   }
-    // Add Workouts
+
+  // Add Workouts
   void addWorkout(String name) {
     Workout newWorkout = Workout(name: name, exercises: []);
     workoutList.add(newWorkout);
@@ -220,7 +122,8 @@ class WorkoutData extends ChangeNotifier {
 
     db.saveWorkout(name, newWorkout);
   }
-    // Edit/Delete Workouts
+
+  // Edit/Delete Workouts
   void changeWorkoutName(String currentName, String newName) {
     Workout relevantWorkout = getRelevantWorkout(currentName)!;
     relevantWorkout.name = newName;
@@ -245,7 +148,7 @@ class WorkoutData extends ChangeNotifier {
   }
   // Exercises
 
-    // Get Exercises
+  // Get Exercises
   Exercise getRelevantExercise(Workout workout, String exerciseName) {
     return workout.exercises
         .firstWhere((exercise) => exercise.name == exerciseName);
@@ -255,8 +158,10 @@ class WorkoutData extends ChangeNotifier {
     Workout relevantWorkout = getRelevantWorkout(workoutName)!;
     return relevantWorkout.exercises.length;
   }
-    // Add Exercises
-  void addExercise(String workoutName, String exerciseName, List<WorkoutSet> sets, bool isCompleted) {
+
+  // Add Exercises
+  void addExercise(String workoutName, String exerciseName,
+      List<WorkoutSet> sets, bool isCompleted) {
     Workout relevantWorkout = getRelevantWorkout(workoutName)!;
     relevantWorkout.exercises.add(
         Exercise(name: exerciseName, sets: sets, isCompleted: isCompleted));
@@ -265,7 +170,8 @@ class WorkoutData extends ChangeNotifier {
 
     db.saveWorkout(workoutName, relevantWorkout);
   }
-    // Edit/Delete Exercises
+
+  // Edit/Delete Exercises
   void checkOffExercise(String workoutName, String exerciseName) {
     Workout relevantWorkout = getRelevantWorkout(workoutName)!;
     Exercise relevantExercise =
@@ -279,7 +185,8 @@ class WorkoutData extends ChangeNotifier {
     if (relevantExercise.isCompleted) {
       db.setDailyCompletion(todaysDate(), currentAmount + 1);
     } else {
-      db.setDailyCompletion(todaysDate(), currentAmount + currentAmount > 0 ? 0 : - 1);
+      db.setDailyCompletion(
+          todaysDate(), currentAmount + currentAmount > 0 ? 0 : -1);
     }
     loadHeatMap();
   }
@@ -300,13 +207,13 @@ class WorkoutData extends ChangeNotifier {
     Workout relevantWorkout = getRelevantWorkout(workoutName)!;
     Exercise relevantExercise =
         getRelevantExercise(relevantWorkout, oldExerciseName);
-    relevantExercise.sets = newSets;  
+    relevantExercise.sets = newSets;
     notifyListeners();
 
     db.saveWorkout(workoutName, relevantWorkout);
   }
   // Workout History
-    // Get Workout History
+  // Get Workout History
 
   bool isWorkoutStarted() {
     return db.checkWorkoutStarted();

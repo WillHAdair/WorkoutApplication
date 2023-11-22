@@ -17,16 +17,16 @@ class WorkoutsPage extends StatefulWidget {
 class WorkoutsPageState extends State<WorkoutsPage> {
   final workoutNameController = TextEditingController();
 
-    void createNewWorkout() {
+  void createNewWorkout() {
     showDialog(
         context: context,
         builder: (context) {
           return CustomizableDialog(customTextFields: [
             CustomTextField(
-                controller: workoutNameController,
-                name: "Workout Name",
-                prefixIcon: Icons.fitness_center,
-                inputType: TextInputType.name,
+              controller: workoutNameController,
+              name: "Workout Name",
+              prefixIcon: Icons.fitness_center,
+              inputType: TextInputType.name,
             ),
           ], onSave: save, onCancel: cancel);
         });
@@ -71,11 +71,11 @@ class WorkoutsPageState extends State<WorkoutsPage> {
       builder: (context) {
         return CustomizableDialog(customTextFields: [
           CustomTextField(
-              controller: workoutNameController,
-              name: "New Name",
-              prefixIcon: Icons.edit,
-              inputType: TextInputType.name,
-            )
+            controller: workoutNameController,
+            name: "New Name",
+            prefixIcon: Icons.edit,
+            inputType: TextInputType.name,
+          )
         ], onSave: () => edit(workoutName), onCancel: cancel);
       },
     );
@@ -131,7 +131,7 @@ class WorkoutsPageState extends State<WorkoutsPage> {
       },
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Consumer<WorkoutData>(

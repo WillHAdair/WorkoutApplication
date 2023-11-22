@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
+import 'package:workout_app/components/popups/customizable_dialog.dart';
 import 'package:workout_app/data/schedule_data.dart';
 import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/data/workout_data.dart';
@@ -23,6 +25,14 @@ class TrackerHomePage extends StatefulWidget {
 
 class TrackerHomePageState extends State<TrackerHomePage> {
   DateTime today = DateTime.now();
+  final scheduleNameController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    Provider.of<ScheduleData>(context, listen: false).initializeScheduleList();
+  }
 
   void daySelected(DateTime day, DateTime focusedDay) {
     Navigator.push(
@@ -46,11 +56,88 @@ class TrackerHomePageState extends State<TrackerHomePage> {
     );
   }
 
-  void editSchedule(String name) {}
+  void edit(String oldName) {
+    String newScheduleName = scheduleNameController.text;
+    Provider.of<ScheduleData>(context, listen: false)
+        .changeScheduleName(oldName, newScheduleName);
+    Navigator.pop(context);
+    clear();
+  }
 
-  void deleteSchedule(String name) {}
+  void editSchedule(String name) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomizableDialog(customTextFields: [
+          CustomTextField(
+            controller: scheduleNameController,
+            name: "New Name",
+            prefixIcon: Icons.settings,
+            inputType: TextInputType.text,
+          )
+        ], onSave: () => edit(name), onCancel: cancel);
+      },
+    );
+  }
 
-  void addSchedule() {}
+  void delete(String name) {
+    Provider.of<ScheduleData>(context, listen: false).deleteSchedule(name);
+    Navigator.pop(context);
+  }
+
+  void cancel() {
+    Navigator.pop(context);
+  }
+
+  void clear() {
+    scheduleNameController.clear();
+  }
+
+  void deleteSchedule(String name) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.all(16),
+          backgroundColor: Colors.grey[900],
+          content: SingleChildScrollView(
+            child: Row(
+              children: [
+                const Text(
+                  'Are you sure?',
+                  style: TextStyle(color: Colors.white),
+                ),
+                const SizedBox(width: 12),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: MaterialButton(
+                    onPressed: () => delete(name),
+                    color: Provider.of<ThemeProvider>(context).rejectColor,
+                    child: const Text(
+                      'Yes',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: MaterialButton(
+                    onPressed: cancel,
+                    color: Provider.of<ThemeProvider>(context).acceptColor,
+                    child: const Text(
+                      'No',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,10 +180,8 @@ class TrackerHomePageState extends State<TrackerHomePage> {
             SlidingTile(
               text: value.getSchedules()[0].name,
               onForwardPress: () => goToSchedulePage(value.getSchedules()[0]),
-              onSettingsPress: () =>
-                  editSchedule(value.getSchedules()[0].name),
-              onDeletePress: () =>
-                  deleteSchedule(value.getSchedules()[0].name),
+              onSettingsPress: () => editSchedule(value.getSchedules()[0].name),
+              onDeletePress: () => deleteSchedule(value.getSchedules()[0].name),
               imageLocation: dumbellImg,
             ),
             const SizedBox(height: 10),
