@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
 import 'package:workout_app/components/dropdown/workout_dropdown_list.dart';
 import 'package:workout_app/components/option_tile.dart';
 import 'package:workout_app/components/sliding_tile.dart';
 import 'package:workout_app/data/schedule_data.dart';
 import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/data/workout_data.dart';
+import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/models/schedule.dart';
 import 'package:workout_app/models/workout.dart';
 import 'package:workout_app/pages/Workouts/workout_page.dart';
@@ -36,16 +38,16 @@ class _SchedulePageState extends State<SchedulePage> {
     false
   ];
   List<Workout> workouts = [
-    Workout(name: "break", exercises: []),
-    Workout(name: "break", exercises: []),
-    Workout(name: "break", exercises: []),
-    Workout(name: "break", exercises: []),
-    Workout(name: "break", exercises: []),
-    Workout(name: "break", exercises: []),
-    Workout(name: "break", exercises: []),
-    Workout(name: "break", exercises: []),
-    Workout(name: "break", exercises: []),
-    Workout(name: "break", exercises: [])
+    restWorkout,
+    restWorkout,
+    restWorkout,
+    restWorkout,
+    restWorkout,
+    restWorkout,
+    restWorkout,
+    restWorkout,
+    restWorkout,
+    restWorkout,
   ];
 
   @override
@@ -132,7 +134,6 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   void editTracker() {
-    String name = nameController.text;
     List<Workout> newWorkouts = [];
     for (int i = 0; areWorkoutsChosen[i]; i++) {
       newWorkouts.add(workouts[i]);
@@ -167,15 +168,21 @@ class _SchedulePageState extends State<SchedulePage> {
                 ],
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Schedule name: '),
+                  const Text(
+                    'Schedule name: ',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: TextField(
+                    child: CustomTextField(
                       controller: nameController,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter schedule name',
-                      ),
+                      name: 'Name',
+                      prefixIcon: Icons.calendar_today,
+                      inputType: TextInputType.text,
                     ),
                   ),
                 ],

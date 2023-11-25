@@ -20,7 +20,8 @@ class CustomizableDialog extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         return AlertDialog(
-          contentPadding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
           content: Container(
             constraints: BoxConstraints(maxHeight: constraints.maxHeight - 100),
             child: SingleChildScrollView(

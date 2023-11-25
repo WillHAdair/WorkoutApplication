@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
 import 'package:workout_app/components/dropdown/exercise_dropdown_list.dart';
 import 'package:workout_app/components/popups/customizable_dialog.dart';
+import 'package:workout_app/pages/exercise_page.dart';
 import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/models/exercise.dart';
@@ -29,16 +30,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
   final exerciseRepsController = TextEditingController();
 
   void save() {
-    // TODO: make the add sets feature work
     Provider.of<WorkoutData>(context, listen: false).addExercise(
-      widget.workoutName,
-      exerciseNameController.text,
-      [],
-      false
-      // exerciseWeightController.text,
-      // exerciseRepsController.text,
-      // exerciseSetsController.text,
-    );
+        widget.workoutName, exerciseNameController.text, [], false);
 
     Navigator.pop(context);
     clear();
@@ -55,48 +48,41 @@ class _WorkoutPageState extends State<WorkoutPage> {
     exerciseRepsController.clear();
   }
 
+  void moveToExercisePage() {
+    Provider.of<WorkoutData>(context, listen: false).addExercise(
+        widget.workoutName, exerciseNameController.text, [], false);
+    Navigator.pop(context);
+    Workout workout = Provider.of<WorkoutData>(context, listen: false)
+        .getRelevantWorkout(widget.workoutName)!;
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ExercisePage(
+                  workout: workout,
+                  exercise: Provider.of<WorkoutData>(context, listen: false)
+                      .getRelevantExercise(
+                          workout, exerciseNameController.text),
+                )));
+  }
+
   void createNewExercise() {
-    List<CustomTextField> exercises = [
-      CustomTextField(
-        controller: exerciseNameController,
-        name: "Exercise name",
-        prefixIcon: Icons.person_add,
-        inputType: TextInputType.name,
-      ),
-      CustomTextField(
-        controller: exerciseWeightController,
-        name: "Exercise weight",
-        prefixIcon: Icons.scale,
-        inputType: TextInputType.number,
-      ),
-      CustomTextField(
-        controller: exerciseSetsController,
-        name: "Exercise sets",
-        prefixIcon: Icons.edit,
-        inputType: TextInputType.number,
-      ),
-      CustomTextField(
-        controller: exerciseRepsController,
-        name: "Exercise reps",
-        prefixIcon: Icons.edit,
-        inputType: TextInputType.number,
-      ),
-    ];
+    clear();
     showDialog(
         context: context,
         builder: (context) {
-          return CustomizableDialog(
-              customTextFields: exercises, onSave: save, onCancel: cancel);
+          return CustomizableDialog(customTextFields: [
+            CustomTextField(
+                controller: exerciseNameController,
+                name: "Exercise Name",
+                prefixIcon: Icons.fitness_center,
+                inputType: TextInputType.text)
+          ], onSave: moveToExercisePage, onCancel: cancel);
         });
   }
 
   void edit(String exerciseName) {
     Provider.of<WorkoutData>(context, listen: false).editExercise(
-      widget.workoutName,
-      exerciseName,
-      exerciseNameController.text,
-      []
-    );
+        widget.workoutName, exerciseName, exerciseNameController.text, []);
 
     Navigator.pop(context);
     clear();
@@ -114,21 +100,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
       selection: TextSelection.fromPosition(
           TextPosition(offset: relevantExercsise.name.length)),
     );
-    // exerciseWeightController.value = TextEditingValue(
-    //   text: relevantExercsise.weight,
-    //   selection: TextSelection.fromPosition(
-    //       TextPosition(offset: relevantExercsise.weight.length)),
-    // );
-    // exerciseSetsController.value = TextEditingValue(
-    //   text: relevantExercsise.sets,
-    //   selection: TextSelection.fromPosition(
-    //       TextPosition(offset: relevantExercsise.sets.length)),
-    // );
-    // exerciseRepsController.value = TextEditingValue(
-    //   text: relevantExercsise.reps,
-    //   selection: TextSelection.fromPosition(
-    //       TextPosition(offset: relevantExercsise.reps.length)),
-    // );
 
     List<CustomTextField> exercises = [
       CustomTextField(
@@ -235,26 +206,26 @@ class _WorkoutPageState extends State<WorkoutPage> {
         body: ListView.builder(
           itemCount: value.numberOfExercisesInWorkout(widget.workoutName),
           itemBuilder: (context, index) => ExerciseDropdownList(
-            title:  value
-              .getRelevantWorkout(widget.workoutName)!
-              .exercises[index]
-              .name,
+            title: value
+                .getRelevantWorkout(widget.workoutName)!
+                .exercises[index]
+                .name,
             sets: value
-              .getRelevantWorkout(widget.workoutName)!
-              .exercises[index]
-              .sets, 
+                .getRelevantWorkout(widget.workoutName)!
+                .exercises[index]
+                .sets,
             isCompleted: value
-              .getRelevantWorkout(widget.workoutName)!
-              .exercises[index]
-              .isCompleted, 
+                .getRelevantWorkout(widget.workoutName)!
+                .exercises[index]
+                .isCompleted,
             onSettingsPress: () => editExercise(value
-              .getRelevantWorkout(widget.workoutName)!
-              .exercises[index]
-              .name), 
+                .getRelevantWorkout(widget.workoutName)!
+                .exercises[index]
+                .name),
             onDeletePress: () => deleteExercise(value
-              .getRelevantWorkout(widget.workoutName)!
-              .exercises[index]
-              .name), 
+                .getRelevantWorkout(widget.workoutName)!
+                .exercises[index]
+                .name),
             onChanged: (val) => onCheckBoxChanged(value
                 .getRelevantWorkout(widget.workoutName)!
                 .exercises[index]

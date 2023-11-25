@@ -4,7 +4,6 @@ import 'package:workout_app/datetime/date_timedata.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/workout_set.dart';
 
-import '../models/schedule.dart';
 import '../models/workout.dart';
 
 class WorkoutData extends ChangeNotifier {
@@ -212,8 +211,45 @@ class WorkoutData extends ChangeNotifier {
 
     db.saveWorkout(workoutName, relevantWorkout);
   }
+
+  /// Sets
+
+  // Get Sets
+  int getSetNumber(Workout workout, Exercise exercise) {
+    return workout.exercises[workout.exercises.indexOf(exercise)].sets.length;
+  }
+
+  WorkoutSet getRelevantSet(Exercise exercise, int index) {
+    return exercise.sets[index];
+  }
+
+  // Add Sets
+  void addSet(Exercise exercise, String weight, String reps) {
+    exercise.sets
+        .add(WorkoutSet(reps: reps, weight: weight, isCompleted: false));
+
+    notifyListeners();
+  }
+
+  // Edit/Delete Sets
+  void editSet(Exercise exercise, int index, String? weight, String? reps) {
+    if (weight != null) {
+      exercise.sets[index].weight = weight;
+    }
+    if (reps != null) {
+      exercise.sets[index].reps = reps;
+    }
+
+    notifyListeners();
+  }
+
+  void deleteSet(Exercise exercise, int index) {
+    exercise.sets.removeAt(index);
+
+    notifyListeners();
+  }
+
   // Workout History
-  // Get Workout History
 
   bool isWorkoutStarted() {
     return db.checkWorkoutStarted();
