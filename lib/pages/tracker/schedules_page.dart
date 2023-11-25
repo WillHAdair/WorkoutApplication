@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
 import 'package:workout_app/components/popups/customizable_dialog.dart';
-import 'package:workout_app/components/sliding_tile.dart';
+import 'package:workout_app/components/tiles/sliding_tile.dart';
 import 'package:workout_app/data/schedule_data.dart';
 import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/models/schedule.dart';

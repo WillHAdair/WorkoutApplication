@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
 import 'package:workout_app/components/dropdown/workout_dropdown_list.dart';
-import 'package:workout_app/components/option_tile.dart';
-import 'package:workout_app/components/sliding_tile.dart';
+import 'package:workout_app/components/tiles/text_tile.dart';
+import 'package:workout_app/components/tiles/sliding_tile.dart';
 import 'package:workout_app/data/schedule_data.dart';
 import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/data/workout_data.dart';
@@ -230,7 +230,10 @@ class _SchedulePageState extends State<SchedulePage> {
                         onSettingsPress: () => chooseWorkout(index),
                         onDeletePress: () => deleteWorkout(index),
                       )
-                    : OptionTile(onClick: () => chooseWorkout(index)),
+                    : TextTile(
+                        contents: defaultTile,
+                        onClick: () => chooseWorkout(index),
+                        isSlideable: false),
               ),
             ],
           ),
@@ -269,3 +272,19 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 }
+
+const Row defaultTile = Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Icon(
+      Icons.add,
+      size: 30,
+    ),
+    Text(
+      'Choose workout',
+      style: TextStyle(
+        fontSize: 24,
+      ),
+    ),
+  ],
+);

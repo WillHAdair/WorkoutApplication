@@ -13,8 +13,8 @@ import 'package:workout_app/pages/Workouts/workout_day_page.dart';
 import 'package:workout_app/pages/tracker/schedule_page.dart';
 import 'package:workout_app/pages/tracker/schedules_page.dart';
 
-import '../../components/custom_tile.dart';
-import '../../components/sliding_tile.dart';
+import '../../components/tiles/custom_tile.dart';
+import '../../components/tiles/sliding_tile.dart';
 
 class TrackerHomePage extends StatefulWidget {
   const TrackerHomePage({Key? key}) : super(key: key);

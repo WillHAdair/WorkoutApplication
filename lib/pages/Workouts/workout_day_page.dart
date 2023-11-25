@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
 import 'package:workout_app/components/dropdown/workout_dropdown_list.dart';
 import 'package:workout_app/components/popups/customizable_dialog.dart';
-import 'package:workout_app/components/sliding_tile.dart';
+import 'package:workout_app/components/tiles/sliding_tile.dart';
 import 'package:workout_app/data/schedule_data.dart';
 import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/data/workout_data.dart';
@@ -30,9 +30,12 @@ class _WorkoutPageState extends State<WorkoutDayPage> {
   }
 
   void onSave() {
-    List<Workout> daysWorkouts = Provider.of<ScheduleData>(context, listen: false).getWorkoutsForDay(widget.date);
+    List<Workout> daysWorkouts =
+        Provider.of<ScheduleData>(context, listen: false)
+            .getWorkoutsForDay(widget.date);
     daysWorkouts.addAll(selectedWorkouts);
-    Provider.of<ScheduleData>(context, listen: false).addWorkoutsToDay(widget.date, daysWorkouts);
+    Provider.of<ScheduleData>(context, listen: false)
+        .addWorkoutsToDay(widget.date, daysWorkouts);
     Navigator.pop(context);
   }
 
@@ -49,7 +52,9 @@ class _WorkoutPageState extends State<WorkoutDayPage> {
           content: SingleChildScrollView(
             child: ListBody(
               children: [
-                ...Provider.of<WorkoutData>(context).getWorkoutList().map((workout) {
+                ...Provider.of<WorkoutData>(context)
+                    .getWorkoutList()
+                    .map((workout) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: WorkoutDropdownList(
@@ -86,7 +91,7 @@ class _WorkoutPageState extends State<WorkoutDayPage> {
     );
   }
 
-    void goToWorkoutPage(String workoutName) {
+  void goToWorkoutPage(String workoutName) {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -120,7 +125,8 @@ class _WorkoutPageState extends State<WorkoutDayPage> {
   }
 
   void delete(String workoutName) {
-    Provider.of<ScheduleData>(context, listen: false).deleteWorkoutFromDay(widget.date, workoutName);
+    Provider.of<ScheduleData>(context, listen: false)
+        .deleteWorkoutFromDay(widget.date, workoutName);
     Navigator.pop(context);
   }
 
@@ -169,7 +175,7 @@ class _WorkoutPageState extends State<WorkoutDayPage> {
       },
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ScheduleData>(
@@ -185,11 +191,11 @@ class _WorkoutPageState extends State<WorkoutDayPage> {
           itemBuilder: (context, index) => SlidingTile(
             text: value.getWorkoutsForDay(widget.date)[index].name,
             onForwardPress: () =>
-              goToWorkoutPage(value.getAllWorkouts()[index].name),
+                goToWorkoutPage(value.getAllWorkouts()[index].name),
             onSettingsPress: () =>
-              onSettingsPress(value.getAllWorkouts()[index].name),
+                onSettingsPress(value.getAllWorkouts()[index].name),
             onDeletePress: () =>
-              onDeletePress(value.getAllWorkouts()[index].name),
+                onDeletePress(value.getAllWorkouts()[index].name),
             imageLocation: dumbellImg,
           ),
         ),
