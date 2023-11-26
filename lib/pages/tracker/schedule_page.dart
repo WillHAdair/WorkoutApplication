@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
-import 'package:workout_app/components/dropdown/workout_dropdown_list.dart';
+import 'package:workout_app/components/popups/list_popup.dart';
 import 'package:workout_app/components/tiles/text_tile.dart';
 import 'package:workout_app/components/tiles/sliding_tile.dart';
 import 'package:workout_app/data/schedule_data.dart';
@@ -90,38 +90,9 @@ class _SchedulePageState extends State<SchedulePage> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          contentPadding: const EdgeInsets.all(16),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                ...Provider.of<WorkoutData>(context)
-                    .getWorkoutList()
-                    .map((workout) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: WorkoutDropdownList(
-                      title: workout.name,
-                      exercises: workout.exercises,
-                      isSelected: false,
-                      onChanged: (value) => onChanged(workout, index),
-                    ),
-                  );
-                })
-              ],
-            ),
-          ),
-          actions: [
-            MaterialButton(
-              onPressed: onCancel,
-              child: Text(
-                "Cancel",
-                style: TextStyle(
-                    color: Provider.of<ThemeProvider>(context).cancelText),
-              ),
-            ),
-          ],
-        );
+        return ListPopup(
+            onChange: (workout) => onChanged(workout, index),
+            onCancel: onCancel);
       },
     );
   }

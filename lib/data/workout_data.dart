@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workout_app/data/hive_database.dart';
 import 'package:workout_app/datetime/date_timedata.dart';
+import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/workout_set.dart';
 
@@ -151,6 +152,36 @@ class WorkoutData extends ChangeNotifier {
   Exercise getRelevantExercise(Workout workout, String exerciseName) {
     return workout.exercises
         .firstWhere((exercise) => exercise.name == exerciseName);
+  }
+
+  Exercise getFirstUnchecked(Workout workout) {
+    if (workout.exercises.isNotEmpty) {
+      return workout.exercises.firstWhere((exercise) => !exercise.isCompleted);
+    }
+    return standIn;
+  }
+
+  List<Exercise> getUncheckedExercises(Workout workout) {
+    List<Exercise> exercises = [];
+    bool first = false;
+    for (Exercise exercise in workout.exercises) {
+      if (!exercise.isCompleted && first) {
+        exercises.add(exercise);
+      } else if (!exercise.isCompleted) {
+        first = true;
+      }
+    }
+    return exercises;
+  }
+
+  List<Exercise> getCheckedExercises(Workout workout) {
+    List<Exercise> exercises = [];
+    for (Exercise exercise in workout.exercises) {
+      if (exercise.isCompleted) {
+        exercises.add(exercise);
+      }
+    }
+    return exercises;
   }
 
   int numberOfExercisesInWorkout(String workoutName) {

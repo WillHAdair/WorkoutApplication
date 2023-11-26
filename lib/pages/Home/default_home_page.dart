@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
+import 'package:workout_app/components/popups/list_popup.dart';
 import 'package:workout_app/components/tiles/custom_tile.dart';
 import 'package:workout_app/components/heat_map.dart';
 import 'package:workout_app/components/popups/customizable_dialog.dart';
@@ -8,11 +9,12 @@ import 'package:workout_app/components/tiles/sliding_tile.dart';
 import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/models/constants.dart';
+import 'package:workout_app/models/workout.dart';
 import 'package:workout_app/pages/Workouts/workout_page.dart';
 import 'package:workout_app/pages/Workouts/workouts_page.dart';
 
 class DefaultHomePage extends StatefulWidget {
-  final Function(bool) onWorkoutStatusChange;
+  final void Function(bool, Workout?) onWorkoutStatusChange;
 
   const DefaultHomePage({Key? key, required this.onWorkoutStatusChange})
       : super(key: key);
@@ -93,8 +95,18 @@ class DefaultHomePageState extends State<DefaultHomePage> {
     );
   }
 
-  void startWorkout(String workoutName) {
-    widget.onWorkoutStatusChange(true);
+  void startWorkout(Workout workout) {
+    Navigator.pop(context);
+    widget.onWorkoutStatusChange(true, workout);
+  }
+
+  void chooseWorkout() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return ListPopup(
+              onChange: (workout) => startWorkout(workout), onCancel: cancel);
+        });
   }
 
   void delete(String workoutName) {
@@ -209,7 +221,7 @@ class DefaultHomePageState extends State<DefaultHomePage> {
         floatingActionButton: Padding(
           padding: const EdgeInsets.all(22),
           child: TextButton(
-            onPressed: () => startWorkout(value.getWorkoutList()[0].name),
+            onPressed: chooseWorkout,
             style: TextButton.styleFrom(
               padding: const EdgeInsets.all(16),
               backgroundColor: Provider.of<ThemeProvider>(context).acceptColor,

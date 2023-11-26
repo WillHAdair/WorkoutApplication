@@ -1,5 +1,6 @@
 // How to model the Rep Type, (i.e do you do set number of reps, or just time, or go to failure)
 import 'package:flutter/material.dart';
+import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/workout.dart';
 
 enum RepType {
@@ -19,6 +20,7 @@ enum ExercisePurpose {
 }
 
 Workout restWorkout = Workout(name: "break", exercises: []);
+Exercise standIn = Exercise(name: "", sets: [], isCompleted: false);
 
 // Modeling the type of Weight used (i.e is it just the number value, % of 1RM, or not weighted at all)
 enum WeightType { fixedValue, percentORM, notApplicable }

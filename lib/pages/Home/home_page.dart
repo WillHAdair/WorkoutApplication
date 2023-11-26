@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/models/constants.dart';
+import 'package:workout_app/models/workout.dart';
 import 'package:workout_app/pages/Home/default_home_page.dart';
 import 'package:workout_app/pages/Home/workout_home_page.dart';
 import 'package:workout_app/data/settings_data.dart';
@@ -19,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   bool workoutStarted = false;
   // ignore: unused_field
   int _currentIndex = 0;
+  Workout chosen = restWorkout;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -34,11 +36,14 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void changeWorkoutStatus(bool newStatus) {
+  // ignore: avoid_init_to_null
+  void changeWorkoutStatus(bool newStatus, Workout? chosenWorkout) {
     setState(() {
       workoutStarted = newStatus;
-      // Determine the correct index based on the workout status change
-      _currentIndex = workoutStarted ? 1 : 0; // Change to the appropriate index
+      _currentIndex = workoutStarted ? 1 : 0;
+      if (chosenWorkout != null) {
+        chosen = chosenWorkout;
+      }
     });
     Provider.of<WorkoutData>(context, listen: false)
         .changeWorkoutStarted(newStatus);
@@ -60,7 +65,8 @@ class _HomePageState extends State<HomePage> {
               onWorkoutStatusChange: changeWorkoutStatus,
             ),
             WorkoutHomePage(
-              onWorkoutStatusChange: changeWorkoutStatus,
+              onWorkoutStatusChange: (val) => changeWorkoutStatus(val, null),
+              chosen: chosen,
             ),
           ],
         ),

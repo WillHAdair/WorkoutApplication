@@ -5,11 +5,16 @@ import 'package:provider/provider.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 import 'package:workout_app/components/dropdown/exercise_dropdown_list.dart';
 import 'package:workout_app/data/theme_provider.dart';
+import 'package:workout_app/data/workout_data.dart';
+import 'package:workout_app/models/constants.dart';
+import 'package:workout_app/models/workout.dart';
 import 'package:workout_app/models/workout_set.dart';
 
 class WorkoutHomePage extends StatefulWidget {
   final Function(bool) onWorkoutStatusChange;
-  const WorkoutHomePage({Key? key, required this.onWorkoutStatusChange})
+  final Workout chosen;
+  const WorkoutHomePage(
+      {Key? key, required this.onWorkoutStatusChange, required this.chosen})
       : super(key: key);
 
   @override
@@ -78,139 +83,158 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Chest Day'),
-        centerTitle: true,
-      ),
-      body: ListView(
-        children: [
-          const SizedBox(height: 20),
-          Card(
-            elevation: 4,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: SizedBox(
-              width: 200,
-              height: 200,
-              child: SimpleCircularProgressBar(
-                valueNotifier: valueNotifier,
-                size: 200,
-                progressStrokeWidth: 5,
-                backStrokeWidth: 5,
-                onGetText: (double value) {
-                  TextStyle centerTextStyle = const TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.greenAccent,
-                  );
-                  return Text(
-                    _formatTime(_hours, _minutes, _seconds),
-                    style: centerTextStyle,
-                  );
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(width: 10),
-              Icon(
-                Icons.fitness_center,
-                color: Colors.blue,
-              ),
-              SizedBox(width: 10),
-              Text('Current exercise',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-            ],
-          ),
-          ExerciseDropdownList(
-              title: 'Benchpress',
-              sets: sets,
-              onSettingsPress: () => {},
-              onDeletePress: () => {},
-              onChanged: (p0) => {},
-              isCompleted: false),
-          const SizedBox(height: 10),
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(width: 10),
-              Icon(
-                Icons.checklist,
-                color: Colors.blue,
-              ),
-              SizedBox(width: 10),
-              Text('Next Exercises',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-            ],
-          ),
-          ExerciseDropdownList(
-              title: 'Incline Bench',
-              sets: sets,
-              onSettingsPress: () => {},
-              onDeletePress: () => {},
-              onChanged: (p0) => {},
-              isCompleted: false),
-          ExerciseDropdownList(
-              title: 'Decline Bench',
-              sets: sets,
-              onSettingsPress: () => {},
-              onDeletePress: () => {},
-              onChanged: (p0) => {},
-              isCompleted: false),
-          const SizedBox(height: 10),
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(width: 10),
-              Icon(
-                Icons.done_all,
-                color: Colors.blue,
-              ),
-              SizedBox(width: 10),
-              Text('Completed Exercises',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-            ],
-          ),
-          ExerciseDropdownList(
-              title: 'Chest Flys',
-              sets: sets,
-              onSettingsPress: () => {},
-              onDeletePress: () => {},
-              onChanged: (p0) => {},
-              isCompleted: false),
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(22),
-        child: TextButton(
-            onPressed: () => endWorkout(),
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.all(16),
-              backgroundColor: Provider.of<ThemeProvider>(context).rejectColor,
-              foregroundColor: Colors.red[200],
+    return Consumer<WorkoutData>(
+      builder: (context, value, child) => Scaffold(
+        appBar: AppBar(
+          title: Text(widget.chosen.name),
+          centerTitle: true,
+        ),
+        body: ListView(
+          children: [
+            const SizedBox(height: 20),
+            Card(
+              elevation: 4,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-            ),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.close),
-                Text(
-                  'End Workout',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                  ),
+              child: SizedBox(
+                width: 200,
+                height: 200,
+                child: SimpleCircularProgressBar(
+                  valueNotifier: valueNotifier,
+                  size: 200,
+                  progressStrokeWidth: 5,
+                  backStrokeWidth: 5,
+                  onGetText: (double value) {
+                    TextStyle centerTextStyle = const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.greenAccent,
+                    );
+                    return Text(
+                      _formatTime(_hours, _minutes, _seconds),
+                      style: centerTextStyle,
+                    );
+                  },
                 ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(width: 10),
+                Icon(
+                  Icons.fitness_center,
+                  color: Colors.blue,
+                ),
+                SizedBox(width: 10),
+                Text('Current exercise',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
               ],
-            )),
+            ),
+            Provider.of<WorkoutData>(context)
+                        .getFirstUnchecked(widget.chosen) !=
+                    standIn
+                ? ExerciseDropdownList(
+                    title: Provider.of<WorkoutData>(context)
+                        .getFirstUnchecked(widget.chosen)!
+                        .name,
+                    sets: Provider.of<WorkoutData>(context)
+                        .getFirstUnchecked(widget.chosen)!
+                        .sets,
+                    onSettingsPress: () => {},
+                    onDeletePress: () => {},
+                    onChanged: (p0) => {},
+                    isCompleted: false)
+                : const SizedBox.shrink(),
+            const SizedBox(height: 10),
+            const Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(width: 10),
+                Icon(
+                  Icons.checklist,
+                  color: Colors.blue,
+                ),
+                SizedBox(width: 10),
+                Text('Next Exercises',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+              ],
+            ),
+            ListView.builder(
+              itemCount: value.getUncheckedExercises(widget.chosen).length,
+              itemBuilder: (context, index) => ExerciseDropdownList(
+                title: value.getUncheckedExercises(widget.chosen)[index].name,
+                sets: value.getUncheckedExercises(widget.chosen)[index].sets,
+                isCompleted: false,
+                onSettingsPress: () {},
+                onDeletePress: () {},
+                onChanged: (p0) {},
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(width: 10),
+                Icon(
+                  Icons.done_all,
+                  color: Colors.blue,
+                ),
+                SizedBox(width: 10),
+                Text('Completed Exercises',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+              ],
+            ),
+            ListView.builder(
+              itemCount: value.getCheckedExercises(widget.chosen).length,
+              itemBuilder: (context, index) => ExerciseDropdownList(
+                title: value.getCheckedExercises(widget.chosen)[index].name,
+                sets: value.getCheckedExercises(widget.chosen)[index].sets,
+                isCompleted: false,
+                onSettingsPress: () {},
+                onDeletePress: () {},
+                onChanged: (p0) {},
+              ),
+            ),
+            ExerciseDropdownList(
+                title: 'Chest Flys',
+                sets: sets,
+                onSettingsPress: () => {},
+                onDeletePress: () => {},
+                onChanged: (p0) => {},
+                isCompleted: false),
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.all(22),
+          child: TextButton(
+              onPressed: () => endWorkout(),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.all(16),
+                backgroundColor:
+                    Provider.of<ThemeProvider>(context).rejectColor,
+                foregroundColor: Colors.red[200],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.close),
+                  Text(
+                    'End Workout',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              )),
+        ),
       ),
     );
   }
