@@ -201,15 +201,10 @@ class WorkoutData extends ChangeNotifier {
     db.saveWorkout(workoutName, relevantWorkout);
   }
 
-  void editExercise(String workoutName, String oldExerciseName,
-      String newExerciseName, List<WorkoutSet> newSets) {
-    Workout relevantWorkout = getRelevantWorkout(workoutName)!;
-    Exercise relevantExercise =
-        getRelevantExercise(relevantWorkout, oldExerciseName);
-    relevantExercise.sets = newSets;
+  void editExerciseName(Workout workout, Exercise exercise, String newName) {
+    exercise.name = newName;
     notifyListeners();
-
-    db.saveWorkout(workoutName, relevantWorkout);
+    db.saveWorkout(workout.name, workout);
   }
 
   /// Sets

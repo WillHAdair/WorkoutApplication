@@ -48,10 +48,14 @@ class _WorkoutPageState extends State<WorkoutPage> {
     exerciseRepsController.clear();
   }
 
-  void moveToExercisePage() {
-    Provider.of<WorkoutData>(context, listen: false).addExercise(
-        widget.workoutName, exerciseNameController.text, [], false);
-    Navigator.pop(context);
+  void moveToExercisePage(bool createNew, {String name = ''}) {
+    String exerciseName = name;
+    if (createNew) {
+      Provider.of<WorkoutData>(context, listen: false).addExercise(
+          widget.workoutName, exerciseNameController.text, [], false);
+      Navigator.pop(context);
+      exerciseName = exerciseNameController.text;
+    }
     Workout workout = Provider.of<WorkoutData>(context, listen: false)
         .getRelevantWorkout(widget.workoutName)!;
     Navigator.push(
@@ -60,8 +64,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
             builder: (context) => ExercisePage(
                   workout: workout,
                   exercise: Provider.of<WorkoutData>(context, listen: false)
-                      .getRelevantExercise(
-                          workout, exerciseNameController.text),
+                      .getRelevantExercise(workout, exerciseName),
                 )));
   }
 
@@ -76,63 +79,38 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 name: "Exercise Name",
                 prefixIcon: Icons.fitness_center,
                 inputType: TextInputType.text)
-          ], onSave: moveToExercisePage, onCancel: cancel);
+          ], onSave: () => moveToExercisePage(true), onCancel: cancel);
         });
   }
 
   void edit(String exerciseName) {
-    Provider.of<WorkoutData>(context, listen: false).editExercise(
-        widget.workoutName, exerciseName, exerciseNameController.text, []);
+    Workout relevantWorkout = Provider.of<WorkoutData>(context, listen: false)
+        .getRelevantWorkout(widget.workoutName)!;
+    Exercise relevantExercise = Provider.of<WorkoutData>(context, listen: false)
+        .getRelevantExercise(relevantWorkout, exerciseName);
+    Provider.of<WorkoutData>(context, listen: false).editExerciseName(
+        relevantWorkout, relevantExercise, exerciseNameController.text);
 
     Navigator.pop(context);
-    clear();
   }
 
   void editExercise(String exerciseName) {
-    Workout relevantWorkout = Provider.of<WorkoutData>(context, listen: false)
-        .getRelevantWorkout(widget.workoutName)!;
-    Exercise relevantExercsise =
-        Provider.of<WorkoutData>(context, listen: false)
-            .getRelevantExercise(relevantWorkout, exerciseName);
-    //Pre-set the text to the current text
-    exerciseNameController.value = TextEditingValue(
-      text: relevantExercsise.name,
-      selection: TextSelection.fromPosition(
-          TextPosition(offset: relevantExercsise.name.length)),
-    );
-
-    List<CustomTextField> exercises = [
-      CustomTextField(
-        controller: exerciseNameController,
-        name: "New name",
-        prefixIcon: Icons.person_add,
-        inputType: TextInputType.name,
-      ),
-      CustomTextField(
-        controller: exerciseWeightController,
-        name: "New weight",
-        prefixIcon: Icons.scale,
-        inputType: TextInputType.number,
-      ),
-      CustomTextField(
-        controller: exerciseSetsController,
-        name: "New sets",
-        prefixIcon: Icons.edit,
-        inputType: TextInputType.number,
-      ),
-      CustomTextField(
-        controller: exerciseRepsController,
-        name: "New reps",
-        prefixIcon: Icons.edit,
-        inputType: TextInputType.number,
-      ),
-    ];
+    exerciseNameController.text = exerciseName;
     showDialog(
         context: context,
         builder: (context) {
           return CustomizableDialog(
-              customTextFields: exercises,
-              onSave: () => edit(exerciseName),
+              customTextFields: [
+                CustomTextField(
+                    controller: exerciseNameController,
+                    name: "Exercise Name",
+                    prefixIcon: Icons.fitness_center,
+                    inputType: TextInputType.text)
+              ],
+              onSave: () {
+                edit(exerciseName);
+                moveToExercisePage(false, name: exerciseNameController.text);
+              },
               onCancel: cancel);
         });
   }

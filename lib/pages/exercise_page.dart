@@ -23,11 +23,15 @@ class _ExercisePageState extends State<ExercisePage> {
   final nameController = TextEditingController();
   final weightController = TextEditingController();
   final repsController = TextEditingController();
+  String name = '';
 
   @override
   void initState() {
     super.initState();
     nameController.text = widget.exercise.name;
+    setState(() {
+      name = nameController.text;
+    });
   }
 
   void save() {
@@ -161,7 +165,7 @@ class _ExercisePageState extends State<ExercisePage> {
     return Consumer<WorkoutData>(
       builder: (context, value, child) => Scaffold(
         appBar: AppBar(
-          title: Text(widget.exercise.name),
+          title: Text(name),
           centerTitle: true,
         ),
         floatingActionButton: FloatingActionButton(
@@ -173,46 +177,6 @@ class _ExercisePageState extends State<ExercisePage> {
           padding: const EdgeInsets.all(12),
           child: ListView(
             children: [
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Icon(
-                    Icons.edit_calendar,
-                    color: Provider.of<ThemeProvider>(context).secondaryColor,
-                  ),
-                  const SizedBox(width: 10),
-                  const Text('Exercise Values',
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-                ],
-              ),
-              Row(
-                children: [
-                  const Text('Exercise name: '),
-                  const SizedBox(width: 5),
-                  Expanded(
-                    child: CustomTextField(
-                      controller: nameController,
-                      name: 'Exercise',
-                      prefixIcon: Icons.person,
-                      inputType: TextInputType.text,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Icon(
-                    Icons.schedule,
-                    color: Provider.of<ThemeProvider>(context).secondaryColor,
-                  ),
-                  const SizedBox(width: 10),
-                  const Text('Exercise Sets',
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-                ],
-              ),
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
