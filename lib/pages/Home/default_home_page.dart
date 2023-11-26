@@ -105,7 +105,9 @@ class DefaultHomePageState extends State<DefaultHomePage> {
         context: context,
         builder: (context) {
           return ListPopup(
-              onChange: (workout) => startWorkout(workout), onCancel: cancel);
+              onChange: (workout) => startWorkout(workout),
+              onCancel: cancel,
+              workouts: Provider.of<WorkoutData>(context).getFilledWorkouts());
         });
   }
 

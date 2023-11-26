@@ -105,6 +105,16 @@ class WorkoutData extends ChangeNotifier {
     return workoutList;
   }
 
+  List<Workout> getFilledWorkouts() {
+    List<Workout> workouts = [];
+    for (Workout workout in getWorkoutList()) {
+      if (workout.exercises.isNotEmpty) {
+        workouts.add(workout);
+      }
+    }
+    return workouts;
+  }
+
   Workout? getRelevantWorkout(String workoutName) {
     try {
       return workoutList.firstWhere((workout) => workout.name == workoutName);
@@ -156,7 +166,11 @@ class WorkoutData extends ChangeNotifier {
 
   Exercise getFirstUnchecked(Workout workout) {
     if (workout.exercises.isNotEmpty) {
-      return workout.exercises.firstWhere((exercise) => !exercise.isCompleted);
+      for (Exercise exercise in workout.exercises) {
+        if (!exercise.isCompleted) {
+          return exercise;
+        }
+      }
     }
     return standIn;
   }

@@ -92,7 +92,8 @@ class _SchedulePageState extends State<SchedulePage> {
       builder: (context) {
         return ListPopup(
             onChange: (workout) => onChanged(workout, index),
-            onCancel: onCancel);
+            onCancel: onCancel,
+            workouts: Provider.of<WorkoutData>(context).getWorkoutList());
       },
     );
   }

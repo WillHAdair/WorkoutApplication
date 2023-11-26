@@ -192,19 +192,12 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 .getRelevantWorkout(widget.workoutName)!
                 .exercises[index]
                 .sets,
-            isCompleted: value
-                .getRelevantWorkout(widget.workoutName)!
-                .exercises[index]
-                .isCompleted,
+            isCompleted: false,
             onSettingsPress: () => editExercise(value
                 .getRelevantWorkout(widget.workoutName)!
                 .exercises[index]
                 .name),
             onDeletePress: () => deleteExercise(value
-                .getRelevantWorkout(widget.workoutName)!
-                .exercises[index]
-                .name),
-            onChanged: (val) => onCheckBoxChanged(value
                 .getRelevantWorkout(widget.workoutName)!
                 .exercises[index]
                 .name),

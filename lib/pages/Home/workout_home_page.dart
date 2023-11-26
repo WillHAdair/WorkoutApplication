@@ -22,6 +22,11 @@ class WorkoutHomePage extends StatefulWidget {
 }
 
 class WorkoutHomePageState extends State<WorkoutHomePage> {
+  void onCheckBoxChanged(String exerciseName) {
+    Provider.of<WorkoutData>(context, listen: false)
+        .checkOffExercise(widget.chosen.name, exerciseName);
+  }
+
   late Timer _timer;
   int _seconds = 0;
   int _minutes = 0;
@@ -133,19 +138,15 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
               ],
             ),
-            Provider.of<WorkoutData>(context)
-                        .getFirstUnchecked(widget.chosen) !=
-                    standIn
+            value.getFirstUnchecked(widget.chosen) != standIn
                 ? ExerciseDropdownList(
-                    title: Provider.of<WorkoutData>(context)
-                        .getFirstUnchecked(widget.chosen)!
-                        .name,
-                    sets: Provider.of<WorkoutData>(context)
-                        .getFirstUnchecked(widget.chosen)!
-                        .sets,
-                    onSettingsPress: () => {},
-                    onDeletePress: () => {},
-                    onChanged: (p0) => {},
+                    title: value.getFirstUnchecked(widget.chosen).name,
+                    sets: value.getFirstUnchecked(widget.chosen).sets,
+                    onChanged: () {
+                      print('hit the breakpoint');
+                      onCheckBoxChanged(
+                          value.getFirstUnchecked(widget.chosen).name);
+                    },
                     isCompleted: false)
                 : const SizedBox.shrink(),
             const SizedBox(height: 10),
@@ -164,14 +165,17 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
             ),
             ListView.builder(
               itemCount: value.getUncheckedExercises(widget.chosen).length,
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
               itemBuilder: (context, index) => ExerciseDropdownList(
-                title: value.getUncheckedExercises(widget.chosen)[index].name,
-                sets: value.getUncheckedExercises(widget.chosen)[index].sets,
-                isCompleted: false,
-                onSettingsPress: () {},
-                onDeletePress: () {},
-                onChanged: (p0) {},
-              ),
+                  title: value.getUncheckedExercises(widget.chosen)[index].name,
+                  sets: value.getUncheckedExercises(widget.chosen)[index].sets,
+                  isCompleted: false,
+                  onChanged: () {
+                    print('hit the breakpoint');
+                    onCheckBoxChanged(
+                        value.getUncheckedExercises(widget.chosen)[index].name);
+                  }),
             ),
             const SizedBox(height: 10),
             const Row(
@@ -189,22 +193,18 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
             ),
             ListView.builder(
               itemCount: value.getCheckedExercises(widget.chosen).length,
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
               itemBuilder: (context, index) => ExerciseDropdownList(
-                title: value.getCheckedExercises(widget.chosen)[index].name,
-                sets: value.getCheckedExercises(widget.chosen)[index].sets,
-                isCompleted: false,
-                onSettingsPress: () {},
-                onDeletePress: () {},
-                onChanged: (p0) {},
-              ),
+                  title: value.getCheckedExercises(widget.chosen)[index].name,
+                  sets: value.getCheckedExercises(widget.chosen)[index].sets,
+                  isCompleted: true,
+                  onChanged: () {
+                    print('hit the breakpoint');
+                    onCheckBoxChanged(
+                        value.getCheckedExercises(widget.chosen)[index].name);
+                  }),
             ),
-            ExerciseDropdownList(
-                title: 'Chest Flys',
-                sets: sets,
-                onSettingsPress: () => {},
-                onDeletePress: () => {},
-                onChanged: (p0) => {},
-                isCompleted: false),
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

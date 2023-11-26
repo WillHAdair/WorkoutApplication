@@ -10,18 +10,18 @@ class ExerciseDropdownList extends StatefulWidget {
   final String title;
   final List<WorkoutSet> sets;
   bool isCompleted;
-  final VoidCallback onSettingsPress;
-  final VoidCallback onDeletePress;
-  final void Function(bool?)? onChanged;
+  VoidCallback? onSettingsPress;
+  VoidCallback? onDeletePress;
+  VoidCallback? onChanged;
 
   ExerciseDropdownList({
-    Key? key, 
-    required this.title, 
-    required this.sets, 
+    Key? key,
+    required this.title,
+    required this.sets,
     required this.isCompleted,
-    required this.onSettingsPress,
-    required this.onDeletePress,
-    required this.onChanged,
+    this.onChanged,
+    this.onSettingsPress,
+    this.onDeletePress,
   }) : super(key: key);
 
   @override
@@ -32,109 +32,130 @@ class ExerciseDropdownList extends StatefulWidget {
 class _ExerciseDropdownListState extends State<ExerciseDropdownList> {
   bool isDropdownOpen = false;
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     Color tileColor = Provider.of<ThemeProvider>(context).getTileColor();
     Color chipColor = Provider.of<ThemeProvider>(context).getChipcolor();
     if (widget.isCompleted) {
       tileColor = Provider.of<ThemeProvider>(context).tileCompleted;
       chipColor = Provider.of<ThemeProvider>(context).chipCompleted;
     }
-    return Padding(
-  padding: const EdgeInsets.all(12),
-  child: Column(
-    children: [
-      Slidable(
-        endActionPane: ActionPane(
-          motion: const StretchMotion(),
-          children: [
-            SlidableAction(
-              onPressed: (context) => widget.onSettingsPress(),
-              backgroundColor: Provider.of<ThemeProvider>(context).settingsTile,
-              icon: Icons.settings,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            SlidableAction(
-              onPressed: (context) => widget.onDeletePress(),
-              backgroundColor: Provider.of<ThemeProvider>(context).deleteTile,
-              icon: Icons.delete,
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ],
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: tileColor,
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: Column(
-            children: [
-              ListTile(
-                leading: Checkbox(
-                  value: widget.isCompleted,
-                  onChanged: (value) => {
-                    setState(() {
-                      widget.isCompleted = value!;
-                    },)
-                  },
-                ),
-                title: Text(
-                  widget.title,
-                  style: const TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-                trailing: IconButton(
-                  icon: Icon(
-                    isDropdownOpen ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isDropdownOpen = !isDropdownOpen;
-                    });
-                  },
-                ),
+    Container contents = Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: tileColor,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        children: [
+          ListTile(
+            leading: widget.onChanged != null
+                ? Checkbox(
+                    value: widget.isCompleted,
+                    onChanged: (value) {
+                      widget.onChanged!();
+                      setState(() {
+                        widget.isCompleted = value!;
+                      });
+                    },
+                  )
+                : const SizedBox.shrink(),
+            title: Text(
+              widget.title,
+              style: const TextStyle(
+                fontSize: 20,
               ),
-              if (isDropdownOpen)
-                Column(
-                  children: widget.sets
-                      .map((workoutSet) => Container(
-                        decoration: BoxDecoration(
-                          color: workoutSet.isCompleted ? Provider.of<ThemeProvider>(context).tileCompleted : tileColor,
-                          borderRadius: BorderRadius.circular(12),
+            ),
+            trailing: IconButton(
+              icon: Icon(
+                isDropdownOpen
+                    ? Icons.keyboard_arrow_down
+                    : Icons.keyboard_arrow_right,
+              ),
+              onPressed: () {
+                setState(() {
+                  isDropdownOpen = !isDropdownOpen;
+                });
+              },
+            ),
+          ),
+          if (isDropdownOpen)
+            Column(
+              children: widget.sets
+                  .map((workoutSet) => Container(
+                      decoration: BoxDecoration(
+                        color: workoutSet.isCompleted
+                            ? Provider.of<ThemeProvider>(context).tileCompleted
+                            : tileColor,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        leading:
+                            Text("${widget.sets.indexOf(workoutSet) + 1})"),
+                        title: Row(
+                          children: [
+                            Chip(
+                              label: Text("${workoutSet.reps} Reps"),
+                              backgroundColor: workoutSet.isCompleted
+                                  ? Provider.of<ThemeProvider>(context)
+                                      .chipCompleted
+                                  : chipColor,
+                            ),
+                            const SizedBox(width: 10),
+                            Chip(
+                              label: Text("${workoutSet.weight} lb"),
+                              backgroundColor: workoutSet.isCompleted
+                                  ? Provider.of<ThemeProvider>(context)
+                                      .chipCompleted
+                                  : chipColor,
+                            ),
+                          ],
                         ),
-                        child: ListTile(
-                            leading: Text("${widget.sets.indexOf(workoutSet) + 1})"),
-                            title: Row(
-                              children: [
-                                Chip(
-                                  label: Text("${workoutSet.reps} Reps"),
-                                  backgroundColor: workoutSet.isCompleted ? 
-                                  Provider.of<ThemeProvider>(context).chipCompleted : chipColor,
-                                ),
-                                const SizedBox(width: 10),
-                                Chip(
-                                  label: Text("${workoutSet.weight} lb"),
-                                  backgroundColor: workoutSet.isCompleted ? 
-                                  Provider.of<ThemeProvider>(context).chipCompleted : chipColor,
-                                ),
-                              ],
-                            ),
-                            trailing: Checkbox(
-                              value: widget.isCompleted ? true : workoutSet.isCompleted,
-                              onChanged: (value) => {
-                                setState(() {
-                                  workoutSet.isCompleted = value!;
-                                },)
+                        trailing: Checkbox(
+                          value: widget.isCompleted
+                              ? true
+                              : workoutSet.isCompleted,
+                          onChanged: (value) => {
+                            setState(
+                              () {
+                                workoutSet.isCompleted = value!;
                               },
-                            ),
-                          )))
-                    .toList(),
-                  ),
-                ],
-              ),
+                            )
+                          },
+                        ),
+                      )))
+                  .toList(),
             ),
-          ),
+        ],
+      ),
+    );
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        children: [
+          widget.onSettingsPress != null && widget.onDeletePress != null
+              ? Slidable(
+                  endActionPane: ActionPane(
+                    motion: const StretchMotion(),
+                    children: [
+                      SlidableAction(
+                        onPressed: (context) => widget.onSettingsPress!(),
+                        backgroundColor:
+                            Provider.of<ThemeProvider>(context).settingsTile,
+                        icon: Icons.settings,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      SlidableAction(
+                        onPressed: (context) => widget.onDeletePress!(),
+                        backgroundColor:
+                            Provider.of<ThemeProvider>(context).deleteTile,
+                        icon: Icons.delete,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ],
+                  ),
+                  child: contents,
+                )
+              : contents,
         ],
       ),
     );
