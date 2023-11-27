@@ -12,7 +12,7 @@ import 'package:workout_app/models/workout.dart';
 import 'package:workout_app/models/workout_set.dart';
 
 class WorkoutHomePage extends StatefulWidget {
-  final Function(bool) onWorkoutStatusChange;
+  final void Function(bool) onWorkoutStatusChange;
   const WorkoutHomePage({Key? key, required this.onWorkoutStatusChange})
       : super(key: key);
 

@@ -110,7 +110,7 @@ class WorkoutData extends ChangeNotifier {
   }
 
   Workout? getStartedWorkout() {
-    return db.getStartedWorkout();
+    return db.getStartedWorkout() ?? restWorkout;
   }
 
   List<Workout> getFilledWorkouts() {

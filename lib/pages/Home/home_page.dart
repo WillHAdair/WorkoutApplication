@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
               onWorkoutStatusChange: changeWorkoutStatus,
             ),
             WorkoutHomePage(
-              onWorkoutStatusChange: (val) => changeWorkoutStatus,
+              onWorkoutStatusChange: changeWorkoutStatus,
             ),
           ],
         ),

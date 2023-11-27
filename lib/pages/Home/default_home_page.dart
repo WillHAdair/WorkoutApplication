@@ -98,7 +98,7 @@ class DefaultHomePageState extends State<DefaultHomePage> {
 
   void startWorkout(Workout workout) {
     Navigator.pop(context);
-    Provider.of<WorkoutData>(context).startWorkout(workout);
+    Provider.of<WorkoutData>(context, listen: false).startWorkout(workout);
     widget.onWorkoutStatusChange(true);
   }
 
