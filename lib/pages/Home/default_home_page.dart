@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
+import 'package:workout_app/components/basic_widgets/text_divider.dart';
 import 'package:workout_app/components/popups/list_popup.dart';
 import 'package:workout_app/components/tiles/custom_tile.dart';
 import 'package:workout_app/components/heat_map.dart';
@@ -107,7 +108,14 @@ class DefaultHomePageState extends State<DefaultHomePage> {
           return ListPopup(
               onChange: (workout) => startWorkout(workout),
               onCancel: cancel,
-              workouts: Provider.of<WorkoutData>(context).getFilledWorkouts());
+              workouts: Provider.of<WorkoutData>(context).getFilledWorkouts(),
+              errorMessage: 'No populated workouts',
+              preferred: Provider.of<WorkoutData>(context).getTodaysWorkout(),
+              heading: const <String, IconData> {
+                'Today\'s Workout': Icons.today,
+                'Other workouts': Icons.checklist
+              },
+            );
         });
   }
 
@@ -176,43 +184,18 @@ class DefaultHomePageState extends State<DefaultHomePage> {
             CustomHeatMap(
                 datasets: value.heatMapDataSet,
                 startDate: value.getStartDate()),
-            const SizedBox(height: 10),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(width: 10),
-                Icon(
-                  Icons.today,
-                  color: Provider.of<ThemeProvider>(context).secondaryColor,
-                ),
-                const SizedBox(width: 10),
-                const Text('Today\'s workout',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-              ],
-            ),
+            const TextDivider(text: 'Today\'s workout', icon: Icons.today),
             SlidingTile(
-              text: value.getWorkoutList()[0].name,
+              text: value.getTodaysWorkout().name,
               onForwardPress: () =>
-                  goToWorkoutPage(value.getWorkoutList()[0].name),
+                  goToWorkoutPage(value.getTodaysWorkout().name),
               onSettingsPress: () =>
-                  onSettingsPress(value.getWorkoutList()[0].name),
+                  onSettingsPress(value.getTodaysWorkout().name),
               onDeletePress: () =>
-                  onDeletePress(value.getWorkoutList()[0].name),
+                  onDeletePress(value.getTodaysWorkout().name),
               imageLocation: dumbellImg,
             ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                const SizedBox(width: 10),
-                Icon(
-                  Icons.checklist,
-                  color: Provider.of<ThemeProvider>(context).secondaryColor,
-                ),
-                const SizedBox(width: 10),
-                const Text('Other workouts',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-              ],
-            ),
+            const TextDivider(text: 'Other workouts', icon: Icons.checklist),
             CustomTile(
               text: 'View/AddWorkouts',
               onForwardPress: () => goToWorkoutsPage(),

@@ -105,6 +105,10 @@ class WorkoutData extends ChangeNotifier {
     return workoutList;
   }
 
+  Workout getTodaysWorkout() {
+    return workoutList[0];
+  }
+
   List<Workout> getFilledWorkouts() {
     List<Workout> workouts = [];
     for (Workout workout in getWorkoutList()) {

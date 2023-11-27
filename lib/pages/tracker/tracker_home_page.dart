@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
+import 'package:workout_app/components/basic_widgets/text_divider.dart';
 import 'package:workout_app/components/popups/customizable_dialog.dart';
 import 'package:workout_app/data/schedule_data.dart';
 import 'package:workout_app/data/theme_provider.dart';
@@ -163,20 +164,7 @@ class TrackerHomePageState extends State<TrackerHomePage> {
               lastDay: today,
               onDaySelected: daySelected,
             ),
-            const SizedBox(height: 10),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(width: 10),
-                Icon(
-                  Icons.schedule,
-                  color: Provider.of<ThemeProvider>(context).secondaryColor,
-                ),
-                const SizedBox(width: 10),
-                const Text('Current schedule',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-              ],
-            ),
+            const TextDivider(text: 'Current schedule', icon: Icons.schedule),
             SlidingTile(
               text: value.getSchedules()[0].name,
               onForwardPress: () => goToSchedulePage(value.getSchedules()[0]),
@@ -184,20 +172,7 @@ class TrackerHomePageState extends State<TrackerHomePage> {
               onDeletePress: () => deleteSchedule(value.getSchedules()[0].name),
               imageLocation: dumbellImg,
             ),
-            const SizedBox(height: 10),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(width: 10),
-                Icon(
-                  Icons.update,
-                  color: Provider.of<ThemeProvider>(context).secondaryColor,
-                ),
-                const SizedBox(width: 10),
-                const Text('Other schedules',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-              ],
-            ),
+            const TextDivider(text: 'Other schedules', icon: Icons.update),
             CustomTile(
               text: 'View Schedules',
               onForwardPress: () => goToSchedulesPage(),

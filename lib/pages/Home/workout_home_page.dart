@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
+import 'package:workout_app/components/basic_widgets/text_divider.dart';
 import 'package:workout_app/components/dropdown/exercise_dropdown_list.dart';
 import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/data/workout_data.dart';
@@ -124,45 +125,18 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
-            const Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(width: 10),
-                Icon(
-                  Icons.fitness_center,
-                  color: Colors.blue,
-                ),
-                SizedBox(width: 10),
-                Text('Current exercise',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-              ],
-            ),
+            const TextDivider(text: 'Current Exercise', icon: Icons.fitness_center),
             value.getFirstUnchecked(widget.chosen) != standIn
                 ? ExerciseDropdownList(
                     title: value.getFirstUnchecked(widget.chosen).name,
                     sets: value.getFirstUnchecked(widget.chosen).sets,
                     onChanged: () {
-                      print('hit the breakpoint');
                       onCheckBoxChanged(
                           value.getFirstUnchecked(widget.chosen).name);
                     },
                     isCompleted: false)
                 : const SizedBox.shrink(),
-            const SizedBox(height: 10),
-            const Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(width: 10),
-                Icon(
-                  Icons.checklist,
-                  color: Colors.blue,
-                ),
-                SizedBox(width: 10),
-                Text('Next Exercises',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-              ],
-            ),
+            const TextDivider(text: 'Next Exercises', icon: Icons.checklist),
             ListView.builder(
               itemCount: value.getUncheckedExercises(widget.chosen).length,
               shrinkWrap: true,
@@ -172,25 +146,11 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
                   sets: value.getUncheckedExercises(widget.chosen)[index].sets,
                   isCompleted: false,
                   onChanged: () {
-                    print('hit the breakpoint');
                     onCheckBoxChanged(
                         value.getUncheckedExercises(widget.chosen)[index].name);
                   }),
             ),
-            const SizedBox(height: 10),
-            const Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(width: 10),
-                Icon(
-                  Icons.done_all,
-                  color: Colors.blue,
-                ),
-                SizedBox(width: 10),
-                Text('Completed Exercises',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-              ],
-            ),
+            const TextDivider(text: 'Completed Exercises', icon: Icons.done),
             ListView.builder(
               itemCount: value.getCheckedExercises(widget.chosen).length,
               shrinkWrap: true,
@@ -200,7 +160,6 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
                   sets: value.getCheckedExercises(widget.chosen)[index].sets,
                   isCompleted: true,
                   onChanged: () {
-                    print('hit the breakpoint');
                     onCheckBoxChanged(
                         value.getCheckedExercises(widget.chosen)[index].name);
                   }),

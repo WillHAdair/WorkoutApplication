@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
+import 'package:workout_app/components/basic_widgets/text_divider.dart';
 import 'package:workout_app/components/popups/customizable_dialog.dart';
 import 'package:workout_app/data/settings_data.dart';
 import 'package:workout_app/data/theme_provider.dart';
@@ -258,40 +259,12 @@ class SettingsPageState extends State<SettingsPage> {
           padding: const EdgeInsets.all(10),
           child: ListView(
             children: [
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Icon(
-                    Icons.toggle_off,
-                    color: Provider.of<ThemeProvider>(context).secondaryColor,
-                  ),
-                  const SizedBox(width: 10),
-                  const Text('Preferences',
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-                ],
-              ),
-              const Divider(height: 20, thickness: 1),
-              const SizedBox(height: 10),
+              const TextDivider(text: 'Preferences', icon: Icons.toggle_on),
               buildSwitch(Icons.light_mode, Icons.dark_mode, 'Theme Dark',
                   darkMode, changeDarkMode),
               buildSwitch(Icons.notifications_off, Icons.notifications_active,
                   'Notifications', notificationsOn, changeNotifications),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Icon(
-                    Icons.storage,
-                    color: Provider.of<ThemeProvider>(context).secondaryColor,
-                  ),
-                  const SizedBox(width: 10),
-                  const Text('Data',
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-                ],
-              ),
-              const Divider(height: 20, thickness: 1),
-              const SizedBox(height: 10),
+              const TextDivider(text: 'Data', icon: Icons.save),
               buildSwitch(Icons.trending_flat, Icons.trending_up,
                   'Progress Tracking', trendTracking, changeTrendTracking),
               buildSwitch(Icons.cloud_off, Icons.cloud_upload,

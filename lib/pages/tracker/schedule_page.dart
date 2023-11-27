@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
+import 'package:workout_app/components/basic_widgets/text_divider.dart';
 import 'package:workout_app/components/popups/list_popup.dart';
 import 'package:workout_app/components/tiles/text_tile.dart';
 import 'package:workout_app/components/tiles/sliding_tile.dart';
@@ -91,9 +92,10 @@ class _SchedulePageState extends State<SchedulePage> {
       context: context,
       builder: (context) {
         return ListPopup(
-            onChange: (workout) => onChanged(workout, index),
-            onCancel: onCancel,
-            workouts: Provider.of<WorkoutData>(context).getWorkoutList());
+          onChange: (workout) => onChanged(workout, index),
+          onCancel: onCancel,
+          workouts: Provider.of<WorkoutData>(context).getWorkoutList(),
+          errorMessage: 'No workouts available');
       },
     );
   }
@@ -126,19 +128,7 @@ class _SchedulePageState extends State<SchedulePage> {
           padding: const EdgeInsets.all(12.0),
           child: ListView(
             children: [
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Icon(
-                    Icons.edit_calendar,
-                    color: Provider.of<ThemeProvider>(context).secondaryColor,
-                  ),
-                  const SizedBox(width: 10),
-                  const Text('Schedule Data',
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-                ],
-              ),
+              const TextDivider(text: 'Schedule Data', icon: Icons.edit_calendar),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -177,19 +167,7 @@ class _SchedulePageState extends State<SchedulePage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Icon(
-                    Icons.schedule,
-                    color: Provider.of<ThemeProvider>(context).secondaryColor,
-                  ),
-                  const SizedBox(width: 10),
-                  const Text('Planned workouts',
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
-                ],
-              ),
+              const TextDivider(text: 'Planned Workouts', icon: Icons.schedule),
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
