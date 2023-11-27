@@ -37,13 +37,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   // ignore: avoid_init_to_null
-  void changeWorkoutStatus(bool newStatus, Workout? chosenWorkout) {
+  void changeWorkoutStatus(bool newStatus) {
     setState(() {
       workoutStarted = newStatus;
       _currentIndex = workoutStarted ? 1 : 0;
-      if (chosenWorkout != null) {
-        chosen = chosenWorkout;
-      }
     });
     Provider.of<WorkoutData>(context, listen: false)
         .changeWorkoutStarted(newStatus);
@@ -65,8 +62,7 @@ class _HomePageState extends State<HomePage> {
               onWorkoutStatusChange: changeWorkoutStatus,
             ),
             WorkoutHomePage(
-              onWorkoutStatusChange: (val) => changeWorkoutStatus(val, null),
-              chosen: chosen,
+              onWorkoutStatusChange: (val) => changeWorkoutStatus,
             ),
           ],
         ),

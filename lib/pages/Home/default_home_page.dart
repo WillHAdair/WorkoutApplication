@@ -15,7 +15,7 @@ import 'package:workout_app/pages/Workouts/workout_page.dart';
 import 'package:workout_app/pages/Workouts/workouts_page.dart';
 
 class DefaultHomePage extends StatefulWidget {
-  final void Function(bool, Workout?) onWorkoutStatusChange;
+  final void Function(bool) onWorkoutStatusChange;
 
   const DefaultHomePage({Key? key, required this.onWorkoutStatusChange})
       : super(key: key);
@@ -98,7 +98,8 @@ class DefaultHomePageState extends State<DefaultHomePage> {
 
   void startWorkout(Workout workout) {
     Navigator.pop(context);
-    widget.onWorkoutStatusChange(true, workout);
+    Provider.of<WorkoutData>(context).startWorkout(workout);
+    widget.onWorkoutStatusChange(true);
   }
 
   void chooseWorkout() {
@@ -106,16 +107,16 @@ class DefaultHomePageState extends State<DefaultHomePage> {
         context: context,
         builder: (context) {
           return ListPopup(
-              onChange: (workout) => startWorkout(workout),
-              onCancel: cancel,
-              workouts: Provider.of<WorkoutData>(context).getFilledWorkouts(),
-              errorMessage: 'No populated workouts',
-              preferred: Provider.of<WorkoutData>(context).getTodaysWorkout(),
-              heading: const <String, IconData> {
-                'Today\'s Workout': Icons.today,
-                'Other workouts': Icons.checklist
-              },
-            );
+            onChange: (workout) => startWorkout(workout),
+            onCancel: cancel,
+            workouts: Provider.of<WorkoutData>(context).getFilledWorkouts(),
+            errorMessage: 'No populated workouts',
+            preferred: Provider.of<WorkoutData>(context).getTodaysWorkout(),
+            heading: const <String, IconData>{
+              'Today\'s Workout': Icons.today,
+              'Other workouts': Icons.checklist
+            },
+          );
         });
   }
 
@@ -191,8 +192,7 @@ class DefaultHomePageState extends State<DefaultHomePage> {
                   goToWorkoutPage(value.getTodaysWorkout().name),
               onSettingsPress: () =>
                   onSettingsPress(value.getTodaysWorkout().name),
-              onDeletePress: () =>
-                  onDeletePress(value.getTodaysWorkout().name),
+              onDeletePress: () => onDeletePress(value.getTodaysWorkout().name),
               imageLocation: dumbellImg,
             ),
             const TextDivider(text: 'Other workouts', icon: Icons.checklist),

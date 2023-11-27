@@ -13,9 +13,7 @@ import 'package:workout_app/models/workout_set.dart';
 
 class WorkoutHomePage extends StatefulWidget {
   final Function(bool) onWorkoutStatusChange;
-  final Workout chosen;
-  const WorkoutHomePage(
-      {Key? key, required this.onWorkoutStatusChange, required this.chosen})
+  const WorkoutHomePage({Key? key, required this.onWorkoutStatusChange})
       : super(key: key);
 
   @override
@@ -25,9 +23,10 @@ class WorkoutHomePage extends StatefulWidget {
 class WorkoutHomePageState extends State<WorkoutHomePage> {
   void onCheckBoxChanged(String exerciseName) {
     Provider.of<WorkoutData>(context, listen: false)
-        .checkOffExercise(widget.chosen.name, exerciseName);
+        .checkOffExercise(chosen.name, exerciseName);
   }
 
+  Workout chosen = restWorkout;
   late Timer _timer;
   int _seconds = 0;
   int _minutes = 0;
@@ -89,10 +88,13 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      chosen = Provider.of<WorkoutData>(context).getStartedWorkout()!;
+    });
     return Consumer<WorkoutData>(
       builder: (context, value, child) => Scaffold(
         appBar: AppBar(
-          title: Text(widget.chosen.name),
+          title: Text(chosen.name),
           centerTitle: true,
         ),
         body: ListView(
@@ -125,43 +127,43 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
                 ),
               ),
             ),
-            const TextDivider(text: 'Current Exercise', icon: Icons.fitness_center),
-            value.getFirstUnchecked(widget.chosen) != standIn
+            const TextDivider(
+                text: 'Current Exercise', icon: Icons.fitness_center),
+            value.getFirstUnchecked(chosen) != standIn
                 ? ExerciseDropdownList(
-                    title: value.getFirstUnchecked(widget.chosen).name,
-                    sets: value.getFirstUnchecked(widget.chosen).sets,
+                    title: value.getFirstUnchecked(chosen).name,
+                    sets: value.getFirstUnchecked(chosen).sets,
                     onChanged: () {
-                      onCheckBoxChanged(
-                          value.getFirstUnchecked(widget.chosen).name);
+                      onCheckBoxChanged(value.getFirstUnchecked(chosen).name);
                     },
                     isCompleted: false)
                 : const SizedBox.shrink(),
             const TextDivider(text: 'Next Exercises', icon: Icons.checklist),
             ListView.builder(
-              itemCount: value.getUncheckedExercises(widget.chosen).length,
+              itemCount: value.getUncheckedExercises(chosen).length,
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
               itemBuilder: (context, index) => ExerciseDropdownList(
-                  title: value.getUncheckedExercises(widget.chosen)[index].name,
-                  sets: value.getUncheckedExercises(widget.chosen)[index].sets,
+                  title: value.getUncheckedExercises(chosen)[index].name,
+                  sets: value.getUncheckedExercises(chosen)[index].sets,
                   isCompleted: false,
                   onChanged: () {
                     onCheckBoxChanged(
-                        value.getUncheckedExercises(widget.chosen)[index].name);
+                        value.getUncheckedExercises(chosen)[index].name);
                   }),
             ),
             const TextDivider(text: 'Completed Exercises', icon: Icons.done),
             ListView.builder(
-              itemCount: value.getCheckedExercises(widget.chosen).length,
+              itemCount: value.getCheckedExercises(chosen).length,
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
               itemBuilder: (context, index) => ExerciseDropdownList(
-                  title: value.getCheckedExercises(widget.chosen)[index].name,
-                  sets: value.getCheckedExercises(widget.chosen)[index].sets,
+                  title: value.getCheckedExercises(chosen)[index].name,
+                  sets: value.getCheckedExercises(chosen)[index].sets,
                   isCompleted: true,
                   onChanged: () {
                     onCheckBoxChanged(
-                        value.getCheckedExercises(widget.chosen)[index].name);
+                        value.getCheckedExercises(chosen)[index].name);
                   }),
             ),
           ],

@@ -109,6 +109,10 @@ class WorkoutData extends ChangeNotifier {
     return workoutList[0];
   }
 
+  Workout? getStartedWorkout() {
+    return db.getStartedWorkout();
+  }
+
   List<Workout> getFilledWorkouts() {
     List<Workout> workouts = [];
     for (Workout workout in getWorkoutList()) {
@@ -135,6 +139,10 @@ class WorkoutData extends ChangeNotifier {
     notifyListeners();
 
     db.saveWorkout(name, newWorkout);
+  }
+
+  void startWorkout(Workout workout) {
+    db.saveWorkout(keyMap[Keys.startedWorkout].toString(), workout);
   }
 
   // Edit/Delete Workouts

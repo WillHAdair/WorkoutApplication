@@ -42,6 +42,10 @@ class HiveDatabase {
     return workoutBox.values.toList();
   }
 
+  Workout? getStartedWorkout() {
+    return workoutBox.get(keyMap[Keys.startedWorkout].toString());
+  }
+
   final settingsBox = Hive.box<Setting>(boxKeyMap[BoxKeys.settings].toString());
   // Settings
 
@@ -61,9 +65,10 @@ class HiveDatabase {
     return settingsBox.values.isNotEmpty ? settingsBox.values.toList() : [];
   }
 
-  final scheduleBox = Hive.box<Schedule>(boxKeyMap[BoxKeys.schedules].toString());
+  final scheduleBox =
+      Hive.box<Schedule>(boxKeyMap[BoxKeys.schedules].toString());
   // Workout Schedules
-  List<Schedule>  readSchedules() {
+  List<Schedule> readSchedules() {
     return scheduleBox.values.isNotEmpty ? scheduleBox.values.toList() : [];
   }
 
@@ -74,6 +79,7 @@ class HiveDatabase {
   void saveSchedules(Map<String, Schedule> schedules) {
     scheduleBox.putAll(schedules);
   }
+
   void deleteSchedule(String scheduleName) {
     scheduleBox.delete(scheduleName);
   }
@@ -116,7 +122,7 @@ class HiveDatabase {
   }
 
   bool checkWorkoutStarted() {
-    if (!selectedKeyFound(programDataBox,keyMap[Keys.workoutStarted]!)) {
+    if (!selectedKeyFound(programDataBox, keyMap[Keys.workoutStarted]!)) {
       changeWorkoutStarted(false);
       return false;
     }
