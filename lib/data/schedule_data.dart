@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:workout_app/data/hive_database.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/datetime/date_timedata.dart';
+import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/schedule.dart';
 import 'package:workout_app/models/workout.dart';
@@ -83,6 +84,10 @@ class ScheduleData extends ChangeNotifier {
     return scheduleList.firstWhere((element) => element.name == scheduleName);
   }
 
+  Schedule? getCurrentSchedule() {
+    return db.getCurrentSchedule();
+  }
+
   // Add Schedules
   void addSchedule(String scheduleName) {
     Schedule newSchedule = Schedule(name: scheduleName, period: 0, workouts: []);
@@ -97,6 +102,11 @@ class ScheduleData extends ChangeNotifier {
   }
 
   // Edit/Delete Schedules
+  void editChosenSchedule(Schedule schedule) {
+    db.saveSchedule(keyMap[Keys.currentSchedule].toString(), schedule);
+    notifyListeners();
+  }
+
   void changeScheduleName(String currentName, String newName) {
     Schedule relevantSchedule = getRelevantSchedule(currentName);
     relevantSchedule.name = newName;
@@ -121,6 +131,11 @@ class ScheduleData extends ChangeNotifier {
 
     notifyListeners();
     db.deleteSchedule(scheduleName);
+  }
+
+  void deleteChosenSchedule() {
+    db.deleteSchedule(keyMap[Keys.currentSchedule].toString());
+    notifyListeners();
   }
 
   List<Workout> getWorkoutsForDay(DateTime day) {

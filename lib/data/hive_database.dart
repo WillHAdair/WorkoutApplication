@@ -84,6 +84,10 @@ class HiveDatabase {
     scheduleBox.delete(scheduleName);
   }
 
+  Schedule? getCurrentSchedule() {
+    return scheduleBox.get(keyMap[Keys.currentSchedule].toString());
+  }
+
   final programDataBox = Hive.box(boxKeyMap[BoxKeys.programData].toString());
   // ProgramData
 
