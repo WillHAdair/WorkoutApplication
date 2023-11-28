@@ -15,53 +15,7 @@ class WorkoutData extends ChangeNotifier {
   Map<DateTime, int> heatMapDataSet = {};
   final db = HiveDatabase();
 
-  List<Workout> workoutList = [
-    Workout(name: "Upper body", exercises: [
-      Exercise(
-        name: 'Bench',
-        sets: [
-          WorkoutSet(weight: "100", reps: "10", isCompleted: false),
-          WorkoutSet(weight: "155", reps: "10", isCompleted: false),
-          WorkoutSet(weight: "165", reps: "10", isCompleted: false),
-        ],
-        isCompleted: false,
-      ),
-    ]),
-    Workout(name: "Lower Body", exercises: [
-      Exercise(
-        name: 'Deadlift',
-        sets: [
-          WorkoutSet(weight: "200", reps: "10", isCompleted: false),
-          WorkoutSet(weight: "255", reps: "10", isCompleted: false),
-          WorkoutSet(weight: "265", reps: "10", isCompleted: false),
-        ],
-        isCompleted: false,
-      ),
-    ]),
-    Workout(name: "Push", exercises: [
-      Exercise(
-        name: 'Incline Press',
-        sets: [
-          WorkoutSet(weight: "100", reps: "10", isCompleted: false),
-          WorkoutSet(weight: "155", reps: "10", isCompleted: false),
-          WorkoutSet(weight: "165", reps: "10", isCompleted: false),
-        ],
-        isCompleted: false,
-      )
-    ]),
-    Workout(name: "Pull", exercises: [
-      Exercise(
-        name: 'Barbell row',
-        sets: [
-          WorkoutSet(weight: "100", reps: "10", isCompleted: false),
-          WorkoutSet(weight: "155", reps: "10", isCompleted: false),
-          WorkoutSet(weight: "165", reps: "10", isCompleted: false),
-        ],
-        isCompleted: false,
-      )
-    ]),
-    Workout(name: "break", exercises: []),
-  ];
+  List<Workout> workoutList = [];
 
   // Initialization
   void initializeWorkoutList() {
@@ -105,8 +59,8 @@ class WorkoutData extends ChangeNotifier {
     return workoutList;
   }
 
-  Workout getTodaysWorkout() {
-    return workoutList[0];
+  Workout? getTodaysWorkout() {
+    return workoutList.isNotEmpty ? workoutList[0] : null;
   }
 
   Workout? getStartedWorkout() {

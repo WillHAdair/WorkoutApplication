@@ -164,14 +164,24 @@ class TrackerHomePageState extends State<TrackerHomePage> {
               lastDay: today,
               onDaySelected: daySelected,
             ),
-            const TextDivider(text: 'Current schedule', icon: Icons.schedule),
-            SlidingTile(
-              text: value.getCurrentSchedule()!.name,
-              onForwardPress: () => goToSchedulePage(value.getCurrentSchedule()!),
-              onSettingsPress: () => editSchedule(value.getCurrentSchedule()!.name),
-              onDeletePress: () => deleteSchedule(value.getCurrentSchedule()!.name),
-              imageLocation: dumbellImg,
-            ),
+            value.getCurrentSchedule() != null
+                ? Column(
+                    children: [
+                      const TextDivider(
+                          text: 'Current schedule', icon: Icons.schedule),
+                      SlidingTile(
+                        text: value.getCurrentSchedule()!.name,
+                        onForwardPress: () =>
+                            goToSchedulePage(value.getCurrentSchedule()!),
+                        onSettingsPress: () =>
+                            editSchedule(value.getCurrentSchedule()!.name),
+                        onDeletePress: () =>
+                            deleteSchedule(value.getCurrentSchedule()!.name),
+                        imageLocation: dumbellImg,
+                      ),
+                    ],
+                  )
+                : const SizedBox.shrink(),
             const TextDivider(text: 'Other schedules', icon: Icons.update),
             CustomTile(
               text: 'View Schedules',

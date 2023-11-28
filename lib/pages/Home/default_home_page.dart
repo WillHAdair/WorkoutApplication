@@ -185,16 +185,24 @@ class DefaultHomePageState extends State<DefaultHomePage> {
             CustomHeatMap(
                 datasets: value.heatMapDataSet,
                 startDate: value.getStartDate()),
-            const TextDivider(text: 'Today\'s workout', icon: Icons.today),
-            SlidingTile(
-              text: value.getTodaysWorkout().name,
-              onForwardPress: () =>
-                  goToWorkoutPage(value.getTodaysWorkout().name),
-              onSettingsPress: () =>
-                  onSettingsPress(value.getTodaysWorkout().name),
-              onDeletePress: () => onDeletePress(value.getTodaysWorkout().name),
-              imageLocation: dumbellImg,
-            ),
+            value.getTodaysWorkout() != null
+                ? Column(
+                    children: [
+                      const TextDivider(
+                          text: 'Today\'s workout', icon: Icons.today),
+                      SlidingTile(
+                        text: value.getTodaysWorkout()!.name,
+                        onForwardPress: () =>
+                            goToWorkoutPage(value.getTodaysWorkout()!.name),
+                        onSettingsPress: () =>
+                            onSettingsPress(value.getTodaysWorkout()!.name),
+                        onDeletePress: () =>
+                            onDeletePress(value.getTodaysWorkout()!.name),
+                        imageLocation: dumbellImg,
+                      ),
+                    ],
+                  )
+                : const SizedBox.shrink(),
             const TextDivider(text: 'Other workouts', icon: Icons.checklist),
             CustomTile(
               text: 'View/AddWorkouts',

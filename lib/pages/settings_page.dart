@@ -58,6 +58,7 @@ class SettingsPageState extends State<SettingsPage> {
   }
 
   delete() {
+    Provider.of<SettingsData>(context, listen: false).deleteData();
     Navigator.pop(context);
   }
 

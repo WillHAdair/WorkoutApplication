@@ -11,13 +11,29 @@ class SettingsData extends ChangeNotifier {
   // Default values
   List<Setting> settingsList = [
     Setting(name: keyMap[Keys.theme].toString(), isString: false, value: false),
-    Setting(name: keyMap[Keys.notifications].toString(), isString: false, value: true),
-    Setting(name: keyMap[Keys.progressTracking].toString(), isString: false, value: true),
-    Setting(name: keyMap[Keys.remoteData].toString(), isString: false, value: false),
-    Setting(name: keyMap[Keys.firstName].toString(), isString: true, value: "Placeholder"),
-    Setting(name: keyMap[Keys.lastName].toString(), isString: true, value: "McPerson"),
+    Setting(
+        name: keyMap[Keys.notifications].toString(),
+        isString: false,
+        value: true),
+    Setting(
+        name: keyMap[Keys.progressTracking].toString(),
+        isString: false,
+        value: true),
+    Setting(
+        name: keyMap[Keys.remoteData].toString(),
+        isString: false,
+        value: false),
+    Setting(
+        name: keyMap[Keys.firstName].toString(),
+        isString: true,
+        value: "Placeholder"),
+    Setting(
+        name: keyMap[Keys.lastName].toString(),
+        isString: true,
+        value: "McPerson"),
     Setting(name: keyMap[Keys.age].toString(), isString: true, value: "21"),
-    Setting(name: keyMap[Keys.height].toString(), isString: true, value: "5'11"),
+    Setting(
+        name: keyMap[Keys.height].toString(), isString: true, value: "5'11"),
     Setting(name: keyMap[Keys.weight].toString(), isString: true, value: "165"),
   ];
 
@@ -51,6 +67,11 @@ class SettingsData extends ChangeNotifier {
     //update DB
     db.saveSetting(settingName, relevantSetting);
 
+    notifyListeners();
+  }
+
+  void deleteData() {
+    db.deleteStoredData();
     notifyListeners();
   }
 }

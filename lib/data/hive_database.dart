@@ -132,4 +132,11 @@ class HiveDatabase {
     }
     return programDataBox.get(keyMap[Keys.workoutStarted]);
   }
+
+  void deleteStoredData() {
+    programDataBox.clear();
+    settingsBox.clear();
+    workoutBox.clear();
+    scheduleBox.clear();
+  }
 }
