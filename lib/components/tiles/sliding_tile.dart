@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+// ignore: must_be_immutable
 class SlidingTile extends StatefulWidget {
   final String text;
   final VoidCallback onForwardPress;
@@ -55,18 +56,22 @@ class _SlidingTileState extends State<SlidingTile> {
             borderRadius: BorderRadius.circular(12),
           ),
           child: ListTile(
-            leading: widget.imageLocation != null ? SizedBox(
-              height: 40,
-              child: Image.asset(widget.imageLocation!),
-            ) : widget.onChanged != null ? Checkbox(
-                    value: widget.isSelected!,
-                    onChanged: (value) {
-                      widget.onChanged!();
-                      setState(() {
-                        widget.isSelected = value!;
-                      });
-                    },
-                  ) : const SizedBox.shrink(),
+            leading: widget.imageLocation != null
+                ? SizedBox(
+                    height: 40,
+                    child: Image.asset(widget.imageLocation!),
+                  )
+                : widget.onChanged != null
+                    ? Checkbox(
+                        value: widget.isSelected!,
+                        onChanged: (value) {
+                          widget.onChanged!();
+                          setState(() {
+                            widget.isSelected = value!;
+                          });
+                        },
+                      )
+                    : const SizedBox.shrink(),
             title: Text(
               widget.text,
               style: const TextStyle(color: Colors.white),

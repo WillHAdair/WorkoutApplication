@@ -110,18 +110,20 @@ class _ExerciseDropdownListState extends State<ExerciseDropdownList> {
                             ),
                           ],
                         ),
-                        trailing: Checkbox(
-                          value: widget.isCompleted
-                              ? true
-                              : workoutSet.isCompleted,
-                          onChanged: (value) => {
-                            setState(
-                              () {
-                                workoutSet.isCompleted = value!;
-                              },
-                            )
-                          },
-                        ),
+                        trailing: widget.onChanged != null
+                            ? Checkbox(
+                                value: widget.isCompleted
+                                    ? true
+                                    : workoutSet.isCompleted,
+                                onChanged: (value) => {
+                                  setState(
+                                    () {
+                                      workoutSet.isCompleted = value!;
+                                    },
+                                  )
+                                },
+                              )
+                            : const SizedBox.shrink(),
                       )))
                   .toList(),
             ),

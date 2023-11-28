@@ -89,7 +89,7 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
   @override
   Widget build(BuildContext context) {
     setState(() {
-      chosen = Provider.of<WorkoutData>(context).getStartedWorkout()!;
+      chosen = Provider.of<WorkoutData>(context).getStartedWorkout();
     });
     return Consumer<WorkoutData>(
       builder: (context, value, child) => Scaffold(

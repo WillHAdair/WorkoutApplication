@@ -63,7 +63,7 @@ class WorkoutData extends ChangeNotifier {
     return workoutList.isNotEmpty ? workoutList[0] : null;
   }
 
-  Workout? getStartedWorkout() {
+  Workout getStartedWorkout() {
     return db.getStartedWorkout() ?? restWorkout;
   }
 
@@ -262,6 +262,16 @@ class WorkoutData extends ChangeNotifier {
   }
 
   void changeWorkoutStarted(bool status) {
+    if (isWorkoutStarted() && !status) {
+      Workout started = db.getStartedWorkout()!;
+      for (Exercise exercise in started.exercises) {
+        exercise.isCompleted = false;
+        for (WorkoutSet set in exercise.sets) {
+          set.isCompleted = false;
+        }
+      }
+      db.deleteWorkout(keyMap[Keys.startedWorkout].toString());
+    }
     db.changeWorkoutStarted(status);
     notifyListeners();
   }
