@@ -8,6 +8,7 @@ import 'package:workout_app/components/dropdown/exercise_dropdown_list.dart';
 import 'package:workout_app/data/theme_provider.dart';
 import 'package:workout_app/data/workout_data.dart';
 import 'package:workout_app/models/constants.dart';
+import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/workout.dart';
 import 'package:workout_app/models/workout_set.dart';
 
@@ -21,9 +22,9 @@ class WorkoutHomePage extends StatefulWidget {
 }
 
 class WorkoutHomePageState extends State<WorkoutHomePage> {
-  void onCheckBoxChanged(String exerciseName) {
+  void onCheckBoxChanged(Exercise exercise) {
     Provider.of<WorkoutData>(context, listen: false)
-        .checkOffExercise(chosen.name, exerciseName);
+        .checkOffExercise(chosen, exercise);
   }
 
   Workout chosen = restWorkout;
@@ -134,7 +135,7 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
                     title: value.getFirstUnchecked(chosen).name,
                     sets: value.getFirstUnchecked(chosen).sets,
                     onChanged: () {
-                      onCheckBoxChanged(value.getFirstUnchecked(chosen).name);
+                      onCheckBoxChanged(value.getFirstUnchecked(chosen));
                     },
                     isCompleted: false)
                 : const SizedBox.shrink(),
@@ -149,7 +150,7 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
                   isCompleted: false,
                   onChanged: () {
                     onCheckBoxChanged(
-                        value.getUncheckedExercises(chosen)[index].name);
+                        value.getUncheckedExercises(chosen)[index]);
                   }),
             ),
             const TextDivider(text: 'Completed Exercises', icon: Icons.done),
@@ -163,7 +164,7 @@ class WorkoutHomePageState extends State<WorkoutHomePage> {
                   isCompleted: true,
                   onChanged: () {
                     onCheckBoxChanged(
-                        value.getCheckedExercises(chosen)[index].name);
+                        value.getCheckedExercises(chosen)[index]);
                   }),
             ),
           ],

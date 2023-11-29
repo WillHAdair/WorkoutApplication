@@ -19,10 +19,6 @@ class WorkoutPage extends StatefulWidget {
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {
-  void onCheckBoxChanged(String exerciseName) {
-    Provider.of<WorkoutData>(context, listen: false)
-        .checkOffExercise(widget.workoutName, exerciseName);
-  }
 
   final exerciseNameController = TextEditingController();
   final exerciseWeightController = TextEditingController();

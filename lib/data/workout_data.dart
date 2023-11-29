@@ -62,8 +62,12 @@ class WorkoutData extends ChangeNotifier {
   }
 
   Workout? getTodaysWorkout() {
-    Schedule? currentSchedule = ScheduleData().getCurrentSchedule();
+    ScheduleData data = ScheduleData();
+    Schedule? currentSchedule = data.getCurrentSchedule();
     if (currentSchedule != null && currentSchedule.workouts.isNotEmpty) {
+      if (currentSchedule.startDate == null) {
+        data.setScheduleStart(currentSchedule);
+      }
       currentSchedule.startDate ??= DateTime.now();
       int daysBetween =
           DateTime.now().difference(currentSchedule.startDate!).inDays;
@@ -192,23 +196,19 @@ class WorkoutData extends ChangeNotifier {
   }
 
   // Edit/Delete Exercises
-  void checkOffExercise(String workoutName, String exerciseName) {
-    Workout relevantWorkout = getRelevantWorkout(workoutName)!;
-    Exercise relevantExercise =
-        getRelevantExercise(relevantWorkout, exerciseName);
-    relevantExercise.isCompleted = !relevantExercise.isCompleted;
+  void checkOffExercise(Workout workout, Exercise exercise) {
+    exercise.isCompleted = !exercise.isCompleted;
 
-    notifyListeners();
-
-    db.saveWorkout(workoutName, relevantWorkout);
+    db.saveWorkout(workout.name, workout);
     int currentAmount = db.getDailyCompletion(todaysDate());
-    if (relevantExercise.isCompleted) {
+    if (exercise.isCompleted) {
       db.setDailyCompletion(todaysDate(), currentAmount + 1);
     } else {
       db.setDailyCompletion(
           todaysDate(), currentAmount + currentAmount > 0 ? 0 : -1);
     }
     loadHeatMap();
+    notifyListeners();
   }
 
   void deleteExercise(String workoutName, String exerciseName) {

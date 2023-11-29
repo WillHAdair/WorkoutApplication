@@ -76,6 +76,11 @@ class ScheduleData extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setScheduleStart(Schedule schedule) {
+    schedule.startDate ??= DateTime.now();
+    notifyListeners();
+  }
+
   void deleteSchedule(String scheduleName) {
     Schedule relevantSchedule = getRelevantSchedule(scheduleName);
     scheduleList.remove(relevantSchedule);
