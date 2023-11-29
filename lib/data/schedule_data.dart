@@ -93,10 +93,6 @@ class ScheduleData extends ChangeNotifier {
     List<Workout> dailyWorkouts = [];
     List<String> workoutNames =
         db.getWorkoutsForDay(convertDateTimeToString(day));
-    if (workoutNames.isEmpty) {
-      // TODO: remove when schedule is made
-      return [WorkoutData().getWorkoutList()[0]];
-    }
     for (String workout in workoutNames) {
       Workout? w = WorkoutData().getRelevantWorkout(workout);
       if (w != null) {

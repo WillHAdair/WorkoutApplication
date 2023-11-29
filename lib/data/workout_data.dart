@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:workout_app/data/hive_database.dart';
+import 'package:workout_app/data/schedule_data.dart';
 import 'package:workout_app/datetime/date_timedata.dart';
 import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/models/exercise.dart';
+import 'package:workout_app/models/schedule.dart';
 import 'package:workout_app/models/workout_set.dart';
 
 import '../models/workout.dart';
@@ -60,7 +62,15 @@ class WorkoutData extends ChangeNotifier {
   }
 
   Workout? getTodaysWorkout() {
-    return workoutList.isNotEmpty ? workoutList[0] : null;
+    Schedule? currentSchedule = ScheduleData().getCurrentSchedule();
+    if (currentSchedule != null && currentSchedule.workouts.isNotEmpty) {
+      currentSchedule.startDate ??= DateTime.now();
+      int daysBetween =
+          DateTime.now().difference(currentSchedule.startDate!).inDays;
+      int workoutIndex = daysBetween % currentSchedule.workouts.length;
+      return currentSchedule.workouts[workoutIndex];
+    }
+    return null;
   }
 
   Workout getStartedWorkout() {
@@ -270,6 +280,7 @@ class WorkoutData extends ChangeNotifier {
           set.isCompleted = false;
         }
       }
+      db.addWorkoutsToDay(todaysDate(), [started.name]);
       db.deleteWorkout(keyMap[Keys.startedWorkout].toString());
     }
     db.changeWorkoutStarted(status);

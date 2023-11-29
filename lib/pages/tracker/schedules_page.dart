@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workout_app/components/basic_widgets/custom_textfield.dart';
 import 'package:workout_app/components/basic_widgets/text_divider.dart';
 import 'package:workout_app/components/popups/customizable_dialog.dart';
+import 'package:workout_app/components/popups/text_popup.dart';
 import 'package:workout_app/components/tiles/sliding_tile.dart';
 import 'package:workout_app/data/schedule_data.dart';
 import 'package:workout_app/data/theme_provider.dart';
@@ -114,7 +115,8 @@ class _SchedulesPageState extends State<SchedulesPage> {
   }
 
   void selectSchedule(Schedule schedule) {
-    Provider.of<ScheduleData>(context, listen: false).editChosenSchedule(schedule);
+    Provider.of<ScheduleData>(context, listen: false)
+        .editChosenSchedule(schedule);
     setState(() {});
   }
 
@@ -155,27 +157,36 @@ class _SchedulesPageState extends State<SchedulesPage> {
           padding: const EdgeInsets.all(12),
           child: ListView(
             children: [
-              const TextDivider(text: 'Chosen schedule', icon: Icons.done_outline),
-               value.getCurrentSchedule() != null ? SlidingTile(
-                text: value.getCurrentSchedule()!.name,
-                onForwardPress: () => goToSchedulePage(value.getCurrentSchedule()!),
-                onSettingsPress: () => editSchedule(value.getCurrentSchedule()!.name),
-                onDeletePress: () => deleteSchedule(value.getCurrentSchedule()!.name),
-                isSelected: true,
-                onChanged: () => deselectSchedule(),
-              ) : const SizedBox.shrink(),
-              const TextDivider(text: 'Available schedules', icon: Icons.format_list_bulleted),
+              const TextDivider(
+                  text: 'Chosen schedule', icon: Icons.done_outline),
+              value.getCurrentSchedule() != null
+                  ? SlidingTile(
+                      text: value.getCurrentSchedule()!.name,
+                      onForwardPress: () =>
+                          goToSchedulePage(value.getCurrentSchedule()!),
+                      onSettingsPress: () =>
+                          editSchedule(value.getCurrentSchedule()!.name),
+                      onDeletePress: () =>
+                          deleteSchedule(value.getCurrentSchedule()!.name),
+                      isSelected: true,
+                      onChanged: () => deselectSchedule(),
+                    )
+                  : const SizedBox.shrink(),
+              const TextDivider(
+                  text: 'Available schedules',
+                  icon: Icons.format_list_bulleted),
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: value.getSchedules().length,
                 itemBuilder: (context, index) => SlidingTile(
                   text: value.getSchedules()[index].name,
-                  onForwardPress: () => goToSchedulePage(value.getSchedules()[index]),
+                  onForwardPress: () =>
+                      goToSchedulePage(value.getSchedules()[index]),
                   onSettingsPress: () =>
-                    editSchedule(value.getSchedules()[index].name),
+                      editSchedule(value.getSchedules()[index].name),
                   onDeletePress: () =>
-                    deleteSchedule(value.getSchedules()[index].name),
+                      deleteSchedule(value.getSchedules()[index].name),
                   isSelected: false,
                   onChanged: () => selectSchedule(value.getSchedules()[index]),
                 ),
