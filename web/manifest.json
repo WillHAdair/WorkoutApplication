@@ -1,6 +1,6 @@
 {
-    "name": "workout_app",
-    "short_name": "workout_app",
+    "name": "workout_application",
+    "short_name": "workout_application",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

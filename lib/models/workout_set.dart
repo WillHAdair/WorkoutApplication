@@ -1,21 +1,25 @@
-import 'package:hive/hive.dart';
+import 'package:isar/isar.dart';
+import 'package:workout_app/models/constants.dart';
 
 part 'workout_set.g.dart';
 
-@HiveType(typeId: 80, adapterName: 'WorkoutSetAdapter')
+@Collection()
 class WorkoutSet {
-  @HiveField(0)
-  String weight;
+  Id id = Isar.autoIncrement;
 
-  @HiveField(1)
-  String reps;
+  double? restTime;
 
-  @HiveField(2)
-  bool isCompleted;
+  @enumerated
+  late SetType setType;
 
-  WorkoutSet({
-    required this.weight,
-    required this.reps,
-    required this.isCompleted,
-  });
+  double? duration;
+  double? weight;
+
+  List<double>? weights;
+  List<int>? reps;
+  List<String>? exercises;
+
+  bool get isTimeSet => setType == SetType.time;
+
+  bool get isRepsSet => setType == SetType.reps;
 }
