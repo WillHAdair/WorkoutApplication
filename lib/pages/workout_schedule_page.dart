@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/text_divider.dart';
+import 'package:workout_app/components/workout_schedule_card.dart';
+import 'package:workout_app/models/schedule_day.dart';
+import 'package:workout_app/models/workout.dart';
 import 'package:workout_app/models/workout_schedule.dart';
 import 'package:workout_app/utils/database_helper.dart';
 import 'package:workout_app/utils/themes.dart';
@@ -23,16 +26,29 @@ class _WorkoutSchedulePageState extends State<WorkoutSchedulePage> {
   }
 
   Future<void> _loadSchedules() async {
-    final schedules = await DatabaseHelper.getAll<WorkoutSchedule>();
+    // Mock data for testing
+    final mockSchedule =
+        WorkoutSchedule()
+          ..name = 'Test Schedule'
+          ..startDate = DateTime.now().subtract(const Duration(days: 5))
+          ..isActive = true
+          ..days.addAll([
+            ScheduleDay()
+              ..dayNumber = 1
+              ..isRestDay = false
+              ..workouts.add(Workout()..name = 'Push-ups'),
+            ScheduleDay()
+              ..dayNumber = 2
+              ..isRestDay = true,
+            ScheduleDay()
+              ..dayNumber = 3
+              ..isRestDay = false
+              ..workouts.add(Workout()..name = 'Squats'),
+          ]);
+
     setState(() {
-      _activeSchedule = schedules.firstWhere(
-        (schedule) =>
-            schedule.endDate == null ||
-            schedule.endDate!.isAfter(DateTime.now()),
-        orElse: null,
-      );
-      _inactiveSchedules =
-          schedules.where((schedule) => schedule != _activeSchedule).toList();
+      _activeSchedule = mockSchedule;
+      _inactiveSchedules = []; // No inactive schedules for testing
     });
   }
 
@@ -55,22 +71,11 @@ class _WorkoutSchedulePageState extends State<WorkoutSchedulePage> {
           children: [
             TextDivider(text: 'Active Schedule', icon: Icons.history),
             _activeSchedule != null
-                ? Card(
-                  color: themeProvider.getBackgroundColor(),
-                  child: ListTile(
-                    title: Text(
-                      _activeSchedule!.name,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: themeProvider.getTextColor(),
-                      ),
-                    ),
-                    subtitle: Text(
-                      _activeSchedule!.description ?? 'No description',
-                      style: TextStyle(color: themeProvider.getTextColor()),
-                    ),
-                  ),
+                ? WorkoutScheduleCard(
+                  schedule: _activeSchedule!,
+                  onSettingsPress: () => {},
+                  onDeletePress: () => {},
+                  onForwardPress: () => {},
                 )
                 : Center(
                   child: Padding(
@@ -95,24 +100,11 @@ class _WorkoutSchedulePageState extends State<WorkoutSchedulePage> {
                         itemCount: _inactiveSchedules.length,
                         itemBuilder: (context, index) {
                           final schedule = _inactiveSchedules[index];
-                          return Card(
-                            color: themeProvider.getBackgroundColor(),
-                            child: ListTile(
-                              title: Text(
-                                schedule.name,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: themeProvider.getTextColor(),
-                                ),
-                              ),
-                              subtitle: Text(
-                                schedule.description ?? 'No description',
-                                style: TextStyle(
-                                  color: themeProvider.getTextColor(),
-                                ),
-                              ),
-                            ),
+                          return WorkoutScheduleCard(
+                            schedule: schedule!,
+                            onSettingsPress: () => {},
+                            onDeletePress: () => {},
+                            onForwardPress: () => {},
                           );
                         },
                       )
