@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/components/activity_settings_modal.dart';
+import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/utils/settings.dart';
 import 'package:workout_app/utils/themes.dart';
 
@@ -55,10 +56,15 @@ class FitnessHeatMap extends StatelessWidget {
                       builder: (context) {
                         return ActivitySettingsModal(
                           showLast30Days: settingsProvider.showLast30Days,
-                          selectedOption: settingsProvider.selectedOption,
+                          selectedOption: trackerMapping[settingsProvider.selectedOption] ?? "",
                           onSave: (bool newShowLast30Days, String newSelectedOption) async {
                             await settingsProvider.setShowLast30Days(newShowLast30Days);
-                            await settingsProvider.setSelectedOption(newSelectedOption);
+                            await settingsProvider.setSelectedOption(
+                              ActivityTracker.values.firstWhere(
+                                (e) => e.toString().split('.').last == newSelectedOption,
+                                orElse: () => ActivityTracker.values.first,
+                              ),
+                            );
                           },
                         );
                       },

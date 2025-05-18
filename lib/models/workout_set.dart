@@ -1,25 +1,67 @@
-import 'package:isar/isar.dart';
 import 'package:workout_app/models/constants.dart';
 
-part 'workout_set.g.dart';
-
-@Collection()
-class WorkoutSet {
-  Id id = Isar.autoIncrement;
-
+abstract class WorkoutSet {
+  int id;
   double? restTime;
+  SetType setType;
 
-  @enumerated
-  late SetType setType;
+  WorkoutSet({
+    required this.id,
+    this.restTime,
+    required this.setType,
+  });
+}
 
-  double? duration;
-  double? weight;
+class TimedSet extends WorkoutSet {
+  double duration;
+  double weight;
 
-  List<double>? weights;
-  List<int>? reps;
-  List<String>? exercises;
+  TimedSet({
+    required super.setType,
+    required super.id,
+    super.restTime,
+    required this.duration,
+    required this.weight,
+  });
+}
 
-  bool get isTimeSet => setType == SetType.time;
+class WeightedSet extends WorkoutSet {
+  double weight;
+  int? reps;
 
-  bool get isRepsSet => setType == SetType.reps;
+  WeightedSet({
+    required super.setType,
+    required super.id,
+    super.restTime,
+    required this.weight,
+    this.reps,
+  });
+}
+
+class DropSet extends WorkoutSet {
+  List<int> reps;
+  List<double> weights;
+
+  DropSet({
+    required super.setType,
+    required super.id,
+    super.restTime,
+    required this.reps,
+    required this.weights,
+  });
+}
+
+class SuperSet extends WorkoutSet {
+  List<int> exercises;
+  List<int> reps;
+  List<double> weights;
+
+  SuperSet({
+    required super.setType,
+    required super.id,
+    super.restTime,
+    required this.exercises,
+    required this.reps,
+    required this.weights,
+  });
 }

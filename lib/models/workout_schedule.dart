@@ -1,23 +1,27 @@
-import 'package:isar/isar.dart';
-import 'schedule_day.dart';
-import 'calorie_tracking.dart';
-import 'user_profile.dart';
+import 'package:workout_app/models/calorie_tracking.dart';
+import 'package:workout_app/models/schedule_day.dart';
+import 'package:workout_app/models/user_profile.dart';
 
-part 'workout_schedule.g.dart';
-
-@Collection()
 class WorkoutSchedule {
-  Id id = Isar.autoIncrement;
-
-  late String name;
+  int id;
+  String name;
   String? description;
-
-  late DateTime startDate;
+  DateTime startDate;
   DateTime? endDate;
+  bool isActive;
+  List<ScheduleDay> days;
+  CalorieTracking? calorieTracking;
+  UserProfile userProfile;
 
-  late bool isActive;
-
-  final days = IsarLinks<ScheduleDay>();
-  final calorieTracking = IsarLink<CalorieTracking>();
-  final userProfile = IsarLink<UserProfile>();
+  WorkoutSchedule({
+    required this.id,
+    required this.name,
+    this.description,
+    required this.startDate,
+    this.endDate,
+    required this.isActive,
+    required this.days,
+    this.calorieTracking,
+    required this.userProfile,
+  });
 }

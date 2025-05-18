@@ -15,12 +15,28 @@ enum NutritionIcons {
 enum SetType {
   reps,
   time,
+  superSet,
+  dropSet,
 }
 
 enum ExerciseType {
   sets,
   continual,
 }
+
+enum ActivityTracker {
+  workoutsCompleted,
+  exercisesCompleted,
+  caloriesMet,
+  workoutsAndCalories,
+}
+
+const Map<ActivityTracker, String> trackerMapping = {
+  ActivityTracker.workoutsCompleted: 'Workouts Completed',
+  ActivityTracker.exercisesCompleted: 'Exercises Completed',
+  ActivityTracker.caloriesMet: 'Calorie Goals Met',
+  ActivityTracker.workoutsAndCalories: 'Workouts and Calories',
+};
 
 // Map to associate enum values with string paths
 const Map<ImageIcons, String> imageIconPaths = {

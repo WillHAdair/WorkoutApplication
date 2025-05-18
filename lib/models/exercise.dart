@@ -1,25 +1,42 @@
-import 'package:isar/isar.dart';
 import 'package:workout_app/models/constants.dart';
-import 'workout_set.dart';
+import 'package:workout_app/models/workout_set.dart';
 
-part 'exercise.g.dart';
-
-@Collection()
-class Exercise {
-  Id id = Isar.autoIncrement;
-
-  late String name;
+abstract class Exercise {
+  int id;
+  String name;
   String? description;
+  ExerciseType exerciseType;
 
-  @enumerated
-  late ExerciseType exerciseType;
+  Exercise({
+    required this.id,
+    required this.name,
+    this.description,
+    required this.exerciseType,
+  });
+}
 
-  double? time;
+class ContinualExercise extends Exercise {
+  double time;
   double? weight;
 
-  final workoutSets = IsarLinks<WorkoutSet>();
+  ContinualExercise({
+    required super.id,
+    required super.name,
+    super.description,
+    required super.exerciseType,
+    required this.time,
+    this.weight,
+  });
+}
 
-  bool get isContinual => exerciseType == ExerciseType.continual;
+class SetsExercise extends Exercise {
+  List<WorkoutSet> sets;
 
-  bool get isDividedBySets => exerciseType == ExerciseType.sets;
+  SetsExercise({
+    required super.id,
+    required super.name,
+    super.description,
+    required super.exerciseType,
+    required this.sets,
+  });
 }

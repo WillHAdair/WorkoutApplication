@@ -76,7 +76,7 @@ UserProfile _userProfileDeserialize(
   final object = UserProfile();
   object.height = reader.readDouble(offsets[0]);
   object.id = id;
-  object.lastUpdated = reader.readDateTimeOrNull(offsets[1]);
+  object.lastUpdated = reader.readDateTime(offsets[1]);
   object.weight = reader.readDouble(offsets[2]);
   return object;
 }
@@ -91,7 +91,7 @@ P _userProfileDeserializeProp<P>(
     case 0:
       return (reader.readDouble(offset)) as P;
     case 1:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 2:
       return (reader.readDouble(offset)) as P;
     default:
@@ -309,25 +309,7 @@ extension UserProfileQueryFilter
   }
 
   QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
-      lastUpdatedIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'lastUpdated',
-      ));
-    });
-  }
-
-  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
-      lastUpdatedIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'lastUpdated',
-      ));
-    });
-  }
-
-  QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
-      lastUpdatedEqualTo(DateTime? value) {
+      lastUpdatedEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'lastUpdated',
@@ -338,7 +320,7 @@ extension UserProfileQueryFilter
 
   QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
       lastUpdatedGreaterThan(
-    DateTime? value, {
+    DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -352,7 +334,7 @@ extension UserProfileQueryFilter
 
   QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
       lastUpdatedLessThan(
-    DateTime? value, {
+    DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -366,8 +348,8 @@ extension UserProfileQueryFilter
 
   QueryBuilder<UserProfile, UserProfile, QAfterFilterCondition>
       lastUpdatedBetween(
-    DateTime? lower,
-    DateTime? upper, {
+    DateTime lower,
+    DateTime upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -577,7 +559,7 @@ extension UserProfileQueryProperty
     });
   }
 
-  QueryBuilder<UserProfile, DateTime?, QQueryOperations> lastUpdatedProperty() {
+  QueryBuilder<UserProfile, DateTime, QQueryOperations> lastUpdatedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lastUpdated');
     });

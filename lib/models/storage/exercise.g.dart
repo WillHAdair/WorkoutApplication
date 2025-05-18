@@ -28,28 +28,18 @@ const ExerciseSchema = CollectionSchema(
       type: IsarType.byte,
       enumMap: _ExerciseexerciseTypeEnumValueMap,
     ),
-    r'isContinual': PropertySchema(
-      id: 2,
-      name: r'isContinual',
-      type: IsarType.bool,
-    ),
-    r'isDividedBySets': PropertySchema(
-      id: 3,
-      name: r'isDividedBySets',
-      type: IsarType.bool,
-    ),
     r'name': PropertySchema(
-      id: 4,
+      id: 2,
       name: r'name',
       type: IsarType.string,
     ),
     r'time': PropertySchema(
-      id: 5,
+      id: 3,
       name: r'time',
       type: IsarType.double,
     ),
     r'weight': PropertySchema(
-      id: 6,
+      id: 4,
       name: r'weight',
       type: IsarType.double,
     )
@@ -99,11 +89,9 @@ void _exerciseSerialize(
 ) {
   writer.writeString(offsets[0], object.description);
   writer.writeByte(offsets[1], object.exerciseType.index);
-  writer.writeBool(offsets[2], object.isContinual);
-  writer.writeBool(offsets[3], object.isDividedBySets);
-  writer.writeString(offsets[4], object.name);
-  writer.writeDouble(offsets[5], object.time);
-  writer.writeDouble(offsets[6], object.weight);
+  writer.writeString(offsets[2], object.name);
+  writer.writeDouble(offsets[3], object.time);
+  writer.writeDouble(offsets[4], object.weight);
 }
 
 Exercise _exerciseDeserialize(
@@ -118,9 +106,9 @@ Exercise _exerciseDeserialize(
       _ExerciseexerciseTypeValueEnumMap[reader.readByteOrNull(offsets[1])] ??
           ExerciseType.sets;
   object.id = id;
-  object.name = reader.readString(offsets[4]);
-  object.time = reader.readDoubleOrNull(offsets[5]);
-  object.weight = reader.readDoubleOrNull(offsets[6]);
+  object.name = reader.readString(offsets[2]);
+  object.time = reader.readDoubleOrNull(offsets[3]);
+  object.weight = reader.readDoubleOrNull(offsets[4]);
   return object;
 }
 
@@ -138,14 +126,10 @@ P _exerciseDeserializeProp<P>(
               reader.readByteOrNull(offset)] ??
           ExerciseType.sets) as P;
     case 2:
-      return (reader.readBool(offset)) as P;
-    case 3:
-      return (reader.readBool(offset)) as P;
-    case 4:
       return (reader.readString(offset)) as P;
-    case 5:
+    case 3:
       return (reader.readDoubleOrNull(offset)) as P;
-    case 6:
+    case 4:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -503,26 +487,6 @@ extension ExerciseQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> isContinualEqualTo(
-      bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isContinual',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Exercise, Exercise, QAfterFilterCondition>
-      isDividedBySetsEqualTo(bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isDividedBySets',
-        value: value,
       ));
     });
   }
@@ -905,30 +869,6 @@ extension ExerciseQuerySortBy on QueryBuilder<Exercise, Exercise, QSortBy> {
     });
   }
 
-  QueryBuilder<Exercise, Exercise, QAfterSortBy> sortByIsContinual() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isContinual', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Exercise, Exercise, QAfterSortBy> sortByIsContinualDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isContinual', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Exercise, Exercise, QAfterSortBy> sortByIsDividedBySets() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isDividedBySets', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Exercise, Exercise, QAfterSortBy> sortByIsDividedBySetsDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isDividedBySets', Sort.desc);
-    });
-  }
-
   QueryBuilder<Exercise, Exercise, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1004,30 +944,6 @@ extension ExerciseQuerySortThenBy
     });
   }
 
-  QueryBuilder<Exercise, Exercise, QAfterSortBy> thenByIsContinual() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isContinual', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Exercise, Exercise, QAfterSortBy> thenByIsContinualDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isContinual', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Exercise, Exercise, QAfterSortBy> thenByIsDividedBySets() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isDividedBySets', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Exercise, Exercise, QAfterSortBy> thenByIsDividedBySetsDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isDividedBySets', Sort.desc);
-    });
-  }
-
   QueryBuilder<Exercise, Exercise, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1080,18 +996,6 @@ extension ExerciseQueryWhereDistinct
     });
   }
 
-  QueryBuilder<Exercise, Exercise, QDistinct> distinctByIsContinual() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isContinual');
-    });
-  }
-
-  QueryBuilder<Exercise, Exercise, QDistinct> distinctByIsDividedBySets() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isDividedBySets');
-    });
-  }
-
   QueryBuilder<Exercise, Exercise, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1130,18 +1034,6 @@ extension ExerciseQueryProperty
       exerciseTypeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'exerciseType');
-    });
-  }
-
-  QueryBuilder<Exercise, bool, QQueryOperations> isContinualProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isContinual');
-    });
-  }
-
-  QueryBuilder<Exercise, bool, QQueryOperations> isDividedBySetsProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isDividedBySets');
     });
   }
 

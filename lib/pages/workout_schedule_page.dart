@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workout_app/components/text_divider.dart';
 import 'package:workout_app/components/workout_schedule_card.dart';
 import 'package:workout_app/models/schedule_day.dart';
+import 'package:workout_app/models/user_profile.dart';
 import 'package:workout_app/models/workout.dart';
 import 'package:workout_app/models/workout_schedule.dart';
 import 'package:workout_app/utils/database_helper.dart';
@@ -27,24 +28,23 @@ class _WorkoutSchedulePageState extends State<WorkoutSchedulePage> {
 
   Future<void> _loadSchedules() async {
     // Mock data for testing
-    final mockSchedule =
-        WorkoutSchedule()
-          ..name = 'Test Schedule'
-          ..startDate = DateTime.now().subtract(const Duration(days: 5))
-          ..isActive = true
-          ..days.addAll([
-            ScheduleDay()
-              ..dayNumber = 1
-              ..isRestDay = false
-              ..workouts.add(Workout()..name = 'Push-ups'),
-            ScheduleDay()
-              ..dayNumber = 2
-              ..isRestDay = true,
-            ScheduleDay()
-              ..dayNumber = 3
-              ..isRestDay = false
-              ..workouts.add(Workout()..name = 'Squats'),
-          ]);
+    final mockSchedule = WorkoutSchedule(
+      id: 1,
+      name: 'Test Schedule',
+      startDate: DateTime.now().subtract(const Duration(days: 5)),
+      isActive: true,
+      userProfile: UserProfile(
+        id: 1,
+        height: 70,
+        weight: 195,
+        lastUpdated: DateTime.now(),
+      ),
+      days: [
+        ScheduleDay(id: 1, name: 'Rest', workouts: List.empty()),
+        ScheduleDay(id: 2, name: 'Chest Day', workouts: List.empty()),
+        ScheduleDay(id: 3, name: "Back Day", workouts: List.empty()),
+      ],
+    );
 
     setState(() {
       _activeSchedule = mockSchedule;
@@ -75,7 +75,6 @@ class _WorkoutSchedulePageState extends State<WorkoutSchedulePage> {
                   schedule: _activeSchedule!,
                   onSettingsPress: () => {},
                   onDeletePress: () => {},
-                  onForwardPress: () => {},
                 )
                 : Center(
                   child: Padding(
@@ -104,7 +103,6 @@ class _WorkoutSchedulePageState extends State<WorkoutSchedulePage> {
                             schedule: schedule!,
                             onSettingsPress: () => {},
                             onDeletePress: () => {},
-                            onForwardPress: () => {},
                           );
                         },
                       )
@@ -124,7 +122,7 @@ class _WorkoutSchedulePageState extends State<WorkoutSchedulePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _addSchedule,
         backgroundColor: themeProvider.primaryColor,
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.white),
       ),
     );
   }

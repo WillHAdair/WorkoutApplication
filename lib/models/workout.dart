@@ -1,14 +1,15 @@
-import 'package:isar/isar.dart';
 import 'exercise.dart';
 
-part 'workout.g.dart';
-
-@Collection()
 class Workout {
-  Id id = Isar.autoIncrement;
-
-  late String name;
+  int id;
+  String name;
   String? description;
+  List<Exercise> exercises;
 
-  final exercises = IsarLinks<Exercise>();
+  Workout({
+    required this.id,
+    required this.name,
+    this.description,
+    required this.exercises,
+  });
 }

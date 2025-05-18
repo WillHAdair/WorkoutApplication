@@ -1,11 +1,11 @@
-import 'package:isar/isar.dart';
-
-part 'calorie_tracking.g.dart';
-
-@Collection()
 class CalorieTracking {
-  Id id = Isar.autoIncrement;
+  int id;
+  int workoutDayCalories;
+  int restDayCalories;
 
-  late int workoutDayCalories;
-  late int restDayCalories;
+  CalorieTracking({
+    required this.id,
+    required this.workoutDayCalories,
+    required this.restDayCalories,
+  });
 }

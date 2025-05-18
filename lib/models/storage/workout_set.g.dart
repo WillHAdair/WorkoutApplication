@@ -25,41 +25,31 @@ const WorkoutSetSchema = CollectionSchema(
     r'exercises': PropertySchema(
       id: 1,
       name: r'exercises',
-      type: IsarType.stringList,
-    ),
-    r'isRepsSet': PropertySchema(
-      id: 2,
-      name: r'isRepsSet',
-      type: IsarType.bool,
-    ),
-    r'isTimeSet': PropertySchema(
-      id: 3,
-      name: r'isTimeSet',
-      type: IsarType.bool,
+      type: IsarType.longList,
     ),
     r'reps': PropertySchema(
-      id: 4,
+      id: 2,
       name: r'reps',
       type: IsarType.longList,
     ),
     r'restTime': PropertySchema(
-      id: 5,
+      id: 3,
       name: r'restTime',
       type: IsarType.double,
     ),
     r'setType': PropertySchema(
-      id: 6,
+      id: 4,
       name: r'setType',
       type: IsarType.byte,
       enumMap: _WorkoutSetsetTypeEnumValueMap,
     ),
     r'weight': PropertySchema(
-      id: 7,
+      id: 5,
       name: r'weight',
       type: IsarType.double,
     ),
     r'weights': PropertySchema(
-      id: 8,
+      id: 6,
       name: r'weights',
       type: IsarType.doubleList,
     )
@@ -85,15 +75,9 @@ int _workoutSetEstimateSize(
 ) {
   var bytesCount = offsets.last;
   {
-    final list = object.exercises;
-    if (list != null) {
-      bytesCount += 3 + list.length * 3;
-      {
-        for (var i = 0; i < list.length; i++) {
-          final value = list[i];
-          bytesCount += value.length * 3;
-        }
-      }
+    final value = object.exercises;
+    if (value != null) {
+      bytesCount += 3 + value.length * 8;
     }
   }
   {
@@ -118,14 +102,12 @@ void _workoutSetSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDouble(offsets[0], object.duration);
-  writer.writeStringList(offsets[1], object.exercises);
-  writer.writeBool(offsets[2], object.isRepsSet);
-  writer.writeBool(offsets[3], object.isTimeSet);
-  writer.writeLongList(offsets[4], object.reps);
-  writer.writeDouble(offsets[5], object.restTime);
-  writer.writeByte(offsets[6], object.setType.index);
-  writer.writeDouble(offsets[7], object.weight);
-  writer.writeDoubleList(offsets[8], object.weights);
+  writer.writeLongList(offsets[1], object.exercises);
+  writer.writeLongList(offsets[2], object.reps);
+  writer.writeDouble(offsets[3], object.restTime);
+  writer.writeByte(offsets[4], object.setType.index);
+  writer.writeDouble(offsets[5], object.weight);
+  writer.writeDoubleList(offsets[6], object.weights);
 }
 
 WorkoutSet _workoutSetDeserialize(
@@ -136,15 +118,15 @@ WorkoutSet _workoutSetDeserialize(
 ) {
   final object = WorkoutSet();
   object.duration = reader.readDoubleOrNull(offsets[0]);
-  object.exercises = reader.readStringList(offsets[1]);
+  object.exercises = reader.readLongList(offsets[1]);
   object.id = id;
-  object.reps = reader.readLongList(offsets[4]);
-  object.restTime = reader.readDoubleOrNull(offsets[5]);
+  object.reps = reader.readLongList(offsets[2]);
+  object.restTime = reader.readDoubleOrNull(offsets[3]);
   object.setType =
-      _WorkoutSetsetTypeValueEnumMap[reader.readByteOrNull(offsets[6])] ??
+      _WorkoutSetsetTypeValueEnumMap[reader.readByteOrNull(offsets[4])] ??
           SetType.reps;
-  object.weight = reader.readDoubleOrNull(offsets[7]);
-  object.weights = reader.readDoubleList(offsets[8]);
+  object.weight = reader.readDoubleOrNull(offsets[5]);
+  object.weights = reader.readDoubleList(offsets[6]);
   return object;
 }
 
@@ -158,21 +140,17 @@ P _workoutSetDeserializeProp<P>(
     case 0:
       return (reader.readDoubleOrNull(offset)) as P;
     case 1:
-      return (reader.readStringList(offset)) as P;
-    case 2:
-      return (reader.readBool(offset)) as P;
-    case 3:
-      return (reader.readBool(offset)) as P;
-    case 4:
       return (reader.readLongList(offset)) as P;
+    case 2:
+      return (reader.readLongList(offset)) as P;
+    case 3:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 4:
+      return (_WorkoutSetsetTypeValueEnumMap[reader.readByteOrNull(offset)] ??
+          SetType.reps) as P;
     case 5:
       return (reader.readDoubleOrNull(offset)) as P;
     case 6:
-      return (_WorkoutSetsetTypeValueEnumMap[reader.readByteOrNull(offset)] ??
-          SetType.reps) as P;
-    case 7:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 8:
       return (reader.readDoubleList(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -182,10 +160,14 @@ P _workoutSetDeserializeProp<P>(
 const _WorkoutSetsetTypeEnumValueMap = {
   'reps': 0,
   'time': 1,
+  'superSet': 2,
+  'dropSet': 3,
 };
 const _WorkoutSetsetTypeValueEnumMap = {
   0: SetType.reps,
   1: SetType.time,
+  2: SetType.superSet,
+  3: SetType.dropSet,
 };
 
 Id _workoutSetGetId(WorkoutSet object) {
@@ -378,58 +360,49 @@ extension WorkoutSetQueryFilter
   }
 
   QueryBuilder<WorkoutSet, WorkoutSet, QAfterFilterCondition>
-      exercisesElementEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+      exercisesElementEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'exercises',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<WorkoutSet, WorkoutSet, QAfterFilterCondition>
       exercisesElementGreaterThan(
-    String value, {
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'exercises',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<WorkoutSet, WorkoutSet, QAfterFilterCondition>
       exercisesElementLessThan(
-    String value, {
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'exercises',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<WorkoutSet, WorkoutSet, QAfterFilterCondition>
       exercisesElementBetween(
-    String lower,
-    String upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -438,77 +411,6 @@ extension WorkoutSetQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterFilterCondition>
-      exercisesElementStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'exercises',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterFilterCondition>
-      exercisesElementEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'exercises',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterFilterCondition>
-      exercisesElementContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'exercises',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterFilterCondition>
-      exercisesElementMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'exercises',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterFilterCondition>
-      exercisesElementIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'exercises',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterFilterCondition>
-      exercisesElementIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'exercises',
-        value: '',
       ));
     });
   }
@@ -651,26 +553,6 @@ extension WorkoutSetQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterFilterCondition> isRepsSetEqualTo(
-      bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isRepsSet',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterFilterCondition> isTimeSetEqualTo(
-      bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isTimeSet',
-        value: value,
       ));
     });
   }
@@ -1238,30 +1120,6 @@ extension WorkoutSetQuerySortBy
     });
   }
 
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterSortBy> sortByIsRepsSet() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isRepsSet', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterSortBy> sortByIsRepsSetDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isRepsSet', Sort.desc);
-    });
-  }
-
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterSortBy> sortByIsTimeSet() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTimeSet', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterSortBy> sortByIsTimeSetDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTimeSet', Sort.desc);
-    });
-  }
-
   QueryBuilder<WorkoutSet, WorkoutSet, QAfterSortBy> sortByRestTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'restTime', Sort.asc);
@@ -1325,30 +1183,6 @@ extension WorkoutSetQuerySortThenBy
     });
   }
 
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterSortBy> thenByIsRepsSet() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isRepsSet', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterSortBy> thenByIsRepsSetDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isRepsSet', Sort.desc);
-    });
-  }
-
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterSortBy> thenByIsTimeSet() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTimeSet', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WorkoutSet, WorkoutSet, QAfterSortBy> thenByIsTimeSetDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTimeSet', Sort.desc);
-    });
-  }
-
   QueryBuilder<WorkoutSet, WorkoutSet, QAfterSortBy> thenByRestTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'restTime', Sort.asc);
@@ -1400,18 +1234,6 @@ extension WorkoutSetQueryWhereDistinct
     });
   }
 
-  QueryBuilder<WorkoutSet, WorkoutSet, QDistinct> distinctByIsRepsSet() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isRepsSet');
-    });
-  }
-
-  QueryBuilder<WorkoutSet, WorkoutSet, QDistinct> distinctByIsTimeSet() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isTimeSet');
-    });
-  }
-
   QueryBuilder<WorkoutSet, WorkoutSet, QDistinct> distinctByReps() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'reps');
@@ -1457,22 +1279,9 @@ extension WorkoutSetQueryProperty
     });
   }
 
-  QueryBuilder<WorkoutSet, List<String>?, QQueryOperations>
-      exercisesProperty() {
+  QueryBuilder<WorkoutSet, List<int>?, QQueryOperations> exercisesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'exercises');
-    });
-  }
-
-  QueryBuilder<WorkoutSet, bool, QQueryOperations> isRepsSetProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isRepsSet');
-    });
-  }
-
-  QueryBuilder<WorkoutSet, bool, QQueryOperations> isTimeSetProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isTimeSet');
     });
   }
 

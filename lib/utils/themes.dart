@@ -1,9 +1,19 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:workout_app/utils/settings.dart';
 
 class ThemeProvider extends ChangeNotifier {
   ///Theme Data
   ThemeMode themeMode = ThemeMode.system;
-  bool get isDarkMode => themeMode == ThemeMode.dark;
+
+  bool get isDarkMode {
+    if (themeMode == ThemeMode.system) {
+      return PlatformDispatcher.instance.platformBrightness == Brightness.dark;
+    }
+    return themeMode == ThemeMode.dark;
+  }
 
   //Text
   Color lightText = Colors.black;
@@ -40,8 +50,13 @@ class ThemeProvider extends ChangeNotifier {
     return isDarkMode ? darkDropdownBackground : lightDropdownBackground;
   }
 
-  //Close Button
+  //Buttons
   Color closeButton = Colors.grey.shade400;
+  Color lightButtonBackground = Colors.grey.shade400;
+  Color darkButtonBackground = Colors.grey.shade700;
+  Color getButtonBackground() {
+    return isDarkMode ? darkButtonBackground : lightButtonBackground;
+  }
 
   //Header
   Color lightHeaderBackground = Colors.grey.shade400;
@@ -101,7 +116,15 @@ class ThemeProvider extends ChangeNotifier {
         ),
       );
 
-  void toggleTheme(bool darkMode) {
+  void syncWithSettings(BuildContext context) {
+    final settings = Provider.of<SettingsProvider>(context, listen: false);
+    themeMode = settings.isDarkMode ? ThemeMode.dark : ThemeMode.light;
+    notifyListeners();
+  }
+
+  void toggleTheme(BuildContext context, bool darkMode) async {
+    final settings = Provider.of<SettingsProvider>(context, listen: false);
+    await settings.setDarkMode(darkMode);
     themeMode = darkMode ? ThemeMode.dark : ThemeMode.light;
     notifyListeners();
   }  

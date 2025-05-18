@@ -17,15 +17,10 @@ const ScheduleDaySchema = CollectionSchema(
   name: r'ScheduleDay',
   id: 7724650858087425046,
   properties: {
-    r'dayNumber': PropertySchema(
+    r'dayName': PropertySchema(
       id: 0,
-      name: r'dayNumber',
-      type: IsarType.long,
-    ),
-    r'isRestDay': PropertySchema(
-      id: 1,
-      name: r'isRestDay',
-      type: IsarType.bool,
+      name: r'dayName',
+      type: IsarType.string,
     )
   },
   estimateSize: _scheduleDayEstimateSize,
@@ -55,6 +50,7 @@ int _scheduleDayEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.dayName.length * 3;
   return bytesCount;
 }
 
@@ -64,8 +60,7 @@ void _scheduleDaySerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLong(offsets[0], object.dayNumber);
-  writer.writeBool(offsets[1], object.isRestDay);
+  writer.writeString(offsets[0], object.dayName);
 }
 
 ScheduleDay _scheduleDayDeserialize(
@@ -75,9 +70,8 @@ ScheduleDay _scheduleDayDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = ScheduleDay();
-  object.dayNumber = reader.readLong(offsets[0]);
+  object.dayName = reader.readString(offsets[0]);
   object.id = id;
-  object.isRestDay = reader.readBool(offsets[1]);
   return object;
 }
 
@@ -89,9 +83,7 @@ P _scheduleDayDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLong(offset)) as P;
-    case 1:
-      return (reader.readBool(offset)) as P;
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -191,58 +183,136 @@ extension ScheduleDayQueryWhere
 
 extension ScheduleDayQueryFilter
     on QueryBuilder<ScheduleDay, ScheduleDay, QFilterCondition> {
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
-      dayNumberEqualTo(int value) {
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> dayNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'dayNumber',
+        property: r'dayName',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
-      dayNumberGreaterThan(
-    int value, {
+      dayNameGreaterThan(
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'dayNumber',
+        property: r'dayName',
         value: value,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
-      dayNumberLessThan(
-    int value, {
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> dayNameLessThan(
+    String value, {
     bool include = false,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'dayNumber',
+        property: r'dayName',
         value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> dayNameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'dayName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
-      dayNumberBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
+      dayNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'dayNumber',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'dayName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> dayNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'dayName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> dayNameContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'dayName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> dayNameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'dayName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      dayNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'dayName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      dayNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'dayName',
+        value: '',
       ));
     });
   }
@@ -296,16 +366,6 @@ extension ScheduleDayQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
-      isRestDayEqualTo(bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isRestDay',
-        value: value,
       ));
     });
   }
@@ -380,42 +440,30 @@ extension ScheduleDayQueryLinks
 
 extension ScheduleDayQuerySortBy
     on QueryBuilder<ScheduleDay, ScheduleDay, QSortBy> {
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> sortByDayNumber() {
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> sortByDayName() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dayNumber', Sort.asc);
+      return query.addSortBy(r'dayName', Sort.asc);
     });
   }
 
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> sortByDayNumberDesc() {
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> sortByDayNameDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dayNumber', Sort.desc);
-    });
-  }
-
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> sortByIsRestDay() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isRestDay', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> sortByIsRestDayDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isRestDay', Sort.desc);
+      return query.addSortBy(r'dayName', Sort.desc);
     });
   }
 }
 
 extension ScheduleDayQuerySortThenBy
     on QueryBuilder<ScheduleDay, ScheduleDay, QSortThenBy> {
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> thenByDayNumber() {
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> thenByDayName() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dayNumber', Sort.asc);
+      return query.addSortBy(r'dayName', Sort.asc);
     });
   }
 
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> thenByDayNumberDesc() {
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> thenByDayNameDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dayNumber', Sort.desc);
+      return query.addSortBy(r'dayName', Sort.desc);
     });
   }
 
@@ -430,31 +478,14 @@ extension ScheduleDayQuerySortThenBy
       return query.addSortBy(r'id', Sort.desc);
     });
   }
-
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> thenByIsRestDay() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isRestDay', Sort.asc);
-    });
-  }
-
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> thenByIsRestDayDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isRestDay', Sort.desc);
-    });
-  }
 }
 
 extension ScheduleDayQueryWhereDistinct
     on QueryBuilder<ScheduleDay, ScheduleDay, QDistinct> {
-  QueryBuilder<ScheduleDay, ScheduleDay, QDistinct> distinctByDayNumber() {
+  QueryBuilder<ScheduleDay, ScheduleDay, QDistinct> distinctByDayName(
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'dayNumber');
-    });
-  }
-
-  QueryBuilder<ScheduleDay, ScheduleDay, QDistinct> distinctByIsRestDay() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isRestDay');
+      return query.addDistinctBy(r'dayName', caseSensitive: caseSensitive);
     });
   }
 }
@@ -467,15 +498,9 @@ extension ScheduleDayQueryProperty
     });
   }
 
-  QueryBuilder<ScheduleDay, int, QQueryOperations> dayNumberProperty() {
+  QueryBuilder<ScheduleDay, String, QQueryOperations> dayNameProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'dayNumber');
-    });
-  }
-
-  QueryBuilder<ScheduleDay, bool, QQueryOperations> isRestDayProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isRestDay');
+      return query.addPropertyName(r'dayName');
     });
   }
 }

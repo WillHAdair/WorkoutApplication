@@ -1,24 +1,21 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 import 'package:workout_app/models/schedule_day.dart';
 import 'package:workout_app/models/workout_schedule.dart';
+import 'package:workout_app/utils/themes.dart';
 
 class WorkoutScheduleCard extends StatefulWidget {
   final WorkoutSchedule schedule;
-  final VoidCallback onForwardPress;
   final VoidCallback onSettingsPress;
   final VoidCallback onDeletePress;
   final VoidCallback? onChanged;
-  bool? isSelected;
 
-  WorkoutScheduleCard({
+  const WorkoutScheduleCard({
     super.key,
     required this.schedule,
-    required this.onForwardPress,
     required this.onSettingsPress,
     required this.onDeletePress,
-    this.isSelected,
     this.onChanged,
   });
 
@@ -29,33 +26,32 @@ class WorkoutScheduleCard extends StatefulWidget {
 class _WorkoutScheduleCardState extends State<WorkoutScheduleCard> {
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     final String scheduleName = widget.schedule.name;
-    final int daysSinceStart = DateTime.now().difference(widget.schedule.startDate).inDays;
+    final int daysSinceStart =
+        DateTime.now().difference(widget.schedule.startDate).inDays;
 
-    final ScheduleDay? todayScheduleDay = widget.schedule.days
-        .where((day) => day.dayNumber == (daysSinceStart % widget.schedule.days.length) + 1)
-        .firstOrNull;
+    final int todayIndex = daysSinceStart % widget.schedule.days.length;
+    final ScheduleDay? todayScheduleDay =
+        widget.schedule.days.isNotEmpty
+            ? widget.schedule.days[todayIndex]
+            : null;
 
-    final String todayWorkout = todayScheduleDay == null
-        ? 'No schedule for today'
-        : todayScheduleDay.isRestDay
+    final String todayWorkout =
+        todayScheduleDay == null
+            ? 'No schedule for today'
+            : todayScheduleDay.workouts.isEmpty
             ? 'Rest Day'
             : todayScheduleDay.workouts.isNotEmpty
-                ? todayScheduleDay.workouts.first.name
-                : 'No workouts planned';    
+            ? todayScheduleDay.workouts.first.name
+            : 'No workouts planned';
 
     return Padding(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(10),
       child: Slidable(
         endActionPane: ActionPane(
           motion: const StretchMotion(),
           children: [
-            SlidableAction(
-              onPressed: (context) => widget.onSettingsPress(),
-              backgroundColor: Colors.grey.shade800,
-              icon: Icons.settings,
-              borderRadius: BorderRadius.circular(12),
-            ),
             SlidableAction(
               onPressed: (context) => widget.onDeletePress(),
               backgroundColor: Colors.red.shade500,
@@ -65,31 +61,21 @@ class _WorkoutScheduleCardState extends State<WorkoutScheduleCard> {
           ],
         ),
         child: Container(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.symmetric(horizontal: 0, vertical: 20),
           decoration: BoxDecoration(
-            color: Colors.grey[800],
+            color: themeProvider.getButtonBackground(),
             borderRadius: BorderRadius.circular(12),
           ),
           child: ListTile(
-            leading: widget.onChanged != null
-                    ? Checkbox(
-                        value: widget.isSelected!,
-                        onChanged: (value) {
-                          widget.onChanged!();
-                          setState(() {
-                            widget.isSelected = value!;
-                          });
-                        },
-                      )
-                    : const SizedBox.shrink(),
+            leading: const SizedBox.shrink(),
             title: Text(
               todayWorkout,
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: themeProvider.getTextColor()),
             ),
             trailing: IconButton(
-              icon: const Icon(Icons.arrow_forward_ios),
-              onPressed: widget.onForwardPress,
-              color: Colors.white,
+              icon: const Icon(Icons.edit),
+              onPressed: widget.onSettingsPress,
+              color: themeProvider.getTextColor(),
             ),
           ),
         ),

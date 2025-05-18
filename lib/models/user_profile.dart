@@ -1,13 +1,13 @@
-import 'package:isar/isar.dart';
-
-part 'user_profile.g.dart';
-
-@Collection()
 class UserProfile {
-  Id id = Isar.autoIncrement;
+  int id;
+  double height;
+  double weight;
+  DateTime lastUpdated;
 
-  late double height;
-  late double weight;
-
-  DateTime? lastUpdated;
+  UserProfile({
+    required this.id,
+    required this.height,
+    required this.weight,
+    required this.lastUpdated,
+  });
 }

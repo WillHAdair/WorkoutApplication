@@ -1,14 +1,13 @@
-import 'package:isar/isar.dart';
-import 'workout.dart';
+import 'package:workout_app/models/workout.dart';
 
-part 'schedule_day.g.dart';
-
-@Collection()
 class ScheduleDay {
-  Id id = Isar.autoIncrement;
+  int id;
+  String name;
+  List<Workout> workouts;
 
-  late int dayNumber;
-
-  final workouts = IsarLinks<Workout>();
-  bool isRestDay = false;
+  ScheduleDay({
+    required this.id,
+    required this.name,
+    required this.workouts,
+  });
 }
