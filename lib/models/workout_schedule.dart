@@ -25,3 +25,25 @@ class WorkoutSchedule {
     required this.userProfile,
   });
 }
+
+extension WorkoutScheduleCopyWith on WorkoutSchedule {
+  WorkoutSchedule copyWith({
+    int? id,
+    String? name,
+    DateTime? startDate,
+    DateTime? endDate,
+    bool? isActive,
+    UserProfile? userProfile,
+    List<ScheduleDay>? days,
+  }) {
+    return WorkoutSchedule(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      isActive: isActive ?? this.isActive,
+      userProfile: userProfile ?? this.userProfile,
+      days: days ?? this.days,
+    );
+  }
+}

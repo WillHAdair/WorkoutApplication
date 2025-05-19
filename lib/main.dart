@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/models/storage/calorie_tracking.dart';
 import 'package:workout_app/models/storage/exercise.dart';
@@ -27,7 +29,7 @@ void main() async {
     CalorieTrackingSchema,
     SettingsSchema,
   ]);
-
+  debugPaintSizeEnabled = false;
   runApp(const MainApp());
 }
 
@@ -72,6 +74,10 @@ class _SettingsLoaderState extends State<SettingsLoader> {
       future: _initFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
+          // Sync theme with settings after loading
+          SchedulerBinding.instance.addPostFrameCallback((_) {
+            Provider.of<ThemeProvider>(context, listen: false).syncWithSettings(context);
+          });
           return const NavigationPage();
         }
         return const Scaffold(

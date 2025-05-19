@@ -14,7 +14,7 @@ class ThemeProvider extends ChangeNotifier {
     }
     return themeMode == ThemeMode.dark;
   }
-
+  
   //Text
   Color lightText = Colors.black;
   Color darkText = Colors.white;

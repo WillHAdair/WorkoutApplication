@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workout_app/components/workout_schedule_dialog.dart';
 import 'package:workout_app/components/text_divider.dart';
 import 'package:workout_app/components/workout_schedule_card.dart';
 import 'package:workout_app/models/schedule_day.dart';
 import 'package:workout_app/models/user_profile.dart';
 import 'package:workout_app/models/workout.dart';
 import 'package:workout_app/models/workout_schedule.dart';
-import 'package:workout_app/utils/database_helper.dart';
 import 'package:workout_app/utils/themes.dart';
 
 class WorkoutSchedulePage extends StatefulWidget {
@@ -31,7 +31,7 @@ class _WorkoutSchedulePageState extends State<WorkoutSchedulePage> {
     final mockSchedule = WorkoutSchedule(
       id: 1,
       name: 'Test Schedule',
-      startDate: DateTime.now().subtract(const Duration(days: 5)),
+      startDate: DateTime.now().subtract(const Duration(days: 2)),
       isActive: true,
       userProfile: UserProfile(
         id: 1,
@@ -41,8 +41,14 @@ class _WorkoutSchedulePageState extends State<WorkoutSchedulePage> {
       ),
       days: [
         ScheduleDay(id: 1, name: 'Rest', workouts: List.empty()),
-        ScheduleDay(id: 2, name: 'Chest Day', workouts: List.empty()),
-        ScheduleDay(id: 3, name: "Back Day", workouts: List.empty()),
+        ScheduleDay(id: 2, name: 'Chest Day', workouts: [
+          Workout(id: 1, name: 'Bench Press', exercises: []),
+          Workout(id: 2, name: 'Incline Dumbbell Press', exercises: []),
+        ]),
+        ScheduleDay(id: 3, name: "Back Day", workouts: [
+          Workout(id: 1, name: 'Bench Press', exercises: []),
+          Workout(id: 2, name: 'Incline Dumbbell Press', exercises: []),
+        ]),
       ],
     );
 
@@ -52,10 +58,16 @@ class _WorkoutSchedulePageState extends State<WorkoutSchedulePage> {
     });
   }
 
-  void _addSchedule() {
-    // Navigate to a page or show a dialog to add a new workout schedule
-    // For now, just print a placeholder message
-    print('Add a new workout schedule');
+  void _addSchedule() async {
+    final result = await showDialog(
+      context: context,
+      builder: (context) => const WorkoutScheduleDialog(),
+    );
+    if (result is WorkoutSchedule) {
+      setState(() {
+        _activeSchedule = result;
+      });
+    }
   }
 
   @override
@@ -78,7 +90,7 @@ class _WorkoutSchedulePageState extends State<WorkoutSchedulePage> {
                 )
                 : Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 69),
                     child: Text(
                       'No active schedules',
                       style: TextStyle(
@@ -100,7 +112,7 @@ class _WorkoutSchedulePageState extends State<WorkoutSchedulePage> {
                         itemBuilder: (context, index) {
                           final schedule = _inactiveSchedules[index];
                           return WorkoutScheduleCard(
-                            schedule: schedule!,
+                            schedule: schedule,
                             onSettingsPress: () => {},
                             onDeletePress: () => {},
                           );
