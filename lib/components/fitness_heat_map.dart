@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:provider/provider.dart';
-import 'package:workout_app/components/activity_settings_modal.dart';
+import 'package:workout_app/components/popups/activity_settings_modal.dart';
 import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/utils/settings.dart';
 import 'package:workout_app/utils/themes.dart';

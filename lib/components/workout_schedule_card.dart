@@ -3,6 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/models/schedule_day.dart';
 import 'package:workout_app/models/workout_schedule.dart';
+import 'package:workout_app/pages/add_edit_schedule_page.dart';
 import 'package:workout_app/utils/themes.dart';
 
 class WorkoutScheduleCard extends StatelessWidget {
@@ -106,8 +107,7 @@ class WorkoutScheduleCard extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  // Chevron icon button (far right, vertically centered)
+                  ),                  // Chevron icon button (far right, vertically centered)
                   Positioned(
                     right: 0,
                     top: (constraints.maxHeight - 36) / 2,
@@ -116,7 +116,16 @@ class WorkoutScheduleCard extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                       color: themeProvider.getTextColor(),
-                      onPressed: onSettingsPress,
+                      onPressed: () async {
+                        final result = await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => AddEditSchedulePage(schedule: schedule),
+                          ),
+                        );
+                        if (result is WorkoutSchedule && onChanged != null) {
+                          onChanged!();
+                        }
+                      },
                     ),
                   ),
                 ],

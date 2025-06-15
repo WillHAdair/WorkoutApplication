@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:workout_app/pages/home_page.dart';
-import 'package:workout_app/pages/settings_page.dart';
-import 'package:workout_app/pages/workout_schedule_page.dart';
+import 'package:workout_app/pages/app_bar/home_page.dart';
+import 'package:workout_app/pages/app_bar/settings_page.dart';
+import 'package:workout_app/pages/app_bar/workout_schedule_page.dart';
 import 'package:workout_app/utils/themes.dart';
 
 class NavigationPage extends StatefulWidget {

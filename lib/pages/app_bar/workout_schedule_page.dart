@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:workout_app/components/workout_schedule_dialog.dart';
+import 'package:workout_app/pages/add_edit_schedule_page.dart';
 import 'package:workout_app/components/text_divider.dart';
 import 'package:workout_app/components/workout_schedule_card.dart';
 import 'package:workout_app/models/schedule_day.dart';
@@ -57,11 +57,11 @@ class _WorkoutSchedulePageState extends State<WorkoutSchedulePage> {
       _inactiveSchedules = []; // No inactive schedules for testing
     });
   }
-
   void _addSchedule() async {
-    final result = await showDialog(
-      context: context,
-      builder: (context) => const WorkoutScheduleDialog(),
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const AddEditSchedulePage(),
+      ),
     );
     if (result is WorkoutSchedule) {
       setState(() {
