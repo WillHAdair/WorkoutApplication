@@ -65,7 +65,7 @@ class _AddEditSchedulePageState extends State<AddEditSchedulePage> {
     ScheduleDay? scheduleDay,
     int? index,
   }) async {
-    final result = await showDialog<ScheduleDay>(
+    final result = await showDialog<dynamic>(
       context: context,
       builder:
           (context) => AddEditScheduleDayModal(
@@ -76,12 +76,18 @@ class _AddEditSchedulePageState extends State<AddEditSchedulePage> {
 
     if (result != null) {
       setState(() {
-        if (index != null) {
-          // Editing existing day
-          _schedule.days[index] = result;
-        } else {
-          // Adding new day
-          _schedule = _schedule.copyWith(days: [..._schedule.days, result]);
+        if (result == 'DELETE' && index != null) {
+          // Delete existing day
+          _schedule.days.removeAt(index);
+          _schedule = _schedule.copyWith(days: List.from(_schedule.days));
+        } else if (result is ScheduleDay) {
+          if (index != null) {
+            // Editing existing day
+            _schedule.days[index] = result;
+          } else {
+            // Adding new day
+            _schedule = _schedule.copyWith(days: [..._schedule.days, result]);
+          }
         }
       });
     }
@@ -156,7 +162,10 @@ class _AddEditSchedulePageState extends State<AddEditSchedulePage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TextDivider(text: 'Schedule Dates', icon: Icons.date_range),
+                        TextDivider(
+                          text: 'Schedule Dates',
+                          icon: Icons.date_range,
+                        ),
                         const SizedBox(height: 16),
                         Row(
                           children: [
@@ -268,7 +277,10 @@ class _AddEditSchedulePageState extends State<AddEditSchedulePage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TextDivider(text: 'Schedule Days', icon: Icons.schedule),
+                        TextDivider(
+                          text: 'Schedule Days',
+                          icon: Icons.schedule,
+                        ),
                         // Days of week header (dynamic, rolling from start date)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -321,9 +333,11 @@ class _AddEditSchedulePageState extends State<AddEditSchedulePage> {
                                                   _showAddEditScheduleDayModal(
                                                     scheduleDay: day,
                                                     index: idx,
-                                                  ),                                          child: Container(
+                                                  ),
+                                          child: Container(
                                             margin: const EdgeInsets.all(2),
-                                            height: 60, // Fixed height for consistency
+                                            height:
+                                                60, // Fixed height for consistency
                                             decoration: BoxDecoration(
                                               color:
                                                   themeProvider
@@ -353,7 +367,10 @@ class _AddEditSchedulePageState extends State<AddEditSchedulePage> {
                                                 ),
                                                 const SizedBox(height: 4),
                                                 Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 2,
+                                                      ),
                                                   child: Text(
                                                     day.name,
                                                     style: TextStyle(
@@ -364,7 +381,8 @@ class _AddEditSchedulePageState extends State<AddEditSchedulePage> {
                                                     ),
                                                     textAlign: TextAlign.center,
                                                     maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
                                                 ),
                                               ],
@@ -381,7 +399,8 @@ class _AddEditSchedulePageState extends State<AddEditSchedulePage> {
                               }),
                             );
                           },
-                        ),                        const SizedBox(height: 16),
+                        ),
+                        const SizedBox(height: 16),
                         // Add day buttons
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

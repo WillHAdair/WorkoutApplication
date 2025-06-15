@@ -39,8 +39,7 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
     _nameController.dispose();
     super.dispose();
   }
-
-  void _showWorkoutDropdown() {
+  Future<void> _showWorkoutDropdown() async {
     if (widget.availableWorkouts.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -50,7 +49,7 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
       return;
     }
 
-    showDialog(
+    await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Select Workouts'),
@@ -87,53 +86,52 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
               ),
             );
           },
-        ),
-        actions: [
+        ),        actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('Cancel'),
           ),
-          TextButton(
-            onPressed: () {
-              setState(() {}); // Refresh main dialog
-              Navigator.of(context).pop();
-            },
+          TextButton(            onPressed: () => Navigator.of(context).pop(),
             child: const Text('Done'),
           ),
         ],
       ),
     );
+    
+    // Refresh the UI after the dialog closes
+    if (mounted) {
+      setState(() {});
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isEditing = widget.scheduleDay != null;
 
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Stack(
         children: [
           Container(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: themeProvider.getPopupBackgroundColor(),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              isEditing ? 'Edit Schedule Day' : 'Add Schedule Day',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: themeProvider.getTextColor(),
-              ),
-            ),
-            const SizedBox(height: 24),
-            
-            Form(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isEditing ? 'Edit Schedule Day' : 'Add Schedule Day',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: themeProvider.getTextColor(),
+                  ),                ),
+                const SizedBox(height: 20),
+                
+                Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,10 +156,9 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a day name';
                       }
-                      return null;
-                    },
+                      return null;                    },
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
                   
                   // Workouts Section
                   Text(
@@ -255,61 +252,89 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
                     ),
                   ],
                 ],
-              ),
-            ),
-            const SizedBox(height: 24),
+              ),            ),
+            const SizedBox(height: 20),
             
             // Action Buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(color: themeProvider.getTextColor()),
+            Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,                children: [
+                  if (isEditing)
+                    TextButton(
+                      onPressed: () {
+                        // Return DELETE to indicate deletion
+                        Navigator.of(context).pop('DELETE');
+                      },
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30,
+                          vertical: 15,
+                        ),
+                        backgroundColor: themeProvider.rejectColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'Delete',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  if (isEditing) const SizedBox(width: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        final scheduleDay = ScheduleDay(
+                          id: widget.scheduleDay?.id ?? DateTime.now().millisecondsSinceEpoch,
+                          name: _nameController.text,
+                          workouts: _selectedWorkouts,
+                        );
+                        Navigator.of(context).pop(scheduleDay);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: themeProvider.primaryColor,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 40,
+                        vertical: 15,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text(
+                      isEditing ? 'Update' : 'Add',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      final scheduleDay = ScheduleDay(
-                        id: widget.scheduleDay?.id ?? DateTime.now().millisecondsSinceEpoch,
-                        name: _nameController.text,
-                        workouts: _selectedWorkouts,
-                      );
-                      Navigator.of(context).pop(scheduleDay);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: themeProvider.primaryColor,
-                  ),
-                  child: Text(
-                    isEditing ? 'Update' : 'Add',                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],            ),
+                ],
+              ),            ),
           ],
         ),
-        ),
-        // Delete button positioned in top right corner (only show when editing)
-        if (isEditing)
-          Positioned(
-            right: 10,
-            top: 10,
-            child: GestureDetector(
-              onTap: () {
-                // Return a special value to indicate deletion
-                Navigator.of(context).pop('DELETE');
-              },
-              child: Icon(
-                Icons.delete,
-                size: 24,
-                color: themeProvider.rejectColor,
-              ),
+        ),        // Close button (always visible, just cancels)
+        Positioned(
+          right: 10,
+          top: 10,
+          child: GestureDetector(
+            onTap: () {
+              // Just close the modal without any action
+              Navigator.of(context).pop();
+            },
+            child: Icon(
+              Icons.close,
+              size: 24,
+              color: themeProvider.closeButton,
             ),
           ),
+        ),
         ],
       ),
     );

@@ -3,6 +3,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/pages/app_bar/home_page.dart';
 import 'package:workout_app/pages/app_bar/settings_page.dart';
+import 'package:workout_app/pages/app_bar/workout_page.dart';
 import 'package:workout_app/pages/app_bar/workout_schedule_page.dart';
 import 'package:workout_app/utils/themes.dart';
 
@@ -69,7 +70,7 @@ class _NavigationPageState extends State<NavigationPage> {
         },
         children: [
           const WorkoutSchedulePage(), // History Page
-          Container(color: Colors.green), // Workout Page
+          const WorkoutPage(), // Workout Page
           const HomePage(),
           Container(color: Colors.yellow), // Food Page
           const SettingsPage(), // Settings Page
@@ -87,18 +88,24 @@ class _NavigationPageState extends State<NavigationPage> {
                   _currentIndex = index;
                   _isAnimating = true;
                 });
-                _pageController.animateToPage(
-                  index,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                ).then((_) {
-                  setState(() {
-                    _isAnimating = false;
-                  });
-                });
+                _pageController
+                    .animateToPage(
+                      index,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    )
+                    .then((_) {
+                      setState(() {
+                        _isAnimating = false;
+                      });
+                    });
               },
-              rippleColor: themeProvider.navBarHighlightBackground.withAlpha(77),
-              hoverColor: themeProvider.navBarHighlightBackground.withAlpha(102),
+              rippleColor: themeProvider.navBarHighlightBackground.withAlpha(
+                77,
+              ),
+              hoverColor: themeProvider.navBarHighlightBackground.withAlpha(
+                102,
+              ),
               haptic: true,
               tabBorderRadius: 16,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -106,7 +113,8 @@ class _NavigationPageState extends State<NavigationPage> {
               gap: 8,
               color: themeProvider.navBarText,
               activeColor: themeProvider.navBarText,
-              tabBackgroundColor: themeProvider.navBarHighlightBackground.withAlpha(128),
+              tabBackgroundColor: themeProvider.navBarHighlightBackground
+                  .withAlpha(128),
               tabs: const [
                 GButton(icon: Icons.calendar_month, text: 'Plan'),
                 GButton(icon: Icons.fitness_center_rounded, text: 'Workout'),
