@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:workout_app/components/popups/add_edit_workout_modal.dart';
 import 'package:workout_app/components/workout_card.dart';
 import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/workout.dart';
+import 'package:workout_app/pages/add_edit_workout_page.dart';
 import 'package:workout_app/utils/themes.dart';
 
 class WorkoutPage extends StatefulWidget {
@@ -103,12 +103,12 @@ class _WorkoutPageState extends State<WorkoutPage> {
         ],
       ),
     ];
-  }
-  Future<void> _addWorkout() async {
-    final result = await showDialog<dynamic>(
-      context: context,
-      builder: (context) => const AddEditWorkoutModal(),
-    );    if (result != null && result is Workout) {
+  }  Future<void> _addWorkout() async {
+    final result = await Navigator.of(context).push<dynamic>(
+      MaterialPageRoute(
+        builder: (context) => const AddEditWorkoutPage(),
+      ),
+    );if (result != null && result is Workout) {
       setState(() {
         _workouts.add(result);
         _workouts.sort((a, b) => a.id.compareTo(b.id));
@@ -121,12 +121,12 @@ class _WorkoutPageState extends State<WorkoutPage> {
         );
       }
     }
-  }
-  Future<void> _editWorkout(Workout workout) async {
-    final result = await showDialog<dynamic>(
-      context: context,
-      builder: (context) => AddEditWorkoutModal(workout: workout),
-    );    if (result != null) {
+  }  Future<void> _editWorkout(Workout workout) async {
+    final result = await Navigator.of(context).push<dynamic>(
+      MaterialPageRoute(
+        builder: (context) => AddEditWorkoutPage(workout: workout),
+      ),
+    );if (result != null) {
       setState(() {
         if (result == 'DELETE') {
           // Delete the workout

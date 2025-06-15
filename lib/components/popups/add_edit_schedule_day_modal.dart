@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:workout_app/models/schedule_day.dart';
 import 'package:workout_app/models/workout.dart';
 import 'package:workout_app/utils/themes.dart';
+import 'package:workout_app/components/popups/workout_selection_modal.dart';
 
 class AddEditScheduleDayModal extends StatefulWidget {
   final ScheduleDay? scheduleDay;
@@ -38,69 +39,30 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
   void dispose() {
     _nameController.dispose();
     super.dispose();
-  }
-  Future<void> _showWorkoutDropdown() async {
+  }  Future<void> _showWorkoutSelectionModal() async {
     if (widget.availableWorkouts.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No workouts available. Create workouts first.'),
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No workouts available. Create workouts first.'),
+          ),
+        );
+      }
       return;
     }
 
-    await showDialog(
+    final result = await showDialog<List<Workout>>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Select Workouts'),
-        content: StatefulBuilder(
-          builder: (context, setDialogState) {
-            return SizedBox(
-              width: double.maxFinite,
-              height: 300,
-              child: ListView.builder(
-                itemCount: widget.availableWorkouts.length,
-                itemBuilder: (context, index) {
-                  final workout = widget.availableWorkouts[index];
-                  final isSelected = _selectedWorkouts.any((w) => w.id == workout.id);
-                  
-                  return CheckboxListTile(
-                    title: Text(workout.name),
-                    subtitle: workout.description != null 
-                        ? Text(workout.description!) 
-                        : null,
-                    value: isSelected,
-                    onChanged: (value) {
-                      setDialogState(() {
-                        if (value == true) {
-                          if (!_selectedWorkouts.any((w) => w.id == workout.id)) {
-                            _selectedWorkouts.add(workout);
-                          }
-                        } else {
-                          _selectedWorkouts.removeWhere((w) => w.id == workout.id);
-                        }
-                      });
-                    },
-                  );
-                },
-              ),
-            );
-          },
-        ),        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          TextButton(            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Done'),
-          ),
-        ],
+      builder: (context) => WorkoutSelectionModal(
+        availableWorkouts: widget.availableWorkouts,
+        selectedWorkouts: _selectedWorkouts,
       ),
     );
     
-    // Refresh the UI after the dialog closes
-    if (mounted) {
-      setState(() {});
+    if (result != null && mounted) {
+      setState(() {
+        _selectedWorkouts = result;
+      });
     }
   }
 
@@ -191,10 +153,9 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  
-                  // Select from Existing Workouts
+                    // Select from Existing Workouts
                   OutlinedButton.icon(
-                    onPressed: _showWorkoutDropdown,
+                    onPressed: _showWorkoutSelectionModal,
                     icon: Icon(Icons.fitness_center, color: themeProvider.primaryColor),
                     label: Text(
                       'Select from Existing Workouts',
@@ -205,35 +166,53 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
-                  // Selected Workouts List
+                    // Selected Workouts List
                   if (_selectedWorkouts.isNotEmpty) ...[
                     Text(
-                      'Selected Workouts:',
+                      'Selected Workouts (${_selectedWorkouts.length})',
                       style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
                         color: themeProvider.getTextColor(),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Container(
-                      height: 100,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: themeProvider.getTextColor().withOpacity(0.3),
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: ListView.builder(
-                        itemCount: _selectedWorkouts.length,
-                        itemBuilder: (context, index) {
-                          final workout = _selectedWorkouts[index];
-                          return ListTile(
-                            dense: true,
+                    const SizedBox(height: 12),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _selectedWorkouts.length,
+                      itemBuilder: (context, index) {
+                        final workout = _selectedWorkouts[index];
+                        return Card(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          color: themeProvider.getButtonBackground(),
+                          child: ListTile(
                             title: Text(
                               workout.name,
-                              style: TextStyle(color: themeProvider.getTextColor()),
+                              style: TextStyle(
+                                color: themeProvider.getTextColor(),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (workout.description != null)
+                                  Text(
+                                    workout.description!,
+                                    style: TextStyle(
+                                      color: themeProvider.getTextColor().withOpacity(0.7),
+                                    ),
+                                  ),
+                                Text(
+                                  '${workout.exercises.length} exercise${workout.exercises.length == 1 ? '' : 's'}',
+                                  style: TextStyle(
+                                    color: themeProvider.getTextColor().withOpacity(0.5),
+                                    fontSize: 12,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ],
                             ),
                             trailing: IconButton(
                               icon: Icon(
@@ -246,8 +225,46 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
                                 });
                               },
                             ),
-                          );
-                        },
+                          ),
+                        );
+                      },
+                    ),
+                  ] else ...[
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: themeProvider.getButtonBackground().withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: themeProvider.getTextColor().withOpacity(0.2),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.fitness_center,
+                            size: 48,
+                            color: themeProvider.getTextColor().withOpacity(0.5),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'No workouts selected',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: themeProvider.getTextColor().withOpacity(0.7),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Add workouts to create a complete schedule day',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: themeProvider.getTextColor().withOpacity(0.5),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
                     ),
                   ],
