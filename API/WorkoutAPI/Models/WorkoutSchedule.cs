@@ -4,7 +4,7 @@
     {
         public int ID { get; set; }
         public required string Name { get; set; }
-        public required string Description { get; set; }
+        public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public List<ScheduleDay> Days { get; set; }
@@ -25,8 +25,9 @@
 
         public ScheduleDay GetActiveDay()
         {
-            int daysSinceStart = (StartDate - DateTime.Today).Days;
-            // TODO: Check this logic
+            int daysSinceStart = (DateTime.Today - StartDate.Date).Days;
+            if (daysSinceStart < 0)
+                daysSinceStart = 0;
             return Days[daysSinceStart % Days.Count];
         }
     }

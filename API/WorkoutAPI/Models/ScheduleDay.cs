@@ -5,7 +5,7 @@
         public int ID { get; set; }
         public int WorkoutSchduleID { get; set; } // Schedule days cannot be shared across schedules
         public required string Name { get; set; }
-        public required string Description { get; set; }
+        public string Description { get; set; }
         public List<Workout> Workouts { get; set; } // When empty, this is assumed to be a rest day
         public double? CalorieGoal { get; set; } // When null, default calorie goal is assumed
         public TimeOnly? WorkoutTime { get; set; } // This is for the time of day expected for a workout (if null then no warning/expected time).

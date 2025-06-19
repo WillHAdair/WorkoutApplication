@@ -8,17 +8,37 @@
     }
     public class WorkoutHistory
     {
-        public Workout? ActiveWorkout { get; set; }
-
+        public (Workout?, double? completionStatus) ActiveWorkout { get; set; }
+        public List<PastScheduleDays> ScheduleHistory { get; set; }
+        public WorkoutHistory()
+        {
+            ActiveWorkout = (null, null);
+            ScheduleHistory = [];
+        }
+        public WorkoutHistory((Workout?, double? completionStatus) activeWorkout, List<PastScheduleDays> scheduleHistory)
+        {
+            ActiveWorkout = activeWorkout;
+            ScheduleHistory = scheduleHistory;
+        }
     }
-    public class ScheduleHistory
+    public class PastScheduleDays
     {
         public int ID { get; set; }
         public int ScheduleID { get; set; }
-        public List<int> WorkoutIDs { get; set; }
-        public DateOnly Day {  get; set; }
+        public PastWorkoutDay? Workouts { get; set; } // if null, then no workouts were done that day (rest or skip day).
+        public DateOnly Day { get; set; }
         public TimeOnly? WorkoutStart { get; set; }
         public TimeOnly? WorkoutEnd { get; set; }
+        public PastScheduleDays() { }
+        public PastScheduleDays(int id, int scheduleID, PastWorkoutDay? workouts, DateOnly day, TimeOnly? workoutStart, TimeOnly? workoutEnd)
+        {
+            ID = id;
+            ScheduleID = scheduleID;
+            Workouts = workouts;
+            Day = day;
+            WorkoutStart = workoutStart;
+            WorkoutEnd = workoutEnd;
+        }
     }
 
     public class PastWorkoutDay
@@ -35,7 +55,11 @@
         public bool IsComplete()
         {
             if (WorkoutIDs.Count == 0 || CompletedWorkoutsStatus.Count == 0 || WorkoutIDs.Count != CompletedWorkoutsStatus.Count) return false;
-            return false;
+            for (int i = 0; i < CompletedWorkoutsStatus.Count; i++)
+            {
+                if (CompletedWorkoutsStatus[i] < 100.0) return false;
+            }
+            return true;
         }
     }
 }

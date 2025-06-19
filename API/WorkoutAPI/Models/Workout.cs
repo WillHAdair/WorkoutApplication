@@ -1,12 +1,10 @@
-﻿using System.Net;
-
-namespace WorkoutAPI.Models
+﻿namespace WorkoutAPI.Models
 {
     public abstract class Workout
     {
         public int ID { get; set; }
         public required string Name { get; set; }
-        public required string Description { get; set; }
+        public string? Description { get; set; }
     }
 
     // This type of workout just has a timer associated with it.
@@ -31,7 +29,7 @@ namespace WorkoutAPI.Models
     {
         public List<Exercise> Exercises { get; set; }
         public double? RestTime { get; set; }
-        public ExercisesWorkout() { }
+        public ExercisesWorkout() { } // measured in seconds.
         public ExercisesWorkout(List<Exercise> exercises, double? restTime)
         {
             Exercises = exercises;
