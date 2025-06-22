@@ -1,6 +1,5 @@
 import 'package:isar/isar.dart';
 import 'schedule_day.dart';
-import 'calorie_tracking.dart';
 
 part 'workout_schedule.g.dart';
 
@@ -17,5 +16,4 @@ class WorkoutSchedule {
   late bool isActive;
 
   final days = IsarLinks<ScheduleDay>();
-  final calorieTracking = IsarLink<CalorieTracking>();
 }

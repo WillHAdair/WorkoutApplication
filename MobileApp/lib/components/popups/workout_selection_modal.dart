@@ -233,7 +233,7 @@ class _WorkoutSelectionModalState extends State<WorkoutSelectionModal> {
                                         ),
                                       ),
                                     Text(
-                                      '${workout.exercises.length} exercise${workout.exercises.length == 1 ? '' : 's'}',
+                                      '${(workout as ExercisesWorkout).exercises.length} exercise${workout.exercises.length == 1 ? '' : 's'}',
                                       style: TextStyle(
                                         color: themeProvider.getTextColor().withOpacity(0.5),
                                         fontSize: 11,

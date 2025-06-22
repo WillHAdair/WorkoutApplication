@@ -12,16 +12,21 @@ enum NutritionIcons {
   overEatenApple,
 }
 
-enum SetType {
+enum WorkoutSetType {
+  timed,
   reps,
-  time,
-  superSet,
-  dropSet,
+  dropset
 }
 
 enum ExerciseType {
-  sets,
   continual,
+  sets,
+  circuit
+}
+
+enum WorkoutType {
+  timed,
+  exercises,
 }
 
 enum ActivityTracker {

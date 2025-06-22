@@ -26,7 +26,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
   void _loadMockWorkouts() {
     // Mock data for testing - replace with actual data loading later
     _workouts = [
-      Workout(
+      ExercisesWorkout(
         id: 1,
         name: 'Push Day',
         description: 'Chest, shoulders, and triceps workout',
@@ -34,18 +34,16 @@ class _WorkoutPageState extends State<WorkoutPage> {
           ContinualExercise(
             id: 1,
             name: 'Bench Press',
-            exerciseType: ExerciseType.sets,
             time: 0,
           ),
           ContinualExercise(
             id: 2,
             name: 'Shoulder Press',
-            exerciseType: ExerciseType.sets,
             time: 0,
           ),
         ],
       ),
-      Workout(
+      ExercisesWorkout(
         id: 2,
         name: 'Pull Day',
         description: 'Back and biceps workout',
@@ -53,18 +51,16 @@ class _WorkoutPageState extends State<WorkoutPage> {
           ContinualExercise(
             id: 3,
             name: 'Pull-ups',
-            exerciseType: ExerciseType.sets,
             time: 0,
           ),
           ContinualExercise(
             id: 4,
             name: 'Barbell Rows',
-            exerciseType: ExerciseType.sets,
             time: 0,
           ),
         ],
       ),
-      Workout(
+      ExercisesWorkout(
         id: 3,
         name: 'Leg Day',
         description: 'Lower body strength training',
@@ -72,18 +68,16 @@ class _WorkoutPageState extends State<WorkoutPage> {
           ContinualExercise(
             id: 5,
             name: 'Squats',
-            exerciseType: ExerciseType.sets,
             time: 0,
           ),
           ContinualExercise(
             id: 6,
             name: 'Deadlifts',
-            exerciseType: ExerciseType.sets,
             time: 0,
           ),
         ],
       ),
-      Workout(
+      ExercisesWorkout(
         id: 4,
         name: 'Cardio',
         description: 'Cardiovascular endurance training',
@@ -91,13 +85,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
           ContinualExercise(
             id: 7,
             name: 'Running',
-            exerciseType: ExerciseType.continual,
             time: 30,
           ),
           ContinualExercise(
             id: 8,
             name: 'Cycling',
-            exerciseType: ExerciseType.continual,
             time: 45,
           ),
         ],

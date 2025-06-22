@@ -35,8 +35,8 @@ class _AddEditWorkoutPageState extends State<AddEditWorkoutPage> {
     _descriptionController = TextEditingController(
       text: widget.workout?.description ?? '',
     );
-    if (widget.workout != null) {
-      _selectedExercises = List.from(widget.workout!.exercises);
+    if (widget.workout != null && widget.workout is ExercisesWorkout) {
+      _selectedExercises = (widget.workout as ExercisesWorkout).exercises;
     }
   }
 
@@ -58,35 +58,30 @@ class _AddEditWorkoutPageState extends State<AddEditWorkoutPage> {
         id: 101,
         name: 'Push-ups',
         description: 'Classic bodyweight chest exercise',
-        exerciseType: ExerciseType.sets,
         time: 0,
       ),
       ContinualExercise(
         id: 102,
         name: 'Squats',
         description: 'Lower body strength exercise',
-        exerciseType: ExerciseType.sets,
         time: 0,
       ),
       ContinualExercise(
         id: 103,
         name: 'Plank',
         description: 'Core strengthening exercise',
-        exerciseType: ExerciseType.continual,
         time: 60,
       ),
       ContinualExercise(
         id: 104,
         name: 'Jumping Jacks',
         description: 'Cardio warm-up exercise',
-        exerciseType: ExerciseType.continual,
         time: 30,
       ),
       ContinualExercise(
         id: 105,
         name: 'Burpees',
         description: 'Full body conditioning exercise',
-        exerciseType: ExerciseType.sets,
         time: 0,
       ),
     ];
@@ -309,12 +304,6 @@ class _AddEditWorkoutPageState extends State<AddEditWorkoutPage> {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              subtitle: Text(
-                                exercise.description ?? 'Type: ${exercise.exerciseType.name}',
-                                style: TextStyle(
-                                  color: themeProvider.getTextColor().withOpacity(0.7),
-                                ),
-                              ),
                               trailing: IconButton(
                                 icon: Icon(
                                   Icons.remove_circle,
@@ -392,7 +381,7 @@ class _AddEditWorkoutPageState extends State<AddEditWorkoutPage> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      final workout = Workout(
+                      final workout = ExercisesWorkout(
                         id: widget.workout?.id ?? DateTime.now().millisecondsSinceEpoch,
                         name: _nameController.text,
                         description: _descriptionController.text.isEmpty 

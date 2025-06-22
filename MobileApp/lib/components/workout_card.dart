@@ -22,8 +22,8 @@ class WorkoutCard extends StatelessWidget {
 
     // Get the first exercise name for display, or show "No exercises"
     final String firstExerciseName =
-        workout.exercises.isNotEmpty
-            ? workout.exercises.first.name
+        (workout as ExercisesWorkout).exercises.isNotEmpty
+            ? (workout as ExercisesWorkout).exercises.first.name
             : 'No exercises';
 
     return Padding(

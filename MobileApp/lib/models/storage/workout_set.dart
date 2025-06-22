@@ -7,18 +7,17 @@ part 'workout_set.g.dart';
 class WorkoutSet {
   Id id = Isar.autoIncrement;
 
+  String? description;
   double? restTime;
+  late bool isBodyWeight;
 
   @enumerated
-  late SetType setType;
-
-  // This is for a super set:
-  // If there are exercsises, their ids will be listed here
-  late List<int>? exercises;
+  late WorkoutSetType setType;
 
   double? duration;
   double? weight;
+  int? reps;
 
-  List<double>? weights;
-  List<int>? reps;
+  List<double>? weightList;
+  List<int?>? repsList;
 }

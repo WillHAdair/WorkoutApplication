@@ -6,7 +6,7 @@ import 'package:workout_app/models/storage/workout_set.dart' as prefix;
 import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/storage/exercise.dart' as prefix;
 import 'package:workout_app/models/workout.dart';
-import 'package:workout_app/models/storage/workout.dart'as prefix;
+import 'package:workout_app/models/storage/workout.dart' as prefix;
 import 'package:workout_app/models/schedule_day.dart';
 import 'package:workout_app/models/storage/schedule_day.dart' as prefix;
 import 'package:workout_app/models/workout_schedule.dart';
@@ -34,11 +34,18 @@ class WorkoutsProvider extends ChangeNotifier {
 
   Future<(WorkoutSchedule?, ModelBase)> getWorkoutScheduleById(int id) async {
     try {
-      prefix.WorkoutSchedule? databaseSchedule = await DatabaseHelper.getById<prefix.WorkoutSchedule>(id);
+      prefix.WorkoutSchedule? databaseSchedule =
+          await DatabaseHelper.getById<prefix.WorkoutSchedule>(id);
       if (databaseSchedule == null) {
-        return (null, ModelBase(success: false, message: "Workout $id not found"));
+        return (
+          null,
+          ModelBase(success: false, message: "Workout $id not found"),
+        );
       }
-      return (convertWorkoutSchedule(databaseSchedule), ModelBase(success: true));
+      return (
+        convertWorkoutSchedule(databaseSchedule),
+        ModelBase(success: true),
+      );
     } catch (exception) {
       return (null, ModelBase(success: false, message: exception.toString()));
     }
@@ -56,7 +63,9 @@ class WorkoutsProvider extends ChangeNotifier {
     }
   }
 
-  Future<(WorkoutSchedule?, ModelBase)> updateWorkoutSchedule(WorkoutSchedule schedule) async {
+  Future<(WorkoutSchedule?, ModelBase)> updateWorkoutSchedule(
+    WorkoutSchedule schedule,
+  ) async {
     try {
       final prefixSchedule = convertDataWorkoutSchedule(schedule);
       await DatabaseHelper.update<prefix.WorkoutSchedule>(prefixSchedule);
@@ -82,19 +91,29 @@ class WorkoutsProvider extends ChangeNotifier {
     try {
       final (schedule, _) = await getWorkoutScheduleById(scheduleId);
       if (schedule == null) {
-        return (<ScheduleDay>[], ModelBase(success: false, message: "Schedule $scheduleId not found"));
+        return (
+          <ScheduleDay>[],
+          ModelBase(success: false, message: "Schedule $scheduleId not found"),
+        );
       }
       return (schedule.days, ModelBase(success: true));
     } catch (exception) {
-      return (<ScheduleDay>[], ModelBase(success: false, message: exception.toString()));
+      return (
+        <ScheduleDay>[],
+        ModelBase(success: false, message: exception.toString()),
+      );
     }
   }
 
   Future<(ScheduleDay?, ModelBase)> getScheduleDayById(int id) async {
     try {
-      final prefixScheduleDay = await DatabaseHelper.getById<prefix.ScheduleDay>(id);
+      final prefixScheduleDay =
+          await DatabaseHelper.getById<prefix.ScheduleDay>(id);
       if (prefixScheduleDay == null) {
-        return (null, ModelBase(success: false, message: "Schedule Day $id not found"));
+        return (
+          null,
+          ModelBase(success: false, message: "Schedule Day $id not found"),
+        );
       }
       ScheduleDay scheduleDay = convertScheduleDay(prefixScheduleDay);
       return (scheduleDay, ModelBase(success: true));
@@ -103,11 +122,18 @@ class WorkoutsProvider extends ChangeNotifier {
     }
   }
 
-  Future<ModelBase> addScheduleDay(int scheduleID, ScheduleDay scheduleDay) async {
+  Future<ModelBase> addScheduleDay(
+    int scheduleID,
+    ScheduleDay scheduleDay,
+  ) async {
     try {
-      prefix.WorkoutSchedule? schedule = await DatabaseHelper.getById<prefix.WorkoutSchedule>(scheduleID);
+      prefix.WorkoutSchedule? schedule =
+          await DatabaseHelper.getById<prefix.WorkoutSchedule>(scheduleID);
       if (schedule == null) {
-        return ModelBase(success: false, message: "Schedule $scheduleID not found");
+        return ModelBase(
+          success: false,
+          message: "Schedule $scheduleID not found",
+        );
       }
       scheduleDay.id = Isar.autoIncrement;
       prefix.ScheduleDay scheduleDayData = convertDataScheduleDay(scheduleDay);
@@ -146,11 +172,20 @@ class WorkoutsProvider extends ChangeNotifier {
     try {
       final (scheduleDay, _) = await getScheduleDayById(scheduleDayID);
       if (scheduleDay == null) {
-        return (<Workout>[], ModelBase(success: false, message: "Schedule day $scheduleDayID not found"));
+        return (
+          <Workout>[],
+          ModelBase(
+            success: false,
+            message: "Schedule day $scheduleDayID not found",
+          ),
+        );
       }
       return (scheduleDay.workouts, ModelBase(success: true));
     } catch (exception) {
-      return (<Workout>[], ModelBase(success: false, message: exception.toString()));
+      return (
+        <Workout>[],
+        ModelBase(success: false, message: exception.toString()),
+      );
     }
   }
 
@@ -158,7 +193,10 @@ class WorkoutsProvider extends ChangeNotifier {
     try {
       final prefixWorkout = await DatabaseHelper.getById<prefix.Workout>(id);
       if (prefixWorkout == null) {
-        return (null, ModelBase(success: false, message: "Workout $id not found"));
+        return (
+          null,
+          ModelBase(success: false, message: "Workout $id not found"),
+        );
       }
       Workout workout = convertWorkout(prefixWorkout);
       return (workout, ModelBase(success: true));
@@ -169,9 +207,13 @@ class WorkoutsProvider extends ChangeNotifier {
 
   Future<ModelBase> addWorkout(int scheduleDayID, Workout workout) async {
     try {
-      prefix.ScheduleDay? scheduleDay = await DatabaseHelper.getById<prefix.ScheduleDay>(scheduleDayID);
+      prefix.ScheduleDay? scheduleDay =
+          await DatabaseHelper.getById<prefix.ScheduleDay>(scheduleDayID);
       if (scheduleDay == null) {
-        return ModelBase(success: false, message: "Schedule Day $scheduleDayID not found");
+        return ModelBase(
+          success: false,
+          message: "Schedule Day $scheduleDayID not found",
+        );
       }
       workout.id = Isar.autoIncrement;
       prefix.Workout workoutData = convertDataWorkout(workout);
@@ -204,17 +246,42 @@ class WorkoutsProvider extends ChangeNotifier {
       return ModelBase(success: false, message: exception.toString());
     }
   }
-  
+
   /// Exercises
   Future<(List<Exercise>, ModelBase)> getExercises(int workoutID) async {
     try {
       final (workout, _) = await getWorkoutById(workoutID);
       if (workout == null) {
-        return (<Exercise>[], ModelBase(success: false, message: "Workout $workoutID not found"));
+        return (
+          <Exercise>[],
+          ModelBase(success: false, message: "Workout $workoutID not found"),
+        );
       }
-      return (workout.exercises, ModelBase(success: true));
+      if (workout is TimedWorkout) {
+        return (
+          <Exercise>[],
+          ModelBase(
+            success: false,
+            message: "Workout $workoutID does not have exercises",
+          ),
+        );
+      }
+      if (workout is ExercisesWorkout) {
+        return (workout.exercises, ModelBase(success: true));
+      }
+      // Add a default return if workout is neither TimedWorkout nor ExercisesWorkout
+      return (
+        <Exercise>[],
+        ModelBase(
+          success: false,
+          message: "Workout $workoutID is of unknown type",
+        ),
+      );
     } catch (exception) {
-      return (<Exercise>[], ModelBase(success: false, message: exception.toString()));
+      return (
+        <Exercise>[],
+        ModelBase(success: false, message: exception.toString()),
+      );
     }
   }
 
@@ -222,7 +289,10 @@ class WorkoutsProvider extends ChangeNotifier {
     try {
       final prefixExercise = await DatabaseHelper.getById<prefix.Exercise>(id);
       if (prefixExercise == null) {
-        return (null, ModelBase(success: false, message: "Exercise $id not found"));
+        return (
+          null,
+          ModelBase(success: false, message: "Exercise $id not found"),
+        );
       }
       Exercise exercise = convertExercise(prefixExercise);
       return (exercise, ModelBase(success: true));
@@ -233,9 +303,14 @@ class WorkoutsProvider extends ChangeNotifier {
 
   Future<ModelBase> addExercise(int workoutID, Exercise exercise) async {
     try {
-      prefix.Workout? workout = await DatabaseHelper.getById<prefix.Workout>(workoutID);
+      prefix.Workout? workout = await DatabaseHelper.getById<prefix.Workout>(
+        workoutID,
+      );
       if (workout == null) {
-        return ModelBase(success: false, message: "Workout $workoutID not found");
+        return ModelBase(
+          success: false,
+          message: "Workout $workoutID not found",
+        );
       }
       exercise.id = Isar.autoIncrement;
       prefix.Exercise workoutData = convertDataExercise(exercise);
@@ -268,28 +343,45 @@ class WorkoutsProvider extends ChangeNotifier {
       return ModelBase(success: false, message: exception.toString());
     }
   }
-  
+
   /// Workout Set
   Future<(List<WorkoutSet>, ModelBase)> getWorkoutSets(int exerciseID) async {
     try {
       final (exercise, _) = await getExerciseById(exerciseID);
       if (exercise == null) {
-        return (<WorkoutSet>[], ModelBase(success: false, message: "Exercise $exerciseID not found"));
+        return (
+          <WorkoutSet>[],
+          ModelBase(success: false, message: "Exercise $exerciseID not found"),
+        );
       }
       if (exercise is SetsExercise) {
         return (exercise.sets, ModelBase(success: true));
       }
-      return (<WorkoutSet>[], ModelBase(success: false, message: "Exercise $exerciseID does not have sets"));
+      return (
+        <WorkoutSet>[],
+        ModelBase(
+          success: false,
+          message: "Exercise $exerciseID does not have sets",
+        ),
+      );
     } catch (exception) {
-      return (<WorkoutSet>[], ModelBase(success: false, message: exception.toString()));
+      return (
+        <WorkoutSet>[],
+        ModelBase(success: false, message: exception.toString()),
+      );
     }
   }
 
   Future<(WorkoutSet?, ModelBase)> getWorkoutSetById(int id) async {
     try {
-      final prefixWorkoutSet = await DatabaseHelper.getById<prefix.WorkoutSet>(id);
+      final prefixWorkoutSet = await DatabaseHelper.getById<prefix.WorkoutSet>(
+        id,
+      );
       if (prefixWorkoutSet == null) {
-        return (null, ModelBase(success: false, message: "Workout Set $id not found"));
+        return (
+          null,
+          ModelBase(success: false, message: "Workout Set $id not found"),
+        );
       }
       WorkoutSet workoutSet = convertWorkoutSet(prefixWorkoutSet);
       return (workoutSet, ModelBase(success: true));
@@ -300,9 +392,14 @@ class WorkoutsProvider extends ChangeNotifier {
 
   Future<ModelBase> addWorkoutSet(int exerciseID, WorkoutSet workoutSet) async {
     try {
-      prefix.Exercise? exercise = await DatabaseHelper.getById<prefix.Exercise>(exerciseID);
+      prefix.Exercise? exercise = await DatabaseHelper.getById<prefix.Exercise>(
+        exerciseID,
+      );
       if (exercise == null) {
-        return ModelBase(success: false, message: "Exercise $exerciseID not found");
+        return ModelBase(
+          success: false,
+          message: "Exercise $exerciseID not found",
+        );
       }
       workoutSet.id = Isar.autoIncrement;
       prefix.WorkoutSet workoutSetData = convertDataWorkoutSet(workoutSet);

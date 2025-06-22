@@ -34,12 +34,12 @@ class _WorkoutSchedulePageState extends State<WorkoutSchedulePage> {
       days: [
         ScheduleDay(id: 1, name: 'Rest', workouts: List.empty()),
         ScheduleDay(id: 2, name: 'Chest Day', workouts: [
-          Workout(id: 1, name: 'Bench Press', exercises: []),
-          Workout(id: 2, name: 'Incline Dumbbell Press', exercises: []),
+          ExercisesWorkout(id: 1, name: 'Bench Press', exercises: []),
+          ExercisesWorkout(id: 2, name: 'Incline Dumbbell Press', exercises: []),
         ]),
         ScheduleDay(id: 3, name: "Back Day", workouts: [
-          Workout(id: 1, name: 'Bench Press', exercises: []),
-          Workout(id: 2, name: 'Incline Dumbbell Press', exercises: []),
+          ExercisesWorkout(id: 1, name: 'Bench Press', exercises: []),
+          ExercisesWorkout(id: 2, name: 'Incline Dumbbell Press', exercises: []),
         ]),
       ],
     );

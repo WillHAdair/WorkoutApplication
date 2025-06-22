@@ -1,4 +1,3 @@
-import 'package:workout_app/models/calorie_tracking.dart';
 import 'package:workout_app/models/schedule_day.dart';
 
 class WorkoutSchedule {
@@ -9,7 +8,6 @@ class WorkoutSchedule {
   DateTime? endDate;
   bool isActive;
   List<ScheduleDay> days;
-  CalorieTracking? calorieTracking;
 
   WorkoutSchedule({
     required this.id,
@@ -19,7 +17,6 @@ class WorkoutSchedule {
     this.endDate,
     required this.isActive,
     required this.days,
-    this.calorieTracking,
   });
 }
 
@@ -32,7 +29,6 @@ extension WorkoutScheduleCopyWith on WorkoutSchedule {
     DateTime? endDate,
     bool? isActive,
     List<ScheduleDay>? days,
-    CalorieTracking? calorieTracking,
   }) {
     return WorkoutSchedule(
       id: id ?? this.id,
@@ -42,7 +38,6 @@ extension WorkoutScheduleCopyWith on WorkoutSchedule {
       endDate: endDate ?? this.endDate,
       isActive: isActive ?? this.isActive,
       days: days ?? this.days,
-      calorieTracking: calorieTracking ?? this.calorieTracking,
     );
   }
 }

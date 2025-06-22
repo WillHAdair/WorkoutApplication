@@ -22,9 +22,19 @@ const ScheduleDaySchema = CollectionSchema(
       name: r'calorieGoal',
       type: IsarType.double,
     ),
-    r'dayName': PropertySchema(
+    r'description': PropertySchema(
       id: 1,
-      name: r'dayName',
+      name: r'description',
+      type: IsarType.string,
+    ),
+    r'name': PropertySchema(
+      id: 2,
+      name: r'name',
+      type: IsarType.string,
+    ),
+    r'startTime': PropertySchema(
+      id: 3,
+      name: r'startTime',
       type: IsarType.string,
     )
   },
@@ -55,7 +65,19 @@ int _scheduleDayEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.dayName.length * 3;
+  {
+    final value = object.description;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  bytesCount += 3 + object.name.length * 3;
+  {
+    final value = object.startTime;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -66,7 +88,9 @@ void _scheduleDaySerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDouble(offsets[0], object.calorieGoal);
-  writer.writeString(offsets[1], object.dayName);
+  writer.writeString(offsets[1], object.description);
+  writer.writeString(offsets[2], object.name);
+  writer.writeString(offsets[3], object.startTime);
 }
 
 ScheduleDay _scheduleDayDeserialize(
@@ -77,8 +101,10 @@ ScheduleDay _scheduleDayDeserialize(
 ) {
   final object = ScheduleDay();
   object.calorieGoal = reader.readDoubleOrNull(offsets[0]);
-  object.dayName = reader.readString(offsets[1]);
+  object.description = reader.readStringOrNull(offsets[1]);
   object.id = id;
+  object.name = reader.readString(offsets[2]);
+  object.startTime = reader.readStringOrNull(offsets[3]);
   return object;
 }
 
@@ -92,7 +118,11 @@ P _scheduleDayDeserializeProp<P>(
     case 0:
       return (reader.readDoubleOrNull(offset)) as P;
     case 1:
+      return (reader.readStringOrNull(offset)) as P;
+    case 2:
       return (reader.readString(offset)) as P;
+    case 3:
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -276,13 +306,32 @@ extension ScheduleDayQueryFilter
     });
   }
 
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> dayNameEqualTo(
-    String value, {
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      descriptionIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'description',
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      descriptionIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'description',
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      descriptionEqualTo(
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'dayName',
+        property: r'description',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -290,46 +339,48 @@ extension ScheduleDayQueryFilter
   }
 
   QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
-      dayNameGreaterThan(
-    String value, {
+      descriptionGreaterThan(
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'dayName',
+        property: r'description',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> dayNameLessThan(
-    String value, {
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      descriptionLessThan(
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'dayName',
+        property: r'description',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> dayNameBetween(
-    String lower,
-    String upper, {
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      descriptionBetween(
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'dayName',
+        property: r'description',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -340,50 +391,49 @@ extension ScheduleDayQueryFilter
   }
 
   QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
-      dayNameStartsWith(
+      descriptionStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'dayName',
+        property: r'description',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> dayNameEndsWith(
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      descriptionEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'dayName',
+        property: r'description',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> dayNameContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      descriptionContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'dayName',
+        property: r'description',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> dayNameMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      descriptionMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'dayName',
+        property: r'description',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
@@ -391,20 +441,20 @@ extension ScheduleDayQueryFilter
   }
 
   QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
-      dayNameIsEmpty() {
+      descriptionIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'dayName',
+        property: r'description',
         value: '',
       ));
     });
   }
 
   QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
-      dayNameIsNotEmpty() {
+      descriptionIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'dayName',
+        property: r'description',
         value: '',
       ));
     });
@@ -459,6 +509,291 @@ extension ScheduleDayQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> nameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> nameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> nameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> nameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'name',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> nameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> nameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> nameContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> nameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'name',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition> nameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      nameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      startTimeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'startTime',
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      startTimeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'startTime',
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      startTimeEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'startTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      startTimeGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'startTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      startTimeLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'startTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      startTimeBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'startTime',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      startTimeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'startTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      startTimeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'startTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      startTimeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'startTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      startTimeMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'startTime',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      startTimeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'startTime',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterFilterCondition>
+      startTimeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'startTime',
+        value: '',
       ));
     });
   }
@@ -545,15 +880,39 @@ extension ScheduleDayQuerySortBy
     });
   }
 
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> sortByDayName() {
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> sortByDescription() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dayName', Sort.asc);
+      return query.addSortBy(r'description', Sort.asc);
     });
   }
 
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> sortByDayNameDesc() {
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> sortByDescriptionDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dayName', Sort.desc);
+      return query.addSortBy(r'description', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> sortByName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> sortByNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> sortByStartTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> sortByStartTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startTime', Sort.desc);
     });
   }
 }
@@ -572,15 +931,15 @@ extension ScheduleDayQuerySortThenBy
     });
   }
 
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> thenByDayName() {
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> thenByDescription() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dayName', Sort.asc);
+      return query.addSortBy(r'description', Sort.asc);
     });
   }
 
-  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> thenByDayNameDesc() {
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> thenByDescriptionDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dayName', Sort.desc);
+      return query.addSortBy(r'description', Sort.desc);
     });
   }
 
@@ -595,6 +954,30 @@ extension ScheduleDayQuerySortThenBy
       return query.addSortBy(r'id', Sort.desc);
     });
   }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> thenByName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> thenByNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> thenByStartTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QAfterSortBy> thenByStartTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startTime', Sort.desc);
+    });
+  }
 }
 
 extension ScheduleDayQueryWhereDistinct
@@ -605,10 +988,24 @@ extension ScheduleDayQueryWhereDistinct
     });
   }
 
-  QueryBuilder<ScheduleDay, ScheduleDay, QDistinct> distinctByDayName(
+  QueryBuilder<ScheduleDay, ScheduleDay, QDistinct> distinctByDescription(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'dayName', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'description', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QDistinct> distinctByName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ScheduleDay, ScheduleDay, QDistinct> distinctByStartTime(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'startTime', caseSensitive: caseSensitive);
     });
   }
 }
@@ -627,9 +1024,21 @@ extension ScheduleDayQueryProperty
     });
   }
 
-  QueryBuilder<ScheduleDay, String, QQueryOperations> dayNameProperty() {
+  QueryBuilder<ScheduleDay, String?, QQueryOperations> descriptionProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'dayName');
+      return query.addPropertyName(r'description');
+    });
+  }
+
+  QueryBuilder<ScheduleDay, String, QQueryOperations> nameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<ScheduleDay, String?, QQueryOperations> startTimeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'startTime');
     });
   }
 }

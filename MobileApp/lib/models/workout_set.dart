@@ -1,67 +1,53 @@
-import 'package:workout_app/models/constants.dart';
-
 abstract class WorkoutSet {
   int id;
+  String? description;
   double? restTime;
-  SetType setType;
+  bool isBodyWeight = false;
 
   WorkoutSet({
     required this.id,
+    this.description,
     this.restTime,
-    required this.setType,
+    this.isBodyWeight = false,
   });
 }
 
 class TimedSet extends WorkoutSet {
   double duration;
-  double weight;
+  double? weight;
 
   TimedSet({
-    required super.setType,
     required super.id,
+    super.description,
     super.restTime,
+    super.isBodyWeight = false,
     required this.duration,
-    required this.weight,
+    this.weight,
   });
 }
 
-class WeightedSet extends WorkoutSet {
+class RepsSet extends WorkoutSet {
   double weight;
-  int? reps;
+  int? reps; // null indicates to failure
 
-  WeightedSet({
-    required super.setType,
+  RepsSet({
     required super.id,
+    super.description,
     super.restTime,
+    super.isBodyWeight = false,
     required this.weight,
     this.reps,
   });
 }
 
 class DropSet extends WorkoutSet {
-  List<int> reps;
-  List<double> weights;
+  Map<double, int?> weightRepsMap;
 
   DropSet({
-    required super.setType,
     required super.id,
+    super.description,
     super.restTime,
-    required this.reps,
-    required this.weights,
-  });
-}
-
-class SuperSet extends WorkoutSet {
-  List<int> exercises;
-  List<int> reps;
-  List<double> weights;
-
-  SuperSet({
-    required super.setType,
-    required super.id,
-    super.restTime,
-    required this.exercises,
-    required this.reps,
-    required this.weights,
+    super.isBodyWeight = false,
+    required this.weightRepsMap,
   });
 }

@@ -7,8 +7,10 @@ part 'schedule_day.g.dart';
 class ScheduleDay {
   Id id = Isar.autoIncrement;
 
-  late String dayName;
+  late String name;
+  String? description;
   
+  String? startTime;
   double? calorieGoal; // Nullable - if null, use user's maintenance calories
 
   final workouts = IsarLinks<Workout>();

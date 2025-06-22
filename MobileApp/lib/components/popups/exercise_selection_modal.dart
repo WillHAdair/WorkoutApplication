@@ -45,12 +45,10 @@ class _ExerciseSelectionModalState extends State<ExerciseSelectionModal> {
         _filteredExercises = widget.availableExercises.where((exercise) {
           final name = exercise.name.toLowerCase();
           final description = exercise.description?.toLowerCase() ?? '';
-          final type = exercise.exerciseType.name.toLowerCase();
           final searchLower = query.toLowerCase();
           
           return name.contains(searchLower) ||
-                 description.contains(searchLower) ||
-                 type.contains(searchLower);
+                 description.contains(searchLower);
         }).toList();
       }
     });
@@ -219,13 +217,6 @@ class _ExerciseSelectionModalState extends State<ExerciseSelectionModal> {
                                   style: TextStyle(
                                     color: themeProvider.getTextColor(),
                                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  exercise.description ?? 'Type: ${exercise.exerciseType.name}',
-                                  style: TextStyle(
-                                    color: themeProvider.getTextColor().withOpacity(0.7),
-                                    fontSize: 12,
                                   ),
                                 ),
                                 value: isSelected,

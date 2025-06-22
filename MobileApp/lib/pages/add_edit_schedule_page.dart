@@ -44,12 +44,12 @@ class _AddEditSchedulePageState extends State<AddEditSchedulePage> {
   void _loadMockWorkouts() {
     // Mock data for testing
     _availableWorkouts = [
-      Workout(id: 1, name: 'Bench Press', exercises: []),
-      Workout(id: 2, name: 'Incline Dumbbell Press', exercises: []),
-      Workout(id: 3, name: 'Deadlift', exercises: []),
-      Workout(id: 4, name: 'Squats', exercises: []),
-      Workout(id: 5, name: 'Pull-ups', exercises: []),
-      Workout(id: 6, name: 'Barbell Rows', exercises: []),
+      ExercisesWorkout(id: 1, name: 'Bench Press', exercises: []),
+      ExercisesWorkout(id: 2, name: 'Incline Dumbbell Press', exercises: []),
+      ExercisesWorkout(id: 3, name: 'Deadlift', exercises: []),
+      ExercisesWorkout(id: 4, name: 'Squats', exercises: []),
+      ExercisesWorkout(id: 5, name: 'Pull-ups', exercises: []),
+      ExercisesWorkout(id: 6, name: 'Barbell Rows', exercises: []),
     ];
   }
 

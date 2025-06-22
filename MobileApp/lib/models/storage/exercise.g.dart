@@ -33,13 +33,18 @@ const ExerciseSchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'time': PropertySchema(
+    r'restTime': PropertySchema(
       id: 3,
+      name: r'restTime',
+      type: IsarType.double,
+    ),
+    r'time': PropertySchema(
+      id: 4,
       name: r'time',
       type: IsarType.double,
     ),
     r'weight': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'weight',
       type: IsarType.double,
     )
@@ -55,6 +60,12 @@ const ExerciseSchema = CollectionSchema(
       id: 4019409876189925903,
       name: r'workoutSets',
       target: r'WorkoutSet',
+      single: false,
+    ),
+    r'exercises': LinkSchema(
+      id: -145717134944662888,
+      name: r'exercises',
+      target: r'Exercise',
       single: false,
     )
   },
@@ -90,8 +101,9 @@ void _exerciseSerialize(
   writer.writeString(offsets[0], object.description);
   writer.writeByte(offsets[1], object.exerciseType.index);
   writer.writeString(offsets[2], object.name);
-  writer.writeDouble(offsets[3], object.time);
-  writer.writeDouble(offsets[4], object.weight);
+  writer.writeDouble(offsets[3], object.restTime);
+  writer.writeDouble(offsets[4], object.time);
+  writer.writeDouble(offsets[5], object.weight);
 }
 
 Exercise _exerciseDeserialize(
@@ -104,11 +116,12 @@ Exercise _exerciseDeserialize(
   object.description = reader.readStringOrNull(offsets[0]);
   object.exerciseType =
       _ExerciseexerciseTypeValueEnumMap[reader.readByteOrNull(offsets[1])] ??
-          ExerciseType.sets;
+          ExerciseType.continual;
   object.id = id;
   object.name = reader.readString(offsets[2]);
-  object.time = reader.readDoubleOrNull(offsets[3]);
-  object.weight = reader.readDoubleOrNull(offsets[4]);
+  object.restTime = reader.readDoubleOrNull(offsets[3]);
+  object.time = reader.readDoubleOrNull(offsets[4]);
+  object.weight = reader.readDoubleOrNull(offsets[5]);
   return object;
 }
 
@@ -124,12 +137,14 @@ P _exerciseDeserializeProp<P>(
     case 1:
       return (_ExerciseexerciseTypeValueEnumMap[
               reader.readByteOrNull(offset)] ??
-          ExerciseType.sets) as P;
+          ExerciseType.continual) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
       return (reader.readDoubleOrNull(offset)) as P;
     case 4:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 5:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -137,12 +152,14 @@ P _exerciseDeserializeProp<P>(
 }
 
 const _ExerciseexerciseTypeEnumValueMap = {
-  'sets': 0,
-  'continual': 1,
+  'continual': 0,
+  'sets': 1,
+  'circuit': 2,
 };
 const _ExerciseexerciseTypeValueEnumMap = {
-  0: ExerciseType.sets,
-  1: ExerciseType.continual,
+  0: ExerciseType.continual,
+  1: ExerciseType.sets,
+  2: ExerciseType.circuit,
 };
 
 Id _exerciseGetId(Exercise object) {
@@ -150,13 +167,15 @@ Id _exerciseGetId(Exercise object) {
 }
 
 List<IsarLinkBase<dynamic>> _exerciseGetLinks(Exercise object) {
-  return [object.workoutSets];
+  return [object.workoutSets, object.exercises];
 }
 
 void _exerciseAttach(IsarCollection<dynamic> col, Id id, Exercise object) {
   object.id = id;
   object.workoutSets
       .attach(col, col.isar.collection<WorkoutSet>(), r'workoutSets', id);
+  object.exercises
+      .attach(col, col.isar.collection<Exercise>(), r'exercises', id);
 }
 
 extension ExerciseQueryWhereSort on QueryBuilder<Exercise, Exercise, QWhere> {
@@ -621,6 +640,84 @@ extension ExerciseQueryFilter
     });
   }
 
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> restTimeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'restTime',
+      ));
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> restTimeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'restTime',
+      ));
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> restTimeEqualTo(
+    double? value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'restTime',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> restTimeGreaterThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'restTime',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> restTimeLessThan(
+    double? value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'restTime',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> restTimeBetween(
+    double? lower,
+    double? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'restTime',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
   QueryBuilder<Exercise, Exercise, QAfterFilterCondition> timeIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -842,6 +939,66 @@ extension ExerciseQueryLinks
           r'workoutSets', lower, includeLower, upper, includeUpper);
     });
   }
+
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> exercises(
+      FilterQuery<Exercise> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'exercises');
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition>
+      exercisesLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'exercises', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition> exercisesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'exercises', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition>
+      exercisesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'exercises', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition>
+      exercisesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'exercises', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition>
+      exercisesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'exercises', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterFilterCondition>
+      exercisesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'exercises', lower, includeLower, upper, includeUpper);
+    });
+  }
 }
 
 extension ExerciseQuerySortBy on QueryBuilder<Exercise, Exercise, QSortBy> {
@@ -878,6 +1035,18 @@ extension ExerciseQuerySortBy on QueryBuilder<Exercise, Exercise, QSortBy> {
   QueryBuilder<Exercise, Exercise, QAfterSortBy> sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterSortBy> sortByRestTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'restTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterSortBy> sortByRestTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'restTime', Sort.desc);
     });
   }
 
@@ -956,6 +1125,18 @@ extension ExerciseQuerySortThenBy
     });
   }
 
+  QueryBuilder<Exercise, Exercise, QAfterSortBy> thenByRestTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'restTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Exercise, Exercise, QAfterSortBy> thenByRestTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'restTime', Sort.desc);
+    });
+  }
+
   QueryBuilder<Exercise, Exercise, QAfterSortBy> thenByTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'time', Sort.asc);
@@ -1003,6 +1184,12 @@ extension ExerciseQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Exercise, Exercise, QDistinct> distinctByRestTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'restTime');
+    });
+  }
+
   QueryBuilder<Exercise, Exercise, QDistinct> distinctByTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'time');
@@ -1040,6 +1227,12 @@ extension ExerciseQueryProperty
   QueryBuilder<Exercise, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<Exercise, double?, QQueryOperations> restTimeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'restTime');
     });
   }
 

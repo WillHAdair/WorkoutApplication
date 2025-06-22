@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
-import 'package:workout_app/models/storage/calorie_tracking.dart';
 import 'package:workout_app/models/storage/exercise.dart';
+import 'package:workout_app/models/storage/past_schedule_day.dart';
 import 'package:workout_app/models/storage/schedule_day.dart';
 import 'package:workout_app/models/storage/user_profile.dart';
 import 'package:workout_app/models/storage/workout.dart';
@@ -23,10 +23,10 @@ void main() async {
     WorkoutScheduleSchema,
     ScheduleDaySchema,
     WorkoutSchema,
+    PastScheduleDaySchema,
     ExerciseSchema,
     WorkoutSetSchema,
     UserProfileSchema,
-    CalorieTrackingSchema,
     SettingsSchema,
   ]);
   debugPaintSizeEnabled = false;

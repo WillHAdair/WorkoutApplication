@@ -13,8 +13,12 @@ class Exercise {
 
   @enumerated
   late ExerciseType exerciseType;
+  double? restTime;
 
   double? time;
   double? weight;
+
   final workoutSets = IsarLinks<WorkoutSet>();
+  
+  final exercises = IsarLinks<Exercise>();
 }

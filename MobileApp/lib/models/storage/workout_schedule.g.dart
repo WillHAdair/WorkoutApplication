@@ -55,12 +55,6 @@ const WorkoutScheduleSchema = CollectionSchema(
       name: r'days',
       target: r'ScheduleDay',
       single: false,
-    ),
-    r'calorieTracking': LinkSchema(
-      id: 4895167914533568297,
-      name: r'calorieTracking',
-      target: r'CalorieTracking',
-      single: true,
     )
   },
   embeddedSchemas: {},
@@ -142,15 +136,13 @@ Id _workoutScheduleGetId(WorkoutSchedule object) {
 }
 
 List<IsarLinkBase<dynamic>> _workoutScheduleGetLinks(WorkoutSchedule object) {
-  return [object.days, object.calorieTracking];
+  return [object.days];
 }
 
 void _workoutScheduleAttach(
     IsarCollection<dynamic> col, Id id, WorkoutSchedule object) {
   object.id = id;
   object.days.attach(col, col.isar.collection<ScheduleDay>(), r'days', id);
-  object.calorieTracking.attach(
-      col, col.isar.collection<CalorieTracking>(), r'calorieTracking', id);
 }
 
 extension WorkoutScheduleQueryWhereSort
@@ -785,20 +777,6 @@ extension WorkoutScheduleQueryLinks
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
           r'days', lower, includeLower, upper, includeUpper);
-    });
-  }
-
-  QueryBuilder<WorkoutSchedule, WorkoutSchedule, QAfterFilterCondition>
-      calorieTracking(FilterQuery<CalorieTracking> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'calorieTracking');
-    });
-  }
-
-  QueryBuilder<WorkoutSchedule, WorkoutSchedule, QAfterFilterCondition>
-      calorieTrackingIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'calorieTracking', 0, true, 0, true);
     });
   }
 }
