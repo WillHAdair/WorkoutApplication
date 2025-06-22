@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/pages/add_edit_schedule_page.dart';
 import 'package:workout_app/components/text_divider.dart';
-import 'package:workout_app/components/workout_schedule_card.dart';
+import 'package:workout_app/components/cards/workout_schedule_card.dart';
 import 'package:workout_app/models/schedule_day.dart';
 import 'package:workout_app/models/workout.dart';
 import 'package:workout_app/models/workout_schedule.dart';
