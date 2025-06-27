@@ -2,6 +2,10 @@ enum ImageIcons {
   dumbell,
   bodyWeight,
   timed,
+  dropset,
+  superset,
+  bed,
+  calendar,
 }
 
 enum NutritionIcons {
@@ -48,6 +52,10 @@ const Map<ImageIcons, String> imageIconPaths = {
   ImageIcons.dumbell: 'lib/images/icons/dumbell.png',
   ImageIcons.bodyWeight: 'lib/images/icons/bodyweight.png',
   ImageIcons.timed: 'lib/images/icons/timed.png',
+  ImageIcons.dropset: 'lib/images/icons/dropset.png',
+  ImageIcons.superset: 'lib/images/icons/superset.png',
+  ImageIcons.bed: 'lib/images/icons/bed.png',
+  ImageIcons.calendar: 'lib/images/icons/calendar.png',
 };
 
 const Map<NutritionIcons, String> nutritionIconPaths = {

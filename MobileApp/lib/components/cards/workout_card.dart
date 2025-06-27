@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:workout_app/models/workout.dart';
+import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/utils/themes.dart';
 
 class WorkoutCard extends StatelessWidget {
@@ -20,15 +21,17 @@ class WorkoutCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
-    // Determine icon and description based on workout type
-    IconData workoutIcon;
+    // Determine image icon and description based on workout type
+    ImageIcons workoutImageIcon;
     String workoutDescription;
 
     if (workout is ExercisesWorkout) {
-      workoutIcon = Icons.fitness_center_rounded;
+      // Use your exercises workout image icon
+      workoutImageIcon = ImageIcons.dumbell; // Replace with your actual enum value
       workoutDescription = workout.description ?? 'No description';
     } else if (workout is TimedWorkout) {
-      workoutIcon = Icons.timer;
+      // Use your timed workout image icon
+      workoutImageIcon = ImageIcons.timed; // Replace with your actual enum value
       final timedWorkout = workout as TimedWorkout;
 
       // Format duration
@@ -43,10 +46,11 @@ class WorkoutCard extends StatelessWidget {
       }
 
       workoutDescription = workout.description?.isNotEmpty == true
-          ? workout.description!
+          ? workout.description!  // Use provided description if available
           : description;
     } else {
-      workoutIcon = Icons.fitness_center_rounded;
+      // Fallback image icon
+      workoutImageIcon = ImageIcons.dumbell; // Replace with your default enum value
       workoutDescription = workout.description ?? 'Unknown workout type';
     }
 
@@ -96,14 +100,22 @@ class WorkoutCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  // Icon (below title, left-aligned) - changes based on workout type
+                  // Custom Image Icon (below title, left-aligned)
                   Positioned(
                     left: 0,
                     top: iconTop,
-                    child: Icon(
-                      workoutIcon,
-                      size: iconSize,
-                      color: themeProvider.getTextColor(),
+                    child: SizedBox(
+                      height: iconSize,
+                      width: iconSize,
+                      child: Image.asset(
+                        imageIconPaths[workoutImageIcon]!,
+                        height: iconSize,
+                        width: iconSize,
+                        fit: BoxFit.contain,
+                        // Optional: Add color filter to match theme
+                        color: themeProvider.getTextColor(),
+                        colorBlendMode: BlendMode.srcIn,
+                      ),
                     ),
                   ),
                   // Description text (vertically centered to icon)

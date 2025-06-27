@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
+import 'package:workout_app/models/constants.dart';
 import 'package:workout_app/models/schedule_day.dart';
 import 'package:workout_app/models/workout_schedule.dart';
 import 'package:workout_app/pages/add_edit_schedule_page.dart';
@@ -40,6 +41,15 @@ class WorkoutScheduleCard extends StatelessWidget {
             : todayScheduleDay.workouts.isEmpty
                 ? 'Rest Day'
                 : todayScheduleDay.workouts.first.name;
+
+    ImageIcons workoutImageIcon;
+    if (todayWorkout == 'Rest Day') {
+      workoutImageIcon = ImageIcons.bed;
+    } else if (todayWorkout == 'No schedule for today') {
+      workoutImageIcon = ImageIcons.calendar;
+    } else {
+      workoutImageIcon = ImageIcons.dumbell;
+    }
 
     return Padding(
       padding: const EdgeInsets.all(10),
@@ -87,11 +97,23 @@ class WorkoutScheduleCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  // Icon (below title, left-aligned)
+                  // Custom Image Icon (below title, left-aligned)
                   Positioned(
                     left: 0,
                     top: iconTop,
-                    child: Icon(todayWorkout == 'Rest Day' ? Icons.bed : Icons.fitness_center_rounded, size: iconSize, color: themeProvider.getTextColor()),
+                    child: SizedBox(
+                      height: iconSize,
+                      width: iconSize,
+                      child: Image.asset(
+                        imageIconPaths[workoutImageIcon]!,
+                        height: iconSize,
+                        width: iconSize,
+                        fit: BoxFit.contain,
+                        // Optional: Add color filter to match theme
+                        color: themeProvider.getTextColor(),
+                        colorBlendMode: BlendMode.srcIn,
+                      ),
+                    ),
                   ),
                   // Workout text (vertically centered to icon)
                   Positioned(
@@ -107,7 +129,8 @@ class WorkoutScheduleCard extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  ),                  // Chevron icon button (far right, vertically centered)
+                  ),
+                  // Edit icon button (far right, vertically centered)
                   Positioned(
                     right: 0,
                     top: (constraints.maxHeight - 36) / 2,

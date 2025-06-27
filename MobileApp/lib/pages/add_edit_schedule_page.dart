@@ -25,7 +25,8 @@ class _AddEditSchedulePageState extends State<AddEditSchedulePage> {
   @override
   void initState() {
     super.initState();
-    _loadMockWorkouts();    if (widget.schedule != null) {
+    _loadMockWorkouts();
+    if (widget.schedule != null) {
       _schedule = widget.schedule!;
       _endDate = widget.schedule!.endDate;
     } else {
@@ -115,7 +116,7 @@ class _AddEditSchedulePageState extends State<AddEditSchedulePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextDivider(text: 'Schedule Name', icon: Icons.badge),
+                    TextDivider(text: 'Basic Details', icon: Icons.badge),
                     // Schedule Name (required)
                     TextFormField(
                       initialValue: _schedule.name,
@@ -127,8 +128,8 @@ class _AddEditSchedulePageState extends State<AddEditSchedulePage> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
-                            color: themeProvider.getTextColor().withOpacity(
-                              0.3,
+                            color: themeProvider.getTextColor().withAlpha(
+                              (0.3 * 255).toInt(),
                             ),
                           ),
                         ),
@@ -149,6 +150,39 @@ class _AddEditSchedulePageState extends State<AddEditSchedulePage> {
                       onChanged:
                           (value) =>
                               _schedule = _schedule.copyWith(name: value),
+                    ),
+                    const SizedBox(height: 24),
+                    // Description (optional)
+                    TextFormField(
+                      initialValue: _schedule.description,
+                      style: TextStyle(color: themeProvider.getTextColor()),
+                      decoration: InputDecoration(
+                        labelText: 'Description (optional)',
+                        labelStyle: TextStyle(
+                          color: themeProvider.getTextColor(),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: themeProvider.getTextColor().withAlpha(
+                              (0.3 * 255).toInt(),
+                            ),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: themeProvider.primaryColor,
+                          ),
+                        ),
+                      ),
+                      maxLines: 3,
+                      onSaved: (value) =>
+                          _schedule = _schedule.copyWith(
+                            description: value?.isEmpty == true ? null : value,
+                          ),
+                      onChanged: (value) =>
+                          _schedule = _schedule.copyWith(
+                            description: value.isEmpty ? null : value,
+                          ),
                     ),
                     const SizedBox(height: 24), // Schedule Dates
                     Column(

@@ -474,6 +474,7 @@ project.lock.json
 # UWP Projects
 AppPackages/
 
+.flutter-plugins-dependencies
 #####
 # End of core ignore list, below put you custom 'per project' settings (patterns or path)
 #####

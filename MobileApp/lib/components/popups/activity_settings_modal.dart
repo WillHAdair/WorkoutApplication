@@ -69,65 +69,78 @@ class _ActivitySettingsModalState extends State<ActivitySettingsModal> {
                   },
                 ),
                 const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Text(
-                      'Heatmap Display',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    InfoMessageButton(
-                      message:
-                          "This setting allows you to choose what is shown on the heatmap and customize how you want to visualize your activity.",
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    decoration: BoxDecoration(
-                      color: themeProvider.getDropdownBackgroundColor(),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: DropdownButton<String>(
-                      value: selectedOption,
-                      icon: Icon(
-                        Icons.arrow_drop_down,
-                        color: themeProvider.getTextColor(),
-                      ),
-                      iconSize: 24,
-                      elevation: 16,
-                      style: TextStyle(color: themeProvider.getTextColor()),
-                      dropdownColor: themeProvider.getDropdownBackgroundColor(),
-                      underline: const SizedBox(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedOption = newValue!;
-                        });
-                      },
-                      items: <String>[
-                        'Workouts Completed',
-                        'Exercises Completed',
-                        'Calorie Goals Met',
-                        'Workouts and Calories',
-                      ].map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: themeProvider.getDropdownBackgroundColor(),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: themeProvider.getTextColor().withAlpha(
+                                (0.3 * 255).toInt(),
+                              ),
+                              width: 1,
+                            ),
+                          ),
+                          child: DropdownButtonFormField<String>(
+                            value: selectedOption,
+                            decoration: InputDecoration(
+                              labelText: 'Heatmap Display',
+                              labelStyle: TextStyle(
+                                color: themeProvider.getTextColor().withAlpha(
+                                  (0.7 * 255).toInt(),
+                                ),
+                                fontSize: 16,
+                              ),
+                              border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                            ),
+                            icon: Icon(
+                              Icons.arrow_drop_down,
+                              color: themeProvider.getTextColor(),
+                            ),
+                            iconSize: 24,
+                            elevation: 16,
                             style: TextStyle(
                               color: themeProvider.getTextColor(),
                             ),
+                            dropdownColor:
+                                themeProvider.getDropdownBackgroundColor(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedOption = newValue!;
+                              });
+                            },
+                            items:
+                                <String>[
+                                  'Workouts Completed',
+                                  'Exercises Completed',
+                                  'Calorie Goals Met',
+                                  'Workouts and Calories',
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                      style: TextStyle(
+                                        color: themeProvider.getTextColor(),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
                           ),
-                        );
-                      }).toList(),
-                    ),
+                        ),
+                      ),
+                      InfoMessageButton(
+                        message:
+                            "This setting allows you to choose what is shown on the heatmap and customize how you want to visualize your activity.",
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -138,8 +151,7 @@ class _ActivitySettingsModalState extends State<ActivitySettingsModal> {
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          themeProvider.primaryColor,
+                      backgroundColor: themeProvider.primaryColor,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 40,
                         vertical: 15,

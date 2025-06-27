@@ -88,17 +88,17 @@ class _WorkoutSelectionModalState extends State<WorkoutSelectionModal> {
                   decoration: InputDecoration(
                     hintText: 'Search workouts...',
                     hintStyle: TextStyle(
-                      color: themeProvider.getTextColor().withOpacity(0.5),
+                      color: themeProvider.getTextColor().withAlpha((0.5 * 255).toInt()),
                     ),
                     prefixIcon: Icon(
                       Icons.search,
-                      color: themeProvider.getTextColor().withOpacity(0.7),
+                      color: themeProvider.getTextColor().withAlpha((0.7 * 255).toInt()),
                     ),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
                             icon: Icon(
                               Icons.clear,
-                              color: themeProvider.getTextColor().withOpacity(0.7),
+                              color: themeProvider.getTextColor().withAlpha((0.7 * 255).toInt()),
                             ),
                             onPressed: () {
                               _searchController.clear();
@@ -108,7 +108,7 @@ class _WorkoutSelectionModalState extends State<WorkoutSelectionModal> {
                         : null,
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: themeProvider.getTextColor().withOpacity(0.3),
+                        color: themeProvider.getTextColor().withAlpha((0.3 * 255).toInt()),
                       ),
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -125,7 +125,7 @@ class _WorkoutSelectionModalState extends State<WorkoutSelectionModal> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
-                    color: themeProvider.primaryColor.withOpacity(0.1),
+                    color: themeProvider.primaryColor.withAlpha((0.1 * 255).toInt()),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Row(
@@ -162,7 +162,7 @@ class _WorkoutSelectionModalState extends State<WorkoutSelectionModal> {
                               Icon(
                                 _searchQuery.isNotEmpty ? Icons.search_off : Icons.fitness_center,
                                 size: 48,
-                                color: themeProvider.getTextColor().withOpacity(0.3),
+                                color: themeProvider.getTextColor().withAlpha((0.3 * 255).toInt()),
                               ),
                               const SizedBox(height: 12),
                               Text(
@@ -171,7 +171,7 @@ class _WorkoutSelectionModalState extends State<WorkoutSelectionModal> {
                                     : 'No workouts available',
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: themeProvider.getTextColor().withOpacity(0.6),
+                                  color: themeProvider.getTextColor().withAlpha((0.6 * 255).toInt()),
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -203,13 +203,13 @@ class _WorkoutSelectionModalState extends State<WorkoutSelectionModal> {
                               margin: const EdgeInsets.only(bottom: 8),
                               decoration: BoxDecoration(
                                 color: isSelected 
-                                    ? themeProvider.primaryColor.withOpacity(0.1)
+                                    ? themeProvider.primaryColor.withAlpha((0.1 * 255).toInt())
                                     : themeProvider.getButtonBackground(),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
                                   color: isSelected 
                                       ? themeProvider.primaryColor
-                                      : themeProvider.getTextColor().withOpacity(0.2),
+                                      : themeProvider.getTextColor().withAlpha((0.2 * 255).toInt()),
                                   width: isSelected ? 2 : 1,
                                 ),
                               ),
@@ -228,14 +228,14 @@ class _WorkoutSelectionModalState extends State<WorkoutSelectionModal> {
                                       Text(
                                         workout.description!,
                                         style: TextStyle(
-                                          color: themeProvider.getTextColor().withOpacity(0.7),
+                                          color: themeProvider.getTextColor().withAlpha((0.5 * 255).toInt()),
                                           fontSize: 12,
                                         ),
                                       ),
                                     Text(
                                       '${(workout as ExercisesWorkout).exercises.length} exercise${workout.exercises.length == 1 ? '' : 's'}',
                                       style: TextStyle(
-                                        color: themeProvider.getTextColor().withOpacity(0.5),
+                                        color: themeProvider.getTextColor().withAlpha((0.5 * 255).toInt()),
                                         fontSize: 11,
                                         fontStyle: FontStyle.italic,
                                       ),

@@ -66,7 +66,13 @@ class _DurationPickerModalState extends State<DurationPickerModal> {
                   children: [
                     Column(
                       children: [
-                        const Text('Hours'),
+                        Text(
+                          'Hours',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: themeProvider.getTextColor(),
+                          ),
+                        ),
                         SizedBox(
                           height: 150,
                           width: 60,
@@ -88,7 +94,10 @@ class _DurationPickerModalState extends State<DurationPickerModal> {
                                   (context, index) => Center(
                                     child: Text(
                                       '$index',
-                                      style: const TextStyle(fontSize: 18),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: themeProvider.getTextColor(),
+                                      ),
                                     ),
                                   ),
                               childCount: 6, // 0-5 hours
@@ -99,7 +108,13 @@ class _DurationPickerModalState extends State<DurationPickerModal> {
                     ),
                     Column(
                       children: [
-                        const Text('Minutes'),
+                        Text(
+                          'Minutes',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: themeProvider.getTextColor(),
+                          ),
+                        ),
                         SizedBox(
                           height: 150,
                           width: 60,
@@ -118,7 +133,10 @@ class _DurationPickerModalState extends State<DurationPickerModal> {
                                   (context, index) => Center(
                                     child: Text(
                                       '$index',
-                                      style: const TextStyle(fontSize: 18),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: themeProvider.getTextColor(),
+                                      ),
                                     ),
                                   ),
                               childCount: 60, // 0-59 minutes
@@ -129,7 +147,13 @@ class _DurationPickerModalState extends State<DurationPickerModal> {
                     ),
                     Column(
                       children: [
-                        const Text('Seconds'),
+                        Text(
+                          'Seconds',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: themeProvider.getTextColor(),
+                          ),
+                        ),
                         SizedBox(
                           height: 150,
                           width: 60,
@@ -148,7 +172,10 @@ class _DurationPickerModalState extends State<DurationPickerModal> {
                                   (context, index) => Center(
                                     child: Text(
                                       '$index',
-                                      style: const TextStyle(fontSize: 18),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: themeProvider.getTextColor(),
+                                      ),
                                     ),
                                   ),
                               childCount: 60, // 0-59 seconds
@@ -159,14 +186,18 @@ class _DurationPickerModalState extends State<DurationPickerModal> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                Text(
-                  'Selected: ${_formatDuration(hours, minutes, seconds)}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                const SizedBox(height: 20),
+                Center(
+                  child: Text(
+                    'Selected: ${_formatDuration(hours, minutes, seconds)}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: themeProvider.getTextColor(),
+                    ),
                   ),
                 ),
+
                 const SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(

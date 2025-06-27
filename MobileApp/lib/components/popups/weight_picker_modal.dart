@@ -76,13 +76,17 @@ class _WeightPickerModalState extends State<WeightPickerModal> {
                   },
                 ),
                 const SizedBox(height: 16),
-                Text(
-                  '${currentWeight.toStringAsFixed(1)} ${widget.unit}',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                Center(
+                  child: Text(
+                    '${currentWeight.toStringAsFixed(1)} ${widget.unit}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: themeProvider.getTextColor(),
+                    ),
                   ),
                 ),
+
                 const SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(
@@ -91,8 +95,7 @@ class _WeightPickerModalState extends State<WeightPickerModal> {
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          themeProvider.primaryColor,
+                      backgroundColor: themeProvider.primaryColor,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 40,
                         vertical: 15,
@@ -127,7 +130,7 @@ class _WeightPickerModalState extends State<WeightPickerModal> {
                 color: themeProvider.closeButton,
               ),
             ),
-          )
+          ),
         ],
       ),
     );

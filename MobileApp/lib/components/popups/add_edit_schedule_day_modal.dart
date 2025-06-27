@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workout_app/models/constants.dart';
+import 'package:workout_app/models/exercise.dart';
 import 'package:workout_app/models/schedule_day.dart';
 import 'package:workout_app/models/workout.dart';
 import 'package:workout_app/utils/themes.dart';
 import 'package:workout_app/components/popups/workout_selection_modal.dart';
+import 'package:workout_app/pages/add_edit_workout_page.dart';
 
 class AddEditScheduleDayModal extends StatefulWidget {
   final ScheduleDay? scheduleDay;
@@ -71,6 +74,77 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
     }
   }
 
+  Future<void> _addNewWorkout() async {
+    final result = await Navigator.of(context).push<Workout>(
+      MaterialPageRoute(
+        builder: (context) => AddEditWorkoutPage(
+          availableExercises: _getAvailableExercises(),
+        ),
+      ),
+    );
+    
+    if (result != null && mounted) {
+      setState(() {
+        // Add the new workout to selected workouts
+        _selectedWorkouts.add(result);
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Added workout "${result.name}"')),
+      );
+    }
+  }
+
+  List<Exercise> _getAvailableExercises() {
+    final Set<Exercise> exercises = {};
+    for (final workout in widget.availableWorkouts) {
+      if (workout is ExercisesWorkout) {
+        exercises.addAll(workout.exercises);
+      }
+    }
+    
+    if (exercises.isEmpty) {
+      return [
+        ContinualExercise(id: 101, name: 'Push-ups', description: 'Bodyweight chest exercise', time: 0),
+        ContinualExercise(id: 102, name: 'Squats', description: 'Lower body exercise', time: 0),
+        ContinualExercise(id: 103, name: 'Plank', description: 'Core exercise', time: 60),
+      ];
+    }
+    
+    return exercises.toList();
+  }
+
+  String _getWorkoutTypeDescription(Workout workout) {
+    if (workout is ExercisesWorkout) {
+      final exerciseCount = workout.exercises.length;
+      return '$exerciseCount exercise${exerciseCount == 1 ? '' : 's'}';
+    } else if (workout is TimedWorkout) {
+      final minutes = workout.duration ~/ 60;
+      final seconds = workout.duration % 60;
+      final durationText = '${minutes}:${seconds.toString().padLeft(2, '0')}';
+      String description = 'Timed workout ($durationText)';
+      if (workout.weight != null && workout.weight! > 0) {
+        description += ' • ${workout.weight!.toStringAsFixed(1)} lbs';
+      }
+      return description;
+    }
+    return 'Unknown workout type';
+  }
+
+  ImageIcons _getWorkoutIcon(Workout workout) {
+    if (workout is ExercisesWorkout) {
+      return ImageIcons.dumbell;
+    } else if (workout is TimedWorkout) {
+      final timedWorkout = workout;
+      if (timedWorkout.weight != null && timedWorkout.weight! > 0) {
+        return ImageIcons.dumbell;
+      } else {
+        return ImageIcons.timed;
+      }
+    }
+    return ImageIcons.dumbell;
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -111,7 +185,7 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
                       labelStyle: TextStyle(color: themeProvider.getTextColor()),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: themeProvider.getTextColor().withOpacity(0.3),
+                          color: themeProvider.getTextColor().withAlpha((0.3 * 2.55).toInt()),
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -136,12 +210,12 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
                       hintText: 'Leave empty to use maintenance calories',
                       labelStyle: TextStyle(color: themeProvider.getTextColor()),
                       hintStyle: TextStyle(
-                        color: themeProvider.getTextColor().withOpacity(0.5),
+                        color: themeProvider.getTextColor().withAlpha((0.5 * 2.55).toInt()),
                         fontSize: 12,
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: themeProvider.getTextColor().withOpacity(0.3),
+                          color: themeProvider.getTextColor().withAlpha((0.3 * 2.55).toInt()),
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -171,16 +245,9 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
                   ),
                   const SizedBox(height: 12),
                   
-                  // Add New Workout Button (placeholder)
+                  // Add New Workout Button (now functional)
                   OutlinedButton.icon(
-                    onPressed: () {
-                      // TODO: Add functionality later
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Add new workout functionality coming soon!'),
-                        ),
-                      );
-                    },
+                    onPressed: _addNewWorkout, // Updated to call the new method
                     icon: Icon(Icons.add, color: themeProvider.primaryColor),
                     label: Text(
                       'Add New Workout',
@@ -221,10 +288,24 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
                       itemCount: _selectedWorkouts.length,
                       itemBuilder: (context, index) {
                         final workout = _selectedWorkouts[index];
+                        final workoutIcon = _getWorkoutIcon(workout);
+                        
                         return Card(
                           margin: const EdgeInsets.only(bottom: 8),
                           color: themeProvider.getButtonBackground(),
                           child: ListTile(
+                            leading: SizedBox(
+                              height: 32.0,
+                              width: 32.0,
+                              child: Image.asset(
+                                imageIconPaths[workoutIcon]!,
+                                height: 32.0,
+                                width: 32.0,
+                                fit: BoxFit.contain,
+                                color: themeProvider.getTextColor(),
+                                colorBlendMode: BlendMode.srcIn,
+                              ),
+                            ),
                             title: Text(
                               workout.name,
                               style: TextStyle(
@@ -239,13 +320,13 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
                                   Text(
                                     workout.description!,
                                     style: TextStyle(
-                                      color: themeProvider.getTextColor().withOpacity(0.7),
+                                      color: themeProvider.getTextColor().withAlpha((0.7 * 2.55).toInt()),
                                     ),
                                   ),
                                 Text(
-                                  '${(workout as ExercisesWorkout).exercises.length} exercise${workout.exercises.length == 1 ? '' : 's'}',
+                                  _getWorkoutTypeDescription(workout),
                                   style: TextStyle(
-                                    color: themeProvider.getTextColor().withOpacity(0.5),
+                                    color: themeProvider.getTextColor().withAlpha((0.5 * 2.55).toInt()),
                                     fontSize: 12,
                                     fontStyle: FontStyle.italic,
                                   ),
@@ -272,10 +353,10 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
                       width: double.infinity,
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: themeProvider.getButtonBackground().withOpacity(0.3),
+                        color: themeProvider.getButtonBackground().withAlpha((0.3 * 2.55).toInt()),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: themeProvider.getTextColor().withOpacity(0.2),
+                          color: themeProvider.getTextColor().withAlpha((0.2 * 2.55).toInt()),
                         ),
                       ),
                       child: Column(
@@ -283,14 +364,14 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
                           Icon(
                             Icons.fitness_center,
                             size: 48,
-                            color: themeProvider.getTextColor().withOpacity(0.5),
+                            color: themeProvider.getTextColor().withAlpha((0.5 * 2.55).toInt()),
                           ),
                           const SizedBox(height: 12),
                           Text(
                             'No workouts selected',
                             style: TextStyle(
                               fontSize: 16,
-                              color: themeProvider.getTextColor().withOpacity(0.7),
+                              color: themeProvider.getTextColor().withAlpha((0.7 * 2.55).toInt()),
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -298,7 +379,7 @@ class _AddEditScheduleDayModalState extends State<AddEditScheduleDayModal> {
                             'Add workouts to create a complete schedule day',
                             style: TextStyle(
                               fontSize: 14,
-                              color: themeProvider.getTextColor().withOpacity(0.5),
+                              color: themeProvider.getTextColor().withAlpha((0.5 * 2.55).toInt()),
                             ),
                             textAlign: TextAlign.center,
                           ),
