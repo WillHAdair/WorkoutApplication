@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  sqlite-holder:
+    container_name: sqlite_db
+    build:
+      context: .
+      dockerfile: Dockerfile.sqlite
+    # expose a persistent volume containing the SQLite file at /database
+    volumes:
+      - sqlite_data:/database
+    networks:
+      - workout-network
+    # keep the container alive so the volume exists and can be inspected
+    command: ["tail", "-f", "/dev/null"]
+
+  workout-api:
+    container_name: workout-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8003:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      # EF/ASP.NET Core will read this as ConnectionStrings:DefaultConnection
+      - ConnectionStrings__DefaultConnection=Data Source=/data/workoutapp.db
+    # Mount the same named volume into the API so it can access the DB file
+    volumes:
+      - sqlite_data:/data
+    networks:
+      - workout-network
+    restart: always
+
+volumes:
+  sqlite_data:
+
+networks:
+  workout-network:
+    driver: bridge

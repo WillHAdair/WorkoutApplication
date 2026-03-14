@@ -12,7 +12,7 @@ public enum MeasurementUnit
 /// <summary>
 /// A registered user within the app
 /// </summary>
-public class User : BaseEntity
+public class User : NamedEntity
 {
     public required string Username { get; set; }
     public required string Email { get; set; }

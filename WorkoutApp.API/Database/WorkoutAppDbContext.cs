@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkoutApp.API.Models;
 
-namespace WorkoutApp.API.Migrations;
+namespace WorkoutApp.API.Database;
 
 public class WorkoutAppDbContext : DbContext
 {
