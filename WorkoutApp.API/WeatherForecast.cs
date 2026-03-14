@@ -1,4 +1,4 @@
-namespace WorkoutAPI
+namespace WorkoutApp.API
 {
     public class WeatherForecast
     {
