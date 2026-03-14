@@ -1,4 +1,4 @@
-@WorkoutApp.API_HostAddress = https://localhost:32769
+@WorkoutApp.API_HostAddress = http://localhost:8003
 
 GET {{WorkoutApp.API_HostAddress}}/api/User/
 Accept: application/json

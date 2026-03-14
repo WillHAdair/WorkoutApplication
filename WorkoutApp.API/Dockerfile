@@ -27,4 +27,5 @@ RUN dotnet publish "./WorkoutApp.API.csproj" -c $BUILD_CONFIGURATION -o /app/pub
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+ENV ConnectionStrings__DefaultConnection="Server=host.docker.internal,14333;Database=WorkoutAppDb;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;Encrypt=False"
 ENTRYPOINT ["dotnet", "WorkoutApp.API.dll"]

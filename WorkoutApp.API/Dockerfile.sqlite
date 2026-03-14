@@ -1,5 +1,6 @@
-FROM alpine:3.19
+FROM mcr.microsoft.com/mssql/server:2022-latest
 
-RUN apk add --no-cache sqlite
+ENV ACCEPT_EULA=Y
+ENV MSSQL_PID=Developer
 
-WORKDIR /database
+EXPOSE 1433

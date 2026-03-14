@@ -12,12 +12,12 @@ builder.Services
     .AddSwagger()
     .AddServices();
 
-// Configure EF Core with SQLite. Connection string comes from configuration
+// Configure EF Core with SQL Server. Connection string comes from configuration.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                        ?? builder.Configuration["ConnectionStrings:DefaultConnection"]
-                       ?? "Data Source=workoutapp.db";
+                       ?? "Server=localhost,14333;Database=WorkoutAppDb;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;Encrypt=False";
 builder.Services.AddDbContext<WorkoutAppDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
@@ -33,11 +33,11 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Ensure database is created on startup (creates DB file/tables if missing)
+// Apply pending migrations on startup.
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<WorkoutAppDbContext>();
-    db.Database.EnsureCreated();
+    db.Database.Migrate();
 }
 
 app.Run();

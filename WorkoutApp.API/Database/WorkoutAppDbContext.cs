@@ -21,14 +21,14 @@ public class WorkoutAppDbContext : DbContext
 	{
 		if (!optionsBuilder.IsConfigured)
 		{
-			// Fallback SQLite DB (used when DI/Program.cs hasn't configured the context)
-			optionsBuilder.UseSqlite("Data Source=workoutapp.db");
+			// Fallback SQL Server DB (used when DI/Program.cs hasn't configured the context)
+			optionsBuilder.UseSqlServer("Server=localhost,14333;Database=WorkoutAppDb;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;Encrypt=False");
 		}
 	}
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		// Converters for types SQLite doesn't handle natively
+		// Converters for date/time types used by this model.
 		var dateOnlyConverter = new ValueConverter<DateOnly, DateTime>(
 			d => d.ToDateTime(TimeOnly.MinValue),
 			dt => DateOnly.FromDateTime(dt));
@@ -108,7 +108,7 @@ public class WorkoutAppDbContext : DbContext
 			b.HasMany(s => s.Exercises)
 			 .WithOne()
 			 .HasForeignKey("ParentSuperSetId")
-			 .OnDelete(DeleteBehavior.Cascade);
+			 .OnDelete(DeleteBehavior.NoAction);
 		});
 
 		// Basic user mapping
