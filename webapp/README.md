@@ -1,5 +1,29 @@
 # Welcome to React Router!
 
+## Workout Wireframe Notes
+
+This webapp now includes a beginner-friendly workout wireframe using Material UI and Font Awesome icons.
+
+### Primary Routes
+
+- `/` Today view with multiple scheduled workouts sorted by `timeOfDay`.
+- `/schedules` Calendar-style schedule assignment page.
+- `/workouts` Workout editor with multi-step exercise and reps wizards.
+- `/settings` Global units, notifications, and theme settings.
+
+### UI Stack
+
+- Material UI (`@mui/material`, `@mui/icons-material`)
+- MUI date pickers (`@mui/x-date-pickers`, `dayjs`)
+- Font Awesome (`@fortawesome/react-fontawesome`, solid icons)
+
+### Quick Run
+
+```bash
+npm install
+npm run dev
+```
+
 A modern, production-ready template for building full-stack React applications using React Router.
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)

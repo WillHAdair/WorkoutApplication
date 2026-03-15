@@ -1,4 +1,10 @@
 import {
+  CssBaseline,
+  ThemeProvider,
+  createTheme,
+  responsiveFontSizes,
+} from "@mui/material";
+import {
   isRouteErrorResponse,
   Links,
   Meta,
@@ -6,7 +12,13 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
+import { useMemo } from "react";
 
+import { AppShell } from "./components/app-shell";
+import {
+  AppPreferencesProvider,
+  useAppPreferences,
+} from "./context/app-preferences";
 import type { Route } from "./+types/root";
 import "./app.css";
 
@@ -19,7 +31,7 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+    href: "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap",
   },
 ];
 
@@ -42,7 +54,69 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <AppPreferencesProvider>
+      <AppThemeBoundary>
+        <AppShell>
+          <Outlet />
+        </AppShell>
+      </AppThemeBoundary>
+    </AppPreferencesProvider>
+  );
+}
+
+function AppThemeBoundary({ children }: { children: React.ReactNode }) {
+  const { themeMode } = useAppPreferences();
+
+  const resolvedMode = useMemo(() => {
+    if (themeMode !== "system") {
+      return themeMode;
+    }
+
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      return "dark";
+    }
+
+    return "light";
+  }, [themeMode]);
+
+  const theme = useMemo(
+    () =>
+      responsiveFontSizes(
+        createTheme({
+          palette: {
+            mode: resolvedMode,
+            primary: { main: "#b9511c" },
+            secondary: { main: "#0f6d61" },
+            background: {
+              default: resolvedMode === "dark" ? "#141414" : "#f6f3ee",
+              paper: resolvedMode === "dark" ? "#222" : "#ffffff",
+            },
+          },
+          shape: { borderRadius: 14 },
+          typography: {
+            fontFamily: "'Source Sans 3', sans-serif",
+            h1: { fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700 },
+            h2: { fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700 },
+            h3: { fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700 },
+            h4: { fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700 },
+            h5: { fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700 },
+            h6: { fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700 },
+          },
+        }),
+      ),
+    [resolvedMode],
+  );
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      {children}
+    </ThemeProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
@@ -62,11 +136,11 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
+    <main style={{ margin: "0 auto", maxWidth: 960, padding: "4rem 1rem" }}>
       <h1>{message}</h1>
       <p>{details}</p>
       {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
+        <pre style={{ overflowX: "auto", padding: 16 }}>
           <code>{stack}</code>
         </pre>
       )}
