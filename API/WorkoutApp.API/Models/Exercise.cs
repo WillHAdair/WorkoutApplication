@@ -1,7 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace WorkoutApp.API.Models;
 
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+[JsonDerivedType(typeof(TimedExercise), typeDiscriminator: "timed")]
+[JsonDerivedType(typeof(SetExercise), typeDiscriminator: "set")]
 public abstract class Exercise : NamedEntity
 {
     [Required]
@@ -20,7 +24,7 @@ public class TimedExercise : Exercise
 
 public class SetExercise : Exercise
 {
-    public IEnumerable<Rep> Sets { get; set; } = [];
+    public ICollection<Rep> Sets { get; set; } = new List<Rep>();
 
     public TimeSpan? RestPeriod { get; set; } = null; // Optional rest period between sets 
 }

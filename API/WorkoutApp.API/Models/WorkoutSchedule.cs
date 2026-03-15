@@ -8,5 +8,5 @@ public class WorkoutSchedule : NamedEntity
     public DateOnly StartDate { get; set; }
     public DateOnly? EndDate { get; set; } = null;
 
-    public IEnumerable<ScheduleDay> ScheduleDays { get; set; } = [];
+    public ICollection<ScheduleDay> ScheduleDays { get; set; } = new List<ScheduleDay>();
 }

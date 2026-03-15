@@ -9,6 +9,6 @@ public class ScheduleDay : NamedEntity
     public WorkoutSchedule? WorkoutSchedule { get; set; }
 
     // Empty collection is assumed to mean rest day
-    public IEnumerable<Exercise> Exercises { get; set; } = [];
+    public ICollection<Exercise> Exercises { get; set; } = new List<Exercise>();
 }
 

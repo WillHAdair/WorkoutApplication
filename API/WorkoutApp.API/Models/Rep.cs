@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace WorkoutApp.API.Models;
 
@@ -8,6 +9,10 @@ public enum RepititionMode
     DropSet
 }
 
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+[JsonDerivedType(typeof(TimedRep), typeDiscriminator: "timed")]
+[JsonDerivedType(typeof(CountedRep), typeDiscriminator: "counted")]
+[JsonDerivedType(typeof(SuperSetRep), typeDiscriminator: "superset")]
 public abstract class Rep : NamedEntity 
 {
     [Required]
@@ -33,7 +38,7 @@ public class CountedRep : Rep
 
 public class SuperSetRep : Rep
 {
-    public IEnumerable<Rep> Exercises { get; set; } = [];
+    public ICollection<Rep> Exercises { get; set; } = new List<Rep>();
     [Required]
     public required RepititionMode Mode { get; set; } // To distinguish between supersets (different workouts performed back to back) and drop sets (same workout performed with decreasing weight until failure)
 }
