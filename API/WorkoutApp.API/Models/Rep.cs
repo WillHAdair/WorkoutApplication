@@ -1,4 +1,6 @@
-﻿namespace WorkoutApp.API.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WorkoutApp.API.Models;
 
 public enum RepititionMode
 {
@@ -6,25 +8,32 @@ public enum RepititionMode
     DropSet
 }
 
-public abstract class WorkoutRepitition : NamedEntity 
+public abstract class Rep : NamedEntity 
 {
+    [Required]
+    public required Guid ExerciseId { get; set; }
+    public SetExercise? Exercise { get; set; }
+
     public TimeSpan? RestPeriod { get; set; } = null; // Optional rest period after completing the set
 }
 
-public class TimedRepitition : WorkoutRepitition
+public class TimedRep : Rep
 {
+    [Required]
     public required TimeSpan Duration { get; set; }
     public decimal? Weight { get; set; } = null; // If there is a weighted component to the repitition
 }
 
-public class RepetitionCount : WorkoutRepitition
+public class CountedRep : Rep
 {
+    [Range(1, int.MaxValue, ErrorMessage = "Count must be a positive integer.")]
     public int? Count { get; set; } = null; // Null indicates to failure, otherwise the number of repititions to complete
     public decimal? Weight { get; set; } = null; // If there is a weighted component to the repitition
 }
 
-public class SuperSetRepition : WorkoutRepitition
+public class SuperSetRep : Rep
 {
-    public IEnumerable<WorkoutRepitition> Exercises { get; set; } = [];
+    public IEnumerable<Rep> Exercises { get; set; } = [];
+    [Required]
     public required RepititionMode Mode { get; set; } // To distinguish between supersets (different workouts performed back to back) and drop sets (same workout performed with decreasing weight until failure)
 }

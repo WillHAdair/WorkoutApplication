@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace WorkoutApp.API.Database.Migrations
+namespace WorkoutApp.API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialSqlServer : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,7 +60,6 @@ namespace WorkoutApp.API.Database.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     WorkoutScheduleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ScheduleDayType = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -78,16 +77,16 @@ namespace WorkoutApp.API.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WorkoutExercises",
+                name: "Exercises",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ScheduleDayId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StartTime = table.Column<TimeSpan>(type: "time", nullable: true),
-                    ExerciseType = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
-                    WorkoutDayId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    WorkoutTime = table.Column<TimeSpan>(type: "time", nullable: true),
-                    Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    ExerciseType = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     RestPeriod = table.Column<TimeSpan>(type: "time", nullable: true),
+                    WorkoutTime = table.Column<TimeSpan>(type: "time", nullable: true),
+                    Weight = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -95,29 +94,29 @@ namespace WorkoutApp.API.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WorkoutExercises", x => x.Id);
+                    table.PrimaryKey("PK_Exercises", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_WorkoutExercises_ScheduleDays_WorkoutDayId",
-                        column: x => x.WorkoutDayId,
+                        name: "FK_Exercises_ScheduleDays_ScheduleDayId",
+                        column: x => x.ScheduleDayId,
                         principalTable: "ScheduleDays",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "WorkoutRepititions",
+                name: "Reps",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExerciseId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RestPeriod = table.Column<TimeSpan>(type: "time", nullable: true),
                     ParentSuperSetId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    RepititionType = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
-                    WorkoutExerciseId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    RepititionType = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
                     Count = table.Column<int>(type: "int", nullable: true),
-                    RepetitionCount_Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    Weight = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
                     Mode = table.Column<int>(type: "int", nullable: true),
                     Duration = table.Column<TimeSpan>(type: "time", nullable: true),
-                    Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    TimedRep_Weight = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -125,39 +124,39 @@ namespace WorkoutApp.API.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WorkoutRepititions", x => x.Id);
+                    table.PrimaryKey("PK_Reps", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_WorkoutRepititions_WorkoutExercises_WorkoutExerciseId",
-                        column: x => x.WorkoutExerciseId,
-                        principalTable: "WorkoutExercises",
+                        name: "FK_Reps_Exercises_ExerciseId",
+                        column: x => x.ExerciseId,
+                        principalTable: "Exercises",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_WorkoutRepititions_WorkoutRepititions_ParentSuperSetId",
+                        name: "FK_Reps_Reps_ParentSuperSetId",
                         column: x => x.ParentSuperSetId,
-                        principalTable: "WorkoutRepititions",
+                        principalTable: "Reps",
                         principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Exercises_ScheduleDayId",
+                table: "Exercises",
+                column: "ScheduleDayId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reps_ExerciseId",
+                table: "Reps",
+                column: "ExerciseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reps_ParentSuperSetId",
+                table: "Reps",
+                column: "ParentSuperSetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ScheduleDays_WorkoutScheduleId",
                 table: "ScheduleDays",
                 column: "WorkoutScheduleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WorkoutExercises_WorkoutDayId",
-                table: "WorkoutExercises",
-                column: "WorkoutDayId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WorkoutRepititions_ParentSuperSetId",
-                table: "WorkoutRepititions",
-                column: "ParentSuperSetId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WorkoutRepititions_WorkoutExerciseId",
-                table: "WorkoutRepititions",
-                column: "WorkoutExerciseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkoutSchedules_UserId",
@@ -169,10 +168,10 @@ namespace WorkoutApp.API.Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "WorkoutRepititions");
+                name: "Reps");
 
             migrationBuilder.DropTable(
-                name: "WorkoutExercises");
+                name: "Exercises");
 
             migrationBuilder.DropTable(
                 name: "ScheduleDays");

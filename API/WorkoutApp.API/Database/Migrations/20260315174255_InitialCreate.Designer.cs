@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkoutApp.API.Database;
 
 #nullable disable
 
-namespace WorkoutApp.API.Database.Migrations
+namespace WorkoutApp.API.Migrations
 {
     [DbContext(typeof(WorkoutAppDbContext))]
-    partial class WorkoutAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260315174255_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,95 @@ namespace WorkoutApp.API.Database.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("WorkoutApp.API.Models.Exercise", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExerciseType")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ScheduleDayId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeSpan?>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ScheduleDayId");
+
+                    b.ToTable("Exercises", (string)null);
+
+                    b.HasDiscriminator<string>("ExerciseType").HasValue("Exercise");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("WorkoutApp.API.Models.Rep", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ExerciseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ParentSuperSetId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("RepititionType")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<TimeSpan?>("RestPeriod")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExerciseId");
+
+                    b.HasIndex("ParentSuperSetId");
+
+                    b.ToTable("Reps", (string)null);
+
+                    b.HasDiscriminator<string>("RepititionType").HasValue("Rep");
+
+                    b.UseTphMappingStrategy();
+                });
 
             modelBuilder.Entity("WorkoutApp.API.Models.ScheduleDay", b =>
                 {
@@ -39,11 +131,6 @@ namespace WorkoutApp.API.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ScheduleDayType")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -54,11 +141,7 @@ namespace WorkoutApp.API.Database.Migrations
 
                     b.HasIndex("WorkoutScheduleId");
 
-                    b.ToTable("ScheduleDays", (string)null);
-
-                    b.HasDiscriminator<string>("ScheduleDayType").HasValue("ScheduleDay");
-
-                    b.UseTphMappingStrategy();
+                    b.ToTable("ScheduleDays");
                 });
 
             modelBuilder.Entity("WorkoutApp.API.Models.User", b =>
@@ -101,95 +184,6 @@ namespace WorkoutApp.API.Database.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("WorkoutApp.API.Models.WorkoutExercise", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ExerciseType")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<TimeSpan?>("StartTime")
-                        .HasColumnType("time");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("WorkoutDayId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WorkoutDayId");
-
-                    b.ToTable("WorkoutExercises", (string)null);
-
-                    b.HasDiscriminator<string>("ExerciseType").HasValue("WorkoutExercise");
-
-                    b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("WorkoutApp.API.Models.WorkoutRepitition", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("ParentSuperSetId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("RepititionType")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
-
-                    b.Property<TimeSpan?>("RestPeriod")
-                        .HasColumnType("time");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("WorkoutExerciseId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ParentSuperSetId");
-
-                    b.HasIndex("WorkoutExerciseId");
-
-                    b.ToTable("WorkoutRepititions", (string)null);
-
-                    b.HasDiscriminator<string>("RepititionType").HasValue("WorkoutRepitition");
-
-                    b.UseTphMappingStrategy();
-                });
-
             modelBuilder.Entity("WorkoutApp.API.Models.WorkoutSchedule", b =>
                 {
                     b.Property<Guid>("Id")
@@ -226,25 +220,22 @@ namespace WorkoutApp.API.Database.Migrations
                     b.ToTable("WorkoutSchedules");
                 });
 
-            modelBuilder.Entity("WorkoutApp.API.Models.RestDay", b =>
+            modelBuilder.Entity("WorkoutApp.API.Models.SetExercise", b =>
                 {
-                    b.HasBaseType("WorkoutApp.API.Models.ScheduleDay");
+                    b.HasBaseType("WorkoutApp.API.Models.Exercise");
 
-                    b.HasDiscriminator().HasValue("Rest");
+                    b.Property<TimeSpan?>("RestPeriod")
+                        .HasColumnType("time");
+
+                    b.HasDiscriminator().HasValue("SetExercise");
                 });
 
-            modelBuilder.Entity("WorkoutApp.API.Models.WorkoutDay", b =>
+            modelBuilder.Entity("WorkoutApp.API.Models.TimedExercise", b =>
                 {
-                    b.HasBaseType("WorkoutApp.API.Models.ScheduleDay");
-
-                    b.HasDiscriminator().HasValue("Workout");
-                });
-
-            modelBuilder.Entity("WorkoutApp.API.Models.TimedWorkout", b =>
-                {
-                    b.HasBaseType("WorkoutApp.API.Models.WorkoutExercise");
+                    b.HasBaseType("WorkoutApp.API.Models.Exercise");
 
                     b.Property<decimal?>("Weight")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<TimeSpan>("WorkoutTime")
@@ -253,38 +244,23 @@ namespace WorkoutApp.API.Database.Migrations
                     b.HasDiscriminator().HasValue("TimedWorkout");
                 });
 
-            modelBuilder.Entity("WorkoutApp.API.Models.WorkoutSetExercise", b =>
+            modelBuilder.Entity("WorkoutApp.API.Models.CountedRep", b =>
                 {
-                    b.HasBaseType("WorkoutApp.API.Models.WorkoutExercise");
-
-                    b.Property<TimeSpan?>("RestPeriod")
-                        .HasColumnType("time");
-
-                    b.HasDiscriminator().HasValue("SetExercise");
-                });
-
-            modelBuilder.Entity("WorkoutApp.API.Models.RepetitionCount", b =>
-                {
-                    b.HasBaseType("WorkoutApp.API.Models.WorkoutRepitition");
+                    b.HasBaseType("WorkoutApp.API.Models.Rep");
 
                     b.Property<int?>("Count")
                         .HasColumnType("int");
 
                     b.Property<decimal?>("Weight")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
-
-                    b.ToTable("WorkoutRepititions", t =>
-                        {
-                            t.Property("Weight")
-                                .HasColumnName("RepetitionCount_Weight");
-                        });
 
                     b.HasDiscriminator().HasValue("Count");
                 });
 
-            modelBuilder.Entity("WorkoutApp.API.Models.SuperSetRepition", b =>
+            modelBuilder.Entity("WorkoutApp.API.Models.SuperSetRep", b =>
                 {
-                    b.HasBaseType("WorkoutApp.API.Models.WorkoutRepitition");
+                    b.HasBaseType("WorkoutApp.API.Models.Rep");
 
                     b.Property<int>("Mode")
                         .HasColumnType("int");
@@ -292,17 +268,51 @@ namespace WorkoutApp.API.Database.Migrations
                     b.HasDiscriminator().HasValue("SuperSet");
                 });
 
-            modelBuilder.Entity("WorkoutApp.API.Models.TimedRepitition", b =>
+            modelBuilder.Entity("WorkoutApp.API.Models.TimedRep", b =>
                 {
-                    b.HasBaseType("WorkoutApp.API.Models.WorkoutRepitition");
+                    b.HasBaseType("WorkoutApp.API.Models.Rep");
 
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("time");
 
                     b.Property<decimal?>("Weight")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.ToTable("Reps", t =>
+                        {
+                            t.Property("Weight")
+                                .HasColumnName("TimedRep_Weight");
+                        });
+
                     b.HasDiscriminator().HasValue("Timed");
+                });
+
+            modelBuilder.Entity("WorkoutApp.API.Models.Exercise", b =>
+                {
+                    b.HasOne("WorkoutApp.API.Models.ScheduleDay", "ScheduleDay")
+                        .WithMany("Exercises")
+                        .HasForeignKey("ScheduleDayId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ScheduleDay");
+                });
+
+            modelBuilder.Entity("WorkoutApp.API.Models.Rep", b =>
+                {
+                    b.HasOne("WorkoutApp.API.Models.SetExercise", "Exercise")
+                        .WithMany("Sets")
+                        .HasForeignKey("ExerciseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WorkoutApp.API.Models.SuperSetRep", null)
+                        .WithMany("Exercises")
+                        .HasForeignKey("ParentSuperSetId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Exercise");
                 });
 
             modelBuilder.Entity("WorkoutApp.API.Models.ScheduleDay", b =>
@@ -316,27 +326,6 @@ namespace WorkoutApp.API.Database.Migrations
                     b.Navigation("WorkoutSchedule");
                 });
 
-            modelBuilder.Entity("WorkoutApp.API.Models.WorkoutExercise", b =>
-                {
-                    b.HasOne("WorkoutApp.API.Models.WorkoutDay", null)
-                        .WithMany("WorkoutExercises")
-                        .HasForeignKey("WorkoutDayId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("WorkoutApp.API.Models.WorkoutRepitition", b =>
-                {
-                    b.HasOne("WorkoutApp.API.Models.SuperSetRepition", null)
-                        .WithMany("Exercises")
-                        .HasForeignKey("ParentSuperSetId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("WorkoutApp.API.Models.WorkoutSetExercise", null)
-                        .WithMany("Sets")
-                        .HasForeignKey("WorkoutExerciseId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("WorkoutApp.API.Models.WorkoutSchedule", b =>
                 {
                     b.HasOne("WorkoutApp.API.Models.User", "User")
@@ -348,22 +337,22 @@ namespace WorkoutApp.API.Database.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("WorkoutApp.API.Models.ScheduleDay", b =>
+                {
+                    b.Navigation("Exercises");
+                });
+
             modelBuilder.Entity("WorkoutApp.API.Models.WorkoutSchedule", b =>
                 {
                     b.Navigation("ScheduleDays");
                 });
 
-            modelBuilder.Entity("WorkoutApp.API.Models.WorkoutDay", b =>
-                {
-                    b.Navigation("WorkoutExercises");
-                });
-
-            modelBuilder.Entity("WorkoutApp.API.Models.WorkoutSetExercise", b =>
+            modelBuilder.Entity("WorkoutApp.API.Models.SetExercise", b =>
                 {
                     b.Navigation("Sets");
                 });
 
-            modelBuilder.Entity("WorkoutApp.API.Models.SuperSetRepition", b =>
+            modelBuilder.Entity("WorkoutApp.API.Models.SuperSetRep", b =>
                 {
                     b.Navigation("Exercises");
                 });

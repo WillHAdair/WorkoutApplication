@@ -5,6 +5,7 @@ public abstract class ServiceResult
 {
     public int StatusCode { get; set; }
     public string Message { get; set; }
+    public bool Success { get; set; }
     public object Data { get; set; }
 }
 
@@ -23,12 +24,14 @@ public class SuccessResult : ServiceResult
     {
         StatusCode = 200;
         Message = message;
+        Success = true;
     }
     public SuccessResult(object data, string message = "Success")
     {
         StatusCode = 200;
         Message = message;
         Data = data;
+        Success = true;
     }
 }
 
@@ -38,11 +41,19 @@ public class SuccessResult : ServiceResult
 /// <typeparam name="T"></typeparam>
 public class SuccessResult<T> : ServiceResult<T>
 {
+    public SuccessResult(string message = "Success")
+    {
+        StatusCode = 200;
+        Message = message;
+        Success = true;
+    }
+
     public SuccessResult(T data, string message = "Success")
     {
         StatusCode = 200;
         Message = message;
         Data = data;
+        Success = true;
     }
 }
 
@@ -55,6 +66,7 @@ public class CreatedResult : ServiceResult
     {
         StatusCode = 201;
         Message = message;
+        Success = true;
     }
 
     public CreatedResult(object data, string message = "Created")
@@ -62,6 +74,7 @@ public class CreatedResult : ServiceResult
         StatusCode = 201;
         Message = message;
         Data = data;
+        Success = true;
     }
 }
 
@@ -76,6 +89,7 @@ public class CreatedResult<T> : ServiceResult<T>
         StatusCode = 201;
         Message = message;
         Data = data;
+        Success = true;
     }
 }
 
@@ -88,6 +102,7 @@ public class NoContentResult : ServiceResult
     {
         StatusCode = 204;
         Message = message;
+        Success = true;
     }
 }
 
@@ -101,6 +116,7 @@ public class NoContentResult<T> : ServiceResult<T>
     {
         StatusCode = 204;
         Message = message;
+        Success = true;
     }
 }
 #endregion
@@ -115,6 +131,7 @@ public class BadRequestResult : ServiceResult
     {
         StatusCode = 400;
         Message = message;
+        Success = false;
     }
 
     public BadRequestResult(object data, string message = "Bad Request")
@@ -122,6 +139,7 @@ public class BadRequestResult : ServiceResult
         StatusCode = 400;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -135,6 +153,7 @@ public class BadRequestResult<T> : ServiceResult<T>
     {
         StatusCode = 400;
         Message = message;
+        Success = false;
     }
 
     public BadRequestResult(T data, string message = "Bad Request")
@@ -142,6 +161,7 @@ public class BadRequestResult<T> : ServiceResult<T>
         StatusCode = 400;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -154,6 +174,7 @@ public class UnauthorizedResult : ServiceResult
     {
         StatusCode = 401;
         Message = message;
+        Success = false;
     }
 
     public UnauthorizedResult(object data, string message = "Unauthorized")
@@ -161,6 +182,7 @@ public class UnauthorizedResult : ServiceResult
         StatusCode = 401;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -174,6 +196,7 @@ public class UnauthorizedResult<T> : ServiceResult<T>
     {
         StatusCode = 401;
         Message = message;
+        Success = false;
     }
 
     public UnauthorizedResult(T data, string message = "Unauthorized")
@@ -181,6 +204,7 @@ public class UnauthorizedResult<T> : ServiceResult<T>
         StatusCode = 401;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -193,6 +217,7 @@ public class ForbiddenResult : ServiceResult
     {
         StatusCode = 403;
         Message = message;
+        Success = false;
     }
 
     public ForbiddenResult(object data, string message = "Forbidden")
@@ -200,6 +225,7 @@ public class ForbiddenResult : ServiceResult
         StatusCode = 403;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -213,6 +239,7 @@ public class ForbiddenResult<T> : ServiceResult<T>
     {
         StatusCode = 403;
         Message = message;
+        Success = false;
     }
 
     public ForbiddenResult(T data, string message = "Forbidden")
@@ -220,6 +247,7 @@ public class ForbiddenResult<T> : ServiceResult<T>
         StatusCode = 403;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -232,6 +260,7 @@ public class NotFoundResult : ServiceResult
     {
         StatusCode = 404;
         Message = message;
+        Success = false;
     }
 
     public NotFoundResult(object data, string message = "Not Found")
@@ -239,6 +268,7 @@ public class NotFoundResult : ServiceResult
         StatusCode = 404;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -252,6 +282,7 @@ public class NotFoundResult<T> : ServiceResult<T>
     {
         StatusCode = 404;
         Message = message;
+        Success = false;
     }
 
     public NotFoundResult(T data, string message = "Not Found")
@@ -259,6 +290,7 @@ public class NotFoundResult<T> : ServiceResult<T>
         StatusCode = 404;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -271,6 +303,7 @@ public class NotAllowedResult : ServiceResult
     {
         StatusCode = 405;
         Message = message;
+        Success = false;
     }
 
     public NotAllowedResult(object data, string message = "Method Not Allowed")
@@ -278,6 +311,7 @@ public class NotAllowedResult : ServiceResult
         StatusCode = 405;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -290,6 +324,7 @@ public class NotAllowedResult<T> : ServiceResult<T>
     {
         StatusCode = 405;
         Message = message;
+        Success = false;
     }
 
     public NotAllowedResult(T data, string message = "Method Not Allowed")
@@ -297,6 +332,7 @@ public class NotAllowedResult<T> : ServiceResult<T>
         StatusCode = 405;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -309,6 +345,7 @@ public class ConflictResult : ServiceResult
     {
         StatusCode = 409;
         Message = message;
+        Success = false;
     }
 
     public ConflictResult(object data, string message = "Conflict")
@@ -316,6 +353,7 @@ public class ConflictResult : ServiceResult
         StatusCode = 409;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -329,6 +367,7 @@ public class ConflictResult<T> : ServiceResult<T>
     {
         StatusCode = 409;
         Message = message;
+        Success = false;
     }
 
     public ConflictResult(T data, string message = "Conflict")
@@ -336,6 +375,7 @@ public class ConflictResult<T> : ServiceResult<T>
         StatusCode = 409;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -348,6 +388,7 @@ public class UnprocessableEntityResult : ServiceResult
     {
         StatusCode = 422;
         Message = message;
+        Success = false;
     }
 
     public UnprocessableEntityResult(object data, string message = "Unprocessable Entity")
@@ -355,6 +396,7 @@ public class UnprocessableEntityResult : ServiceResult
         StatusCode = 422;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -368,6 +410,7 @@ public class UnprocessableEntityResult<T> : ServiceResult<T>
     {
         StatusCode = 422;
         Message = message;
+        Success = false;
     }
 
     public UnprocessableEntityResult(T data, string message = "Unprocessable Entity")
@@ -375,6 +418,7 @@ public class UnprocessableEntityResult<T> : ServiceResult<T>
         StatusCode = 422;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 #endregion
@@ -389,6 +433,7 @@ public class InternalServerErrorResult : ServiceResult
     {
         StatusCode = 500;
         Message = message;
+        Success = false;
     }
 
     public InternalServerErrorResult(object data, string message = "Internal Server Error")
@@ -396,6 +441,7 @@ public class InternalServerErrorResult : ServiceResult
         StatusCode = 500;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -409,6 +455,7 @@ public class InternalServerErrorResult<T> : ServiceResult<T>
     {
         StatusCode = 500;
         Message = message;
+        Success = false;
     }
 
     public InternalServerErrorResult(T data, string message = "Internal Server Error")
@@ -416,6 +463,7 @@ public class InternalServerErrorResult<T> : ServiceResult<T>
         StatusCode = 500;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -428,6 +476,7 @@ public class NotImplementedResult : ServiceResult
     {
         StatusCode = 501;
         Message = message;
+        Success = false;
     }
 
     public NotImplementedResult(object data, string message = "Not Implemented")
@@ -435,6 +484,7 @@ public class NotImplementedResult : ServiceResult
         StatusCode = 501;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -448,6 +498,7 @@ public class NotImplementedResult<T> : ServiceResult<T>
     {
         StatusCode = 501;
         Message = message;
+        Success = false;
     }
 
     public NotImplementedResult(T data, string message = "Not Implemented")
@@ -455,6 +506,7 @@ public class NotImplementedResult<T> : ServiceResult<T>
         StatusCode = 501;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -467,6 +519,7 @@ public class BadGatewayResult : ServiceResult
     {
         StatusCode = 502;
         Message = message;
+        Success = false;
     }
 
     public BadGatewayResult(object data, string message = "Bad Gateway")
@@ -474,6 +527,7 @@ public class BadGatewayResult : ServiceResult
         StatusCode = 502;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -487,6 +541,7 @@ public class BadGatewayResult<T> : ServiceResult<T>
     {
         StatusCode = 502;
         Message = message;
+        Success = false;
     }
 
     public BadGatewayResult(T data, string message = "Bad Gateway")
@@ -494,6 +549,7 @@ public class BadGatewayResult<T> : ServiceResult<T>
         StatusCode = 502;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -506,6 +562,7 @@ public class ServiceUnavailableResult : ServiceResult
     {
         StatusCode = 503;
         Message = message;
+        Success = false;
     }
 
     public ServiceUnavailableResult(object data, string message = "Service Unavailable")
@@ -513,6 +570,7 @@ public class ServiceUnavailableResult : ServiceResult
         StatusCode = 503;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 
@@ -526,6 +584,7 @@ public class ServiceUnavailableResult<T> : ServiceResult<T>
     {
         StatusCode = 503;
         Message = message;
+        Success = false;
     }
 
     public ServiceUnavailableResult(T data, string message = "Service Unavailable")
@@ -533,6 +592,7 @@ public class ServiceUnavailableResult<T> : ServiceResult<T>
         StatusCode = 503;
         Message = message;
         Data = data;
+        Success = false;
     }
 }
 #endregion
