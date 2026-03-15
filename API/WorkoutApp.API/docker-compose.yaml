@@ -1,0 +1,46 @@
+services:
+  sqlserver:
+    container_name: workout-sqlserver
+    build:
+      context: .
+      dockerfile: Dockerfile.sqlite
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Developer
+      - MSSQL_SA_PASSWORD=YourStrong!Passw0rd
+    ports:
+      - "14333:1433"
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-C", "-S", "localhost", "-U", "sa", "-P", "YourStrong!Passw0rd", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - workout-network
+
+  workout-api:
+    container_name: workout-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8003:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=WorkoutAppDb;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;Encrypt=False
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - workout-network
+    restart: always
+
+volumes:
+  sqlserver_data:
+
+networks:
+  workout-network:
+    driver: bridge
