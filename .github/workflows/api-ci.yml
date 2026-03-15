@@ -1,0 +1,34 @@
+name: API CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+        working-directory: API
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+        working-directory: API
+
+      - name: Run tests
+        run: dotnet test --no-build --configuration Release --verbosity normal
+        working-directory: API
