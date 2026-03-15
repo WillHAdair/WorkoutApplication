@@ -10,7 +10,7 @@ export type ScheduleTemplate = {
   id: string;
   name: string;
   description: string;
-  assignedDates: string[];
+  assignedDates: Date[];
 };
 
 export type ExerciseTemplate = {
@@ -49,19 +49,19 @@ export const scheduleTemplates: ScheduleTemplate[] = [
     id: "s1",
     name: "Strength A",
     description: "Primary compound lifts and upper-body accessories.",
-    assignedDates: ["2026-03-16", "2026-03-18", "2026-03-20"],
+    assignedDates: [new Date("2026-03-16"), new Date("2026-03-18"), new Date("2026-03-20")],
   },
   {
     id: "s2",
     name: "Cardio",
     description: "Easy intervals and steady-state pace work.",
-    assignedDates: ["2026-03-17", "2026-03-19"],
+    assignedDates: [new Date("2026-03-17"), new Date("2026-03-19")],
   },
   {
     id: "s3",
     name: "Mobility",
     description: "Core activation and full-body mobility sessions.",
-    assignedDates: ["2026-03-15", "2026-03-21"],
+    assignedDates: [new Date("2026-03-15"), new Date("2026-03-21")],
   },
 ];
 

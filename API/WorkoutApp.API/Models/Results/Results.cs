@@ -3,7 +3,7 @@ namespace WorkoutApp.API.Models.Results;
 // Base Result class
 public abstract class ServiceResult
 {
-    public int StatusCode { get; set; }
+    public int Status { get; set; }
     public string Message { get; set; }
     public bool Success { get; set; }
     public object Data { get; set; }
@@ -22,13 +22,13 @@ public class SuccessResult : ServiceResult
 {
     public SuccessResult(string message = "Success")
     {
-        StatusCode = 200;
+        Status = 200;
         Message = message;
         Success = true;
     }
     public SuccessResult(object data, string message = "Success")
     {
-        StatusCode = 200;
+        Status = 200;
         Message = message;
         Data = data;
         Success = true;
@@ -43,14 +43,14 @@ public class SuccessResult<T> : ServiceResult<T>
 {
     public SuccessResult(string message = "Success")
     {
-        StatusCode = 200;
+        Status = 200;
         Message = message;
         Success = true;
     }
 
     public SuccessResult(T data, string message = "Success")
     {
-        StatusCode = 200;
+        Status = 200;
         Message = message;
         Data = data;
         Success = true;
@@ -64,14 +64,14 @@ public class CreatedResult : ServiceResult
 {
     public CreatedResult(string message = "Created")
     {
-        StatusCode = 201;
+        Status = 201;
         Message = message;
         Success = true;
     }
 
     public CreatedResult(object data, string message = "Created")
     {
-        StatusCode = 201;
+        Status = 201;
         Message = message;
         Data = data;
         Success = true;
@@ -86,7 +86,7 @@ public class CreatedResult<T> : ServiceResult<T>
 {
     public CreatedResult(T data, string message = "Created")
     {
-        StatusCode = 201;
+        Status = 201;
         Message = message;
         Data = data;
         Success = true;
@@ -100,7 +100,7 @@ public class NoContentResult : ServiceResult
 {
     public NoContentResult(string message = "No Content")
     {
-        StatusCode = 204;
+        Status = 204;
         Message = message;
         Success = true;
     }
@@ -114,7 +114,7 @@ public class NoContentResult<T> : ServiceResult<T>
 {
     public NoContentResult(string message = "No Content")
     {
-        StatusCode = 204;
+        Status = 204;
         Message = message;
         Success = true;
     }
@@ -129,14 +129,14 @@ public class BadRequestResult : ServiceResult
 {
     public BadRequestResult(string message = "Bad Request")
     {
-        StatusCode = 400;
+        Status = 400;
         Message = message;
         Success = false;
     }
 
     public BadRequestResult(object data, string message = "Bad Request")
     {
-        StatusCode = 400;
+        Status = 400;
         Message = message;
         Data = data;
         Success = false;
@@ -151,14 +151,14 @@ public class BadRequestResult<T> : ServiceResult<T>
 {
     public BadRequestResult(string message = "Bad Request")
     {
-        StatusCode = 400;
+        Status = 400;
         Message = message;
         Success = false;
     }
 
     public BadRequestResult(T data, string message = "Bad Request")
     {
-        StatusCode = 400;
+        Status = 400;
         Message = message;
         Data = data;
         Success = false;
@@ -172,14 +172,14 @@ public class UnauthorizedResult : ServiceResult
 {
     public UnauthorizedResult(string message = "Unauthorized")
     {
-        StatusCode = 401;
+        Status = 401;
         Message = message;
         Success = false;
     }
 
     public UnauthorizedResult(object data, string message = "Unauthorized")
     {
-        StatusCode = 401;
+        Status = 401;
         Message = message;
         Data = data;
         Success = false;
@@ -194,14 +194,14 @@ public class UnauthorizedResult<T> : ServiceResult<T>
 {
     public UnauthorizedResult(string message = "Unauthorized")
     {
-        StatusCode = 401;
+        Status = 401;
         Message = message;
         Success = false;
     }
 
     public UnauthorizedResult(T data, string message = "Unauthorized")
     {
-        StatusCode = 401;
+        Status = 401;
         Message = message;
         Data = data;
         Success = false;
@@ -215,14 +215,14 @@ public class ForbiddenResult : ServiceResult
 {
     public ForbiddenResult(string message = "Forbidden")
     {
-        StatusCode = 403;
+        Status = 403;
         Message = message;
         Success = false;
     }
 
     public ForbiddenResult(object data, string message = "Forbidden")
     {
-        StatusCode = 403;
+        Status = 403;
         Message = message;
         Data = data;
         Success = false;
@@ -237,14 +237,14 @@ public class ForbiddenResult<T> : ServiceResult<T>
 {
     public ForbiddenResult(string message = "Forbidden")
     {
-        StatusCode = 403;
+        Status = 403;
         Message = message;
         Success = false;
     }
 
     public ForbiddenResult(T data, string message = "Forbidden")
     {
-        StatusCode = 403;
+        Status = 403;
         Message = message;
         Data = data;
         Success = false;
@@ -258,14 +258,14 @@ public class NotFoundResult : ServiceResult
 {
     public NotFoundResult(string message = "Not Found")
     {
-        StatusCode = 404;
+        Status = 404;
         Message = message;
         Success = false;
     }
 
     public NotFoundResult(object data, string message = "Not Found")
     {
-        StatusCode = 404;
+        Status = 404;
         Message = message;
         Data = data;
         Success = false;
@@ -280,14 +280,14 @@ public class NotFoundResult<T> : ServiceResult<T>
 {
     public NotFoundResult(string message = "Not Found")
     {
-        StatusCode = 404;
+        Status = 404;
         Message = message;
         Success = false;
     }
 
     public NotFoundResult(T data, string message = "Not Found")
     {
-        StatusCode = 404;
+        Status = 404;
         Message = message;
         Data = data;
         Success = false;
@@ -301,14 +301,14 @@ public class NotAllowedResult : ServiceResult
 {
     public NotAllowedResult(string message = "Method Not Allowed")
     {
-        StatusCode = 405;
+        Status = 405;
         Message = message;
         Success = false;
     }
 
     public NotAllowedResult(object data, string message = "Method Not Allowed")
     {
-        StatusCode = 405;
+        Status = 405;
         Message = message;
         Data = data;
         Success = false;
@@ -322,14 +322,14 @@ public class NotAllowedResult<T> : ServiceResult<T>
 {
     public NotAllowedResult(string message = "Method Not Allowed")
     {
-        StatusCode = 405;
+        Status = 405;
         Message = message;
         Success = false;
     }
 
     public NotAllowedResult(T data, string message = "Method Not Allowed")
     {
-        StatusCode = 405;
+        Status = 405;
         Message = message;
         Data = data;
         Success = false;
@@ -343,14 +343,14 @@ public class ConflictResult : ServiceResult
 {
     public ConflictResult(string message = "Conflict")
     {
-        StatusCode = 409;
+        Status = 409;
         Message = message;
         Success = false;
     }
 
     public ConflictResult(object data, string message = "Conflict")
     {
-        StatusCode = 409;
+        Status = 409;
         Message = message;
         Data = data;
         Success = false;
@@ -365,14 +365,14 @@ public class ConflictResult<T> : ServiceResult<T>
 {
     public ConflictResult(string message = "Conflict")
     {
-        StatusCode = 409;
+        Status = 409;
         Message = message;
         Success = false;
     }
 
     public ConflictResult(T data, string message = "Conflict")
     {
-        StatusCode = 409;
+        Status = 409;
         Message = message;
         Data = data;
         Success = false;
@@ -386,14 +386,14 @@ public class UnprocessableEntityResult : ServiceResult
 {
     public UnprocessableEntityResult(string message = "Unprocessable Entity")
     {
-        StatusCode = 422;
+        Status = 422;
         Message = message;
         Success = false;
     }
 
     public UnprocessableEntityResult(object data, string message = "Unprocessable Entity")
     {
-        StatusCode = 422;
+        Status = 422;
         Message = message;
         Data = data;
         Success = false;
@@ -408,14 +408,14 @@ public class UnprocessableEntityResult<T> : ServiceResult<T>
 {
     public UnprocessableEntityResult(string message = "Unprocessable Entity")
     {
-        StatusCode = 422;
+        Status = 422;
         Message = message;
         Success = false;
     }
 
     public UnprocessableEntityResult(T data, string message = "Unprocessable Entity")
     {
-        StatusCode = 422;
+        Status = 422;
         Message = message;
         Data = data;
         Success = false;
@@ -431,14 +431,14 @@ public class InternalServerErrorResult : ServiceResult
 {
     public InternalServerErrorResult(string message = "Internal Server Error")
     {
-        StatusCode = 500;
+        Status = 500;
         Message = message;
         Success = false;
     }
 
     public InternalServerErrorResult(object data, string message = "Internal Server Error")
     {
-        StatusCode = 500;
+        Status = 500;
         Message = message;
         Data = data;
         Success = false;
@@ -453,14 +453,14 @@ public class InternalServerErrorResult<T> : ServiceResult<T>
 {
     public InternalServerErrorResult(string message = "Internal Server Error")
     {
-        StatusCode = 500;
+        Status = 500;
         Message = message;
         Success = false;
     }
 
     public InternalServerErrorResult(T data, string message = "Internal Server Error")
     {
-        StatusCode = 500;
+        Status = 500;
         Message = message;
         Data = data;
         Success = false;
@@ -474,14 +474,14 @@ public class NotImplementedResult : ServiceResult
 {
     public NotImplementedResult(string message = "Not Implemented")
     {
-        StatusCode = 501;
+        Status = 501;
         Message = message;
         Success = false;
     }
 
     public NotImplementedResult(object data, string message = "Not Implemented")
     {
-        StatusCode = 501;
+        Status = 501;
         Message = message;
         Data = data;
         Success = false;
@@ -496,14 +496,14 @@ public class NotImplementedResult<T> : ServiceResult<T>
 {
     public NotImplementedResult(string message = "Not Implemented")
     {
-        StatusCode = 501;
+        Status = 501;
         Message = message;
         Success = false;
     }
 
     public NotImplementedResult(T data, string message = "Not Implemented")
     {
-        StatusCode = 501;
+        Status = 501;
         Message = message;
         Data = data;
         Success = false;
@@ -517,14 +517,14 @@ public class BadGatewayResult : ServiceResult
 {
     public BadGatewayResult(string message = "Bad Gateway")
     {
-        StatusCode = 502;
+        Status = 502;
         Message = message;
         Success = false;
     }
 
     public BadGatewayResult(object data, string message = "Bad Gateway")
     {
-        StatusCode = 502;
+        Status = 502;
         Message = message;
         Data = data;
         Success = false;
@@ -539,14 +539,14 @@ public class BadGatewayResult<T> : ServiceResult<T>
 {
     public BadGatewayResult(string message = "Bad Gateway")
     {
-        StatusCode = 502;
+        Status = 502;
         Message = message;
         Success = false;
     }
 
     public BadGatewayResult(T data, string message = "Bad Gateway")
     {
-        StatusCode = 502;
+        Status = 502;
         Message = message;
         Data = data;
         Success = false;
@@ -560,14 +560,14 @@ public class ServiceUnavailableResult : ServiceResult
 {
     public ServiceUnavailableResult(string message = "Service Unavailable")
     {
-        StatusCode = 503;
+        Status = 503;
         Message = message;
         Success = false;
     }
 
     public ServiceUnavailableResult(object data, string message = "Service Unavailable")
     {
-        StatusCode = 503;
+        Status = 503;
         Message = message;
         Data = data;
         Success = false;
@@ -582,14 +582,14 @@ public class ServiceUnavailableResult<T> : ServiceResult<T>
 {
     public ServiceUnavailableResult(string message = "Service Unavailable")
     {
-        StatusCode = 503;
+        Status = 503;
         Message = message;
         Success = false;
     }
 
     public ServiceUnavailableResult(T data, string message = "Service Unavailable")
     {
-        StatusCode = 503;
+        Status = 503;
         Message = message;
         Data = data;
         Success = false;

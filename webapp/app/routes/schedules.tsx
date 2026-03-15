@@ -27,7 +27,7 @@ function formatDate(value: Dayjs) {
 export default function Schedules() {
   const [selectedScheduleId, setSelectedScheduleId] = useState(scheduleTemplates[0].id);
   const [saved, setSaved] = useState(false);
-  const [assignedDateMap, setAssignedDateMap] = useState<Record<string, string[]>>(
+  const [assignedDateMap, setAssignedDateMap] = useState<Record<string, Date[]>>(
     Object.fromEntries(scheduleTemplates.map((item) => [item.id, item.assignedDates])),
   );
 
@@ -39,16 +39,18 @@ export default function Schedules() {
   const assignedDates = assignedDateMap[selectedSchedule.id] ?? [];
 
   const toggleDate = (value: Dayjs) => {
-    const formatted = formatDate(value);
+    const dateObj = value.toDate();
     setSaved(false);
     setAssignedDateMap((current) => {
       const dates = current[selectedSchedule.id] ?? [];
-      const exists = dates.includes(formatted);
-      const nextDates = exists ? dates.filter((date) => date !== formatted) : [...dates, formatted];
+      const exists = dates.some((d) => d.getTime() === dateObj.getTime());
+      const nextDates = exists ? dates.filter((d) => d.getTime() !== dateObj.getTime()) : [...dates, dateObj];
+
+      nextDates.sort((a, b) => a.getTime() - b.getTime());
 
       return {
         ...current,
-        [selectedSchedule.id]: nextDates.sort(),
+        [selectedSchedule.id]: nextDates,
       };
     });
   };
@@ -98,13 +100,15 @@ export default function Schedules() {
                   toggleDate(value);
                 }
               }}
-              value={dayjs(assignedDates[0] ?? dayjs().format("YYYY-MM-DD"))}
+              value={assignedDates[0] ? dayjs(assignedDates[0]) : dayjs()}
             />
           </LocalizationProvider>
 
           <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mt: 2 }}>
             {assignedDates.length > 0 ? (
-              assignedDates.map((date) => <Chip key={date} label={dayjs(date).format("ddd, MMM D")} />)
+              assignedDates.map((date) => (
+                <Chip key={date.toISOString()} label={dayjs(date).format("ddd, MMM D")} />
+              ))
             ) : (
               <Typography color="text.secondary">No dates selected yet.</Typography>
             )}
